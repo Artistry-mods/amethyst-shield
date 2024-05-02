@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:shield"
+    },
+    "a": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "c": {
+      "item": "minecraft:copper_ingot"
+    },
+    "o": {
+      "item": "amyshield:oxaline_bolt"
+    },
+    "s": {
+      "item": "amyshield:skulk_latch"
+    }
+  },
+  "pattern": [
+    "aaa",
+    "o#o",
+    "csc"
+  ],
+  "result": {
+    "item": "amyshield:amethyst_shield"
+  },
+  "show_notification": true
+}
