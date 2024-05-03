@@ -1,6 +1,8 @@
 package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.util.BlockingListener;
+import chaos.amyshield.util.DoubleJumpListener;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ public class AmethystShield implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();
+		BlockingListener.init();
+		DoubleJumpListener.init();
 
 		LOGGER.info("Hello Fabric world!");
 	}
