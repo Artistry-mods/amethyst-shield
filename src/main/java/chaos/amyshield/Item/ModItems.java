@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 public class ModItems {
 
     public static final Item AMETHYST_SHIELD = registerItem("amethyst_shield",
-            new AmethystShieldItem(new FabricItemSettings().maxCount(1).maxDamage(200), 100, 14, Items.AMETHYST_SHARD));
+            new AmethystShieldItem(new FabricItemSettings().maxCount(1).maxDamage(512), 100, 14, Items.AMETHYST_SHARD));
 
     public static final Item SKULK_LATCH = registerItem("skulk_latch",
             new Item(new FabricItemSettings()));
