@@ -26,19 +26,23 @@ public class ExampleClientMixin {
 		if (!player.isOnGround() &&
 				!player.isClimbing() &&
 				!this.jumpedLastTick &&
-				player.getVelocity().getY() < 0f &&
-				player.input.jumping &&
-				!player.getAbilities().flying &&
-				(AmethystShieldItem.getCharge(player.getMainHandStack()) >= 50 ||
-				AmethystShieldItem.getCharge(player.getOffHandStack()) >= 50) &&
-				player.isBlocking()) {
+				!player.getAbilities().flying) {
+
+			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+			passedData.writeUuid(player.getUuid());
+			//passedData.writeBoolean(player.getVelocity().getY() > 0f);
+
 			if (canJump(player)) {
-				player.jump();
+				if (player.getVelocity().getY() < 0f &&
+						(AmethystShieldItem.getCharge(player.getMainHandStack()) >= 50 ||
+						AmethystShieldItem.getCharge(player.getOffHandStack()) >= 50) &&
+						player.isBlocking() &&
+						player.input.jumping) {
 
-				PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-				passedData.writeUuid(player.getUuid());
+					player.setVelocity(player.getVelocity().getX(), 0.6, player.getVelocity().getZ());
 
-				ClientPlayNetworking.send(DoubleJumpListener.C2S_DO_DOUBLEJUMP, passedData);
+					ClientPlayNetworking.send(DoubleJumpListener.C2S_DO_DOUBLEJUMP, passedData);
+				}
 			}
 		}
 		this.jumpedLastTick = player.input.jumping;
