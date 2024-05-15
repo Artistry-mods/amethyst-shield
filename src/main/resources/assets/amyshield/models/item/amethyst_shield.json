@@ -5,6 +5,14 @@
     64,
     64
   ],
+  "overrides": [
+    {
+      "predicate": {
+        "blocking": 1
+      },
+      "model": "amyshield:item/amethyst_shield_blocking"
+    }
+  ],
   "display": {
     "thirdperson_righthand": {
       "rotation": [

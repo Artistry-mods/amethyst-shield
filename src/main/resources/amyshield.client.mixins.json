@@ -3,7 +3,7 @@
 	"package": "chaos.amyshield.mixin.client",
 	"compatibilityLevel": "JAVA_17",
 	"client": [
-		"ExampleClientMixin"
+      "AmethystShieldAbilityClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
