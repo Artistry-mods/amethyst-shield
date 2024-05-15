@@ -1,13 +1,13 @@
 package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
-import chaos.amyshield.util.AmethystPushAbilityListener;
+import chaos.amyshield.networking.C2Server.AmethystPushAbilityListener;
 import chaos.amyshield.util.BlockingListener;
-import chaos.amyshield.util.AmethystShieldAbilityListener;
+import chaos.amyshield.networking.C2Server.AmethystShieldAbilityListener;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +19,9 @@ public class AmethystShield implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();
-		BlockingListener.init();
-		AmethystShieldAbilityListener.init();
-		AmethystPushAbilityListener.init();
+		ModPackets.registerGlobalReceiversC2S();
 		ModParticles.registerModParticles();
+		BlockingListener.init();
 		LOGGER.info("Hello, Blockixel :)");
 	}
 }
