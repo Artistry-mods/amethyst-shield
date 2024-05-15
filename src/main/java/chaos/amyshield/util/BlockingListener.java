@@ -18,9 +18,9 @@ public class BlockingListener {
 
     private static ActionResult listener(LivingEntity defender, DamageSource damageSource, float amount, Hand hand, ItemStack itemStack) {
         if (itemStack.getItem() == ModItems.AMETHYST_SHIELD) {
-            int currantCharge = AmethystShieldItem.getCharge(itemStack);
-            System.out.println("Charge is: " + currantCharge + " | Damage is: " + amount);
-            AmethystShieldItem.setCharge(itemStack, (int) (currantCharge + amount));
+            float currantCharge = AmethystShieldItem.getCharge(itemStack);
+            System.out.println("Charge is: " + (currantCharge + amount) + " | Damage is: " + amount);
+            AmethystShieldItem.setCharge(itemStack, currantCharge + amount);
             return ActionResult.PASS;
         }
         return ActionResult.PASS;

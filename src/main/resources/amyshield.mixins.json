@@ -3,7 +3,6 @@
   "package": "chaos.amyshield.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "DoubleJumpAbilityMixin",
     "ExampleMixin"
   ],
   "injectors": {

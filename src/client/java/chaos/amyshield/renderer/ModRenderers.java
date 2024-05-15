@@ -1,4 +1,4 @@
-package chaos.amyshield.renderer;
+package chaos.amyshield.Item.client.renderer;
 
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.animatable.GeoItem;

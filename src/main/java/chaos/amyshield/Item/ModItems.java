@@ -2,7 +2,6 @@ package chaos.amyshield.Item;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
-import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricShieldItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
