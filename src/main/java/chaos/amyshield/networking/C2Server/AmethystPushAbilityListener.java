@@ -1,27 +1,32 @@
-package chaos.amyshield.util;
+package chaos.amyshield.networking.C2Server;
 
+import chaos.amyshield.networking.ModPackets;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.List;
 
 public class AmethystPushAbilityListener {
-    public static final Identifier AMETHYST_PUSH_ABILITY_C2S = new Identifier("amyshield", "do_a_push");
-    public static void init() {
-        ServerPlayNetworking.registerGlobalReceiver(AMETHYST_PUSH_ABILITY_C2S,
-                (server, player, handler, buf, responseSender) -> server.execute(() -> {
-                        List<Entity> entityList = getEntitiesAroundPlayer(3, player);
-                        entityList.forEach(entity -> {
-                            pushEntityAwayFromPlayer(entity, 0.5, player);
-                        });
-                }));
+    public static void receiver(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        List<Entity> entityList = getEntitiesAroundPlayer(3, player);
+        entityList.forEach(entity -> {
+            pushEntityAwayFromPlayer(entity, 0.5, player);
+        });
     }
-
     private static List<Entity> getEntitiesAroundPlayer(double radius, PlayerEntity player) {
         World world = player.getWorld();
         Box box = new Box(
@@ -46,4 +51,5 @@ public class AmethystPushAbilityListener {
         // Set the entity's velocity
         entity.addVelocity(velocity);
     }
+
 }

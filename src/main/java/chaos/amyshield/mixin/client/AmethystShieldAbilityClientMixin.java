@@ -1,9 +1,10 @@
 package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
-import chaos.amyshield.util.AmethystPushAbilityListener;
-import chaos.amyshield.util.AmethystShieldAbilityListener;
+import chaos.amyshield.networking.C2Server.AmethystPushAbilityListener;
+import chaos.amyshield.networking.C2Server.AmethystShieldAbilityListener;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -158,7 +159,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeFloat(-cost);
 		//sending the packed to remove charge
-		ClientPlayNetworking.send(AmethystShieldAbilityListener.AMETHYST_ABILITY_C2S, passedData);
+		ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
 	}
 	@Unique
 	private void onSparklingSlash() {
@@ -185,7 +186,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 	private void onAmethystBurst() {
 		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 		//sending the packed to remove charge
-		ClientPlayNetworking.send(AmethystPushAbilityListener.AMETHYST_PUSH_ABILITY_C2S, passedData);
+		ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
 		System.out.println("bwoomm");
 	}
 
