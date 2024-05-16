@@ -10,6 +10,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
+import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
+
 public class BlockingListener {
     public static void init() {
         ShieldBlockCallback.EVENT.register(BlockingListener::listener);
@@ -17,11 +19,9 @@ public class BlockingListener {
     }
 
     private static ActionResult listener(LivingEntity defender, DamageSource damageSource, float amount, Hand hand, ItemStack itemStack) {
-        if (itemStack.getItem() == ModItems.AMETHYST_SHIELD) {
-            float currantCharge = AmethystShieldItem.getCharge(itemStack);
-            System.out.println("Charge is: " + (currantCharge + amount) + " | Damage is: " + amount);
-            AmethystShieldItem.setCharge(itemStack, currantCharge + amount);
-            return ActionResult.PASS;
+        if (!defender.isInvulnerableTo(damageSource) && defender.canTakeDamage() && itemStack.getItem() == ModItems.AMETHYST_SHIELD && defender instanceof ServerPlayerEntity) {
+            AmethystShieldItem.addCharge(((IEntityDataSaver) defender), amount);
+            syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) defender)), (ServerPlayerEntity) defender);
         }
         return ActionResult.PASS;
     }
