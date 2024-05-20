@@ -49,7 +49,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
         //movement delta (I hate it and I will delete it)
-        if (this.lastPos != null && !AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) && !this.isSliding) {
+        if (this.lastPos != null && !AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) && !this.isSliding && !player.isFallFlying()) {
             double movementDelta = new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
                     .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ())));
             if (movementDelta > AmethystShield.MIN_MOVEMENT_DELTA) {
@@ -70,7 +70,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         }
 
         //returning from slashing state if a player touches the ground
-        if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
+        if (((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) || player.isSwimming()) && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
             AmethystShieldItem.setSlashing(((IEntityDataSaver) player), false);
             AmethystShieldItem.syncSlashing(false);
         }

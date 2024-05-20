@@ -12,10 +12,10 @@
       "item": "minecraft:copper_ingot"
     },
     "o": {
-      "item": "amyshield:oxaline_bolt"
+      "item": "amyshield:oxiwine_bolt"
     },
     "s": {
-      "item": "amyshield:skulk_latch"
+      "item": "amyshield:sculk_latch"
     }
   },
   "pattern": [

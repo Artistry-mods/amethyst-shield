@@ -14,11 +14,13 @@ public class AmethystShield implements ModInitializer {
 	public static String MOD_ID = "amyshield";
 
 	//TODO
-	// Make Abilities stronger because they are too weak against players (2.5 hearts max with the push which is the strongest ability) (Slash does not do shit) -Should be fixed can't confirm till tested.
 	// Make that the items you need to craft the shield are actually obtainable.
+	// If no direction is pressed on the side move forwards
 	// BUGS:
-	// Shield gets disabled when you use a shield ability with the axe in the main hand (axe main and shield in off) -Should be fixed can't confirm till tested.
-	// Shield can block other shield abilities (maybe not a bug but wierd) -Should be fixed can't confirm till tested.
+	// Damage does not connect sometimes (maybe because of I frames?)
+	//
+
+
 	//Abilities
 	public final static float MAX_CHARGE = 100f; //The maximum amethyst shield charge
 	public final static float MIN_CHARGE = 0f; //The minimum amethyst shield charge
@@ -26,7 +28,7 @@ public class AmethystShield implements ModInitializer {
 	public final static float SPARKLING_SLASH_COST = 25f; //How much charge the sparkling slash costs
 	public final static int SLASH_TIMING = 10; //how many ticks the player has to hit and activate the ability after starting to fall again
 	public final static float SPARKLING_SLASH_STRENGTH = 2f; //How far the sparkling slash propels the use
-	public final static float SPARKLING_SLASH_DAMAGE = 6f; //How much a sparkling slash hit does (hit points)
+	public final static float SPARKLING_SLASH_DAMAGE = 17f; //How much a sparkling slash hit does (hit points)
 	public final static float SPARKLING_SLASH_CHARGE_RETURN = 20f; //How much charge the player get returned for landing a successful sparkling slash
 	public final static float SPARKLING_SLASH_RADIUS = 0.5f; //The radius around the player in which entities get damaged and flung
 	//DOUBLE JUMP
@@ -45,6 +47,8 @@ public class AmethystShield implements ModInitializer {
 	//MOVEMENT CHARGE GAIN
 	public final static int MOVEMENT_CHARGE_TIMING = 20; //After how many tick the packet for movement charge gain gets send
 	public final static float MIN_MOVEMENT_DELTA = 0.001f; //The minimum movement distance required for charge contribution
+	//Block charge gain
+	public static final float BLOCK_GAIN_MULTIPLIER = 0.4F;
 
 	@Override
 	public void onInitialize() {
