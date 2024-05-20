@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "amyshield:item/skulk_latch"
+    "layer0": "amyshield:item/oxiwine_bolt"
   }
 }

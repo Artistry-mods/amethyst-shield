@@ -17,10 +17,10 @@ public class ModItems {
     public static final Item AMETHYST_SHIELD = registerItem("amethyst_shield",
             new AmethystShieldItem(new FabricItemSettings().maxCount(1).maxDamage(512), 100, 14, Items.AMETHYST_SHARD));
 
-    public static final Item SKULK_LATCH = registerItem("skulk_latch",
+    public static final Item SCULK_LATCH = registerItem("sculk_latch",
             new Item(new FabricItemSettings()));
 
-    public static final Item OXALINE_BOLT = registerItem("oxaline_bolt",
+    public static final Item OXIWINE_BOLT = registerItem("oxiwine_bolt",
             new Item(new FabricItemSettings()));
 
     private static Item registerItem(String name, Item item) {
@@ -35,11 +35,14 @@ public class ModItems {
     }
 
     private static void addItemsToIngredientsTabItemGroup(FabricItemGroupEntries entries) {
+        entries.add(OXIWINE_BOLT);
+        entries.add(SCULK_LATCH);
     }
     private static void addItemsToFoodTabItemGroup(FabricItemGroupEntries entries) {
     }
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::addItemsToCombatTabItemGroup);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItems::addItemsToIngredientsTabItemGroup);
         AmethystShield.LOGGER.info("Registering Items for Mod " + AmethystShield.MOD_ID);
     }
 }
