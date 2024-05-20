@@ -1,9 +1,9 @@
 package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.AmethystShield;
+import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.ModPackets;
-import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.IEntityDataSaver;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -11,7 +11,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.SwordItem;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,204 +21,256 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class AmethystShieldAbilityClientMixin {
-	//double jump mod I ripped :)
-	@Unique
-	private boolean jumpedLastTick = false;
-	//My stuff
-	@Unique
-	public int isDoubleJumpingTimer = 0;
-	@Unique
-	private boolean hasSneakedLastTick = false;
-	@Unique
-	private int sneakCounter = 0;
-	//for movement charge stuff
-	@Unique
-	public Vec3d lastPos;
-	@Unique
-	public int movementChargeTimer = 0;
-	@Unique
-	public double movementCharge = 0;
-	@Inject(at = @At("HEAD"), method = "tickMovement")
-	public void tickMovement(CallbackInfo ci) {
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+    //My stuff
+    @Unique
+    public int isDoubleJumpingTimer = 0;
+    //for movement charge stuff
+    @Unique
+    public Vec3d lastPos;
+    @Unique
+    public int movementChargeTimer = 0;
+    @Unique
+    public double movementCharge = 0;
+    //double jump mod I ripped :)
+    @Unique
+    private boolean jumpedLastTick = false;
+    private boolean isSliding = false;
+    @Unique
+    private boolean hasSneakedLastTick = false;
+    @Unique
+    private int sneakTimer = 0;
+    @Unique
+    private boolean hasBlockedLastTick = false;
+    @Unique
+    private int blockTimer = 0;
 
-		//movement delta (I hate it and I will delete it)
-        if (this.lastPos != null && !AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
-            double movementDelta =   new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
-					.distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ())));
+    @Inject(at = @At("HEAD"), method = "tickMovement")
+    public void tickMovement(CallbackInfo ci) {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        //movement delta (I hate it and I will delete it)
+        if (this.lastPos != null && !AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) && !this.isSliding) {
+            double movementDelta = new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
+                    .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ())));
             if (movementDelta > AmethystShield.MIN_MOVEMENT_DELTA) {
-				this.movementCharge += movementDelta;
+                this.movementCharge += movementDelta;
                 //sending the packed to remove charge
             }
         }
         this.lastPos = player.getPos();
 
-		if (this.movementChargeTimer >= 1) this.movementChargeTimer -= 1;
-		if (this.movementChargeTimer == 0) {
-			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-			passedData.writeFloat((float) this.movementCharge);
-			ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
-			this.movementChargeTimer = AmethystShield.MOVEMENT_CHARGE_TIMING;
-			this.movementCharge = 0;
-		}
+        if (this.movementChargeTimer >= 1) this.movementChargeTimer -= 1;
+        if (this.movementChargeTimer == 0) {
+            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+            passedData.writeFloat((float) this.movementCharge);
+            passedData.writeBoolean(false);
+            ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
+            this.movementChargeTimer = AmethystShield.MOVEMENT_CHARGE_TIMING;
+            this.movementCharge = 0;
+        }
 
-		//returning from slashing state if a player touches the ground
-		if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
-			AmethystShieldItem.setSlashing(((IEntityDataSaver) player), false);
-			AmethystShieldItem.syncSlashing(false);
-		}
+        //returning from slashing state if a player touches the ground
+        if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
+            AmethystShieldItem.setSlashing(((IEntityDataSaver) player), false);
+            AmethystShieldItem.syncSlashing(false);
+        }
 
-		//this is just sneaking detection / ability activation
-		if (this.sneakCounter >= 1) this.sneakCounter -= 1;
+        if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) && this.isSliding) {
+            this.isSliding = false;
+        }
 
-		if (player.isSneaking()) {
-			this.hasSneakedLastTick = true;
-		}
-		if (!player.isSneaking() && this.hasSneakedLastTick) {
-			this.hasSneakedLastTick = false;
-			this.onSneakRelease();
-		}
+        //this is just sneaking detection / ability activation
+        if (this.sneakTimer >= 1) this.sneakTimer -= 1;
 
-		if (!player.isOnGround() &&
-				!player.isClimbing() &&
-				!this.jumpedLastTick &&
-				!player.getAbilities().flying) {
+        if (player.isSneaking()) {
+            this.hasSneakedLastTick = true;
+        }
+        if (!player.isSneaking() && this.hasSneakedLastTick) {
+            this.hasSneakedLastTick = false;
+            this.onSneakRelease();
+        }
 
-			if (AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
-				if (player.getRandom().nextInt(5) == 1) {
-					player.getWorld().addParticle(ModParticles.AMETHYST_CRIT_PARTICLE,
-							player.getX() + player.getRandom().nextFloat() - 0.5,
-							player.getY() + player.getRandom().nextFloat() - 0.5,
-							player.getZ() + player.getRandom().nextFloat() - 0.5,
-							player.getRandom().nextFloat(),
-							player.getRandom().nextFloat(),
-							player.getRandom().nextFloat());
-					player.playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, 1f, 1);
-				}
-			}
+        if (this.blockTimer >= 1) this.blockTimer -= 1;
 
-			if (canJump(player)) {
-				//dashing code
-				if (this.isDoubleJumpingTimer >= 1 &&
-						player.handSwinging &&
-						AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.SPARKLING_SLASH_COST &&
-						player.getMainHandStack().getItem() instanceof SwordItem) {
-					this.onSparklingSlash();
-				}
+        if (player.isUsingItem() && player.getActiveItem().getItem().equals(ModItems.AMETHYST_SHIELD)) {
+            this.hasBlockedLastTick = true;
+        }
+        if (!player.isUsingItem() && this.hasBlockedLastTick) {
+            this.hasBlockedLastTick = false;
+            this.onBlockRelease();
+        }
 
-				//double jumping code
-				if (player.getVelocity().getY() < 0f) {
-					if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
-					if ((AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.DOUBLE_JUMP_COST ||
-							AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.DOUBLE_JUMP_COST) &&
-							player.isBlocking() &&
-							player.input.jumping) {
-						this.onDoubleJump();
-					}
-				}
-			}
-		}
-		//IDK why I need this, but it was there from the Mod I riped it from
-		this.jumpedLastTick = player.input.jumping;
-	}
-	@Unique
-	private boolean canJump(ClientPlayerEntity player) {
-		return !player.isFallFlying() && !player.hasVehicle()
-				&& !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
-	}
+        if (!player.isOnGround() &&
+                !player.isClimbing() &&
+                !this.jumpedLastTick &&
+                !player.getAbilities().flying) {
 
-	@Unique
-	private void onAbilityUse(float cost) {
-		//play a little sound
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-		player.playSound(SoundEvents.BLOCK_BELL_USE, 0.3f, 0.8f);
-		player.playSound(SoundEvents.BLOCK_BELL_RESONATE, 0.3f, 0.8f);
-		player.playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, 1.5f, 1);
-		//spawn a nice particle
-		player.getWorld().addParticle(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY(), player.getZ(), 0,0,0);
+            if (canJump(player)) {
+                //dashing code
+                if (this.isDoubleJumpingTimer >= 1 &&
+                        player.handSwinging &&
+                        AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.SPARKLING_SLASH_COST &&
+                        player.getMainHandStack().getItem() instanceof SwordItem) {
+                    this.onSparklingSlash();
+                }
 
-		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-		passedData.writeFloat(-cost);
-		//sending the packed to remove charge
-		ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
-	}
-	@Unique
-	private void onSparklingSlash() {
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-		AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
-		AmethystShieldItem.syncSlashing(true);
+                //double jumping code
+                if (player.getVelocity().getY() < 0f) {
+                    if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
+                    if ((AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.DOUBLE_JUMP_COST ||
+                            AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.DOUBLE_JUMP_COST) &&
+                            player.isBlocking() &&
+                            player.input.jumping) {
+                        this.onDoubleJump();
+                    }
+                }
+            }
+        }
+        //IDK why I need this, but it was there from the Mod I riped it from
+        this.jumpedLastTick = player.input.jumping;
+    }
 
-		flingPlayer(AmethystShield.SPARKLING_SLASH_STRENGTH);
-		this.isDoubleJumpingTimer = 0;
+    @Unique
+    private boolean canJump(ClientPlayerEntity player) {
+        return !player.isFallFlying() && !player.hasVehicle()
+                && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
+    }
 
-		this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST);
-	}
-	@Unique
-	private void onDoubleJump() {
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+    @Unique
+    private void onAbilityUse(float cost) {
+        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+        passedData.writeFloat(-cost);
+        passedData.writeBoolean(true);
+        //sending the packed to remove charge
+        ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
+    }
 
-		//Setting velocity to make the player jump
-		player.jump();
-		player.setVelocity(player.getVelocity().getX(), AmethystShield.DOUBLE_JUMP_STRENGTH, player.getVelocity().getZ());
-		//setting the double jump timer to 10, so that we can use it later for the sword slash
-		this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
+    @Unique
+    private void onSparklingSlash() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
+        AmethystShieldItem.syncSlashing(true);
 
-		this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST);
-	}
+        flingPlayer(AmethystShield.SPARKLING_SLASH_STRENGTH);
+        this.isDoubleJumpingTimer = 0;
 
-	@Unique
-	private void onAmethystBurst() {
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-		//sending the packed to remove charge
-		ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
-		this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST);
-	}
+        this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST);
+    }
 
-	@Unique
-	private void onSneakRelease() {
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-		if (player.isBlocking()) {
-			if (this.sneakCounter >= 1) {
-				this.sneakCounter = 0;
-				if (AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.AMETHYST_PUSH_COST) {
-					this.onAmethystBurst();
-				}
-				return;
-			}
-			this.sneakCounter = AmethystShield.AMETHYST_PUSH_SNEAKING_TIMING;
-		}
-	}
+    @Unique
+    private void onDoubleJump() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
-	/*
-	public boolean isSlashing(PlayerEntity player) {
-		PlayerEntity mixin_player = (PlayerEntity) (Object) this;
-		if (mixin_player == player) {
-			return this.isSlashing;
-		}
-		return false;
-	}
-	 */
+        //Setting velocity to make the player jump
+        player.jump();
+        player.setVelocity(player.getVelocity().getX(), AmethystShield.DOUBLE_JUMP_STRENGTH, player.getVelocity().getZ());
+        //setting the double jump timer to 10, so that we can use it later for the sword slash
+        this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
 
-	//chatGPTs code since IDK math like that
-	@Unique
-	private void flingPlayer(double speed) {
-		ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-		float yaw = player.getYaw();
-		float pitch = player.getPitch();
+        this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST);
+    }
 
-		// Convert yaw and pitch to radians
-		double yawRadians = Math.toRadians(yaw);
-		double pitchRadians = Math.toRadians(pitch);
+    @Unique
+    private void onAmethystBurst() {
+        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+        //sending the packed to remove charge
+        ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
+        this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST);
+    }
 
-		// Calculate velocity components
-		double vx = -Math.sin(yawRadians) * Math.cos(pitchRadians) * speed;
-		double vy = -Math.sin(pitchRadians) * speed;
-		double vz = Math.cos(yawRadians) * Math.cos(pitchRadians) * speed;
+    @Unique
+    private void onSneakRelease() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        if (player.isBlocking()) {
+            if (this.sneakTimer >= 1) {
+                this.sneakTimer = 0;
+                if (AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.AMETHYST_PUSH_COST) {
+                    this.onAmethystBurst();
+                }
+                return;
+            }
+            this.sneakTimer = AmethystShield.AMETHYST_PUSH_SNEAKING_TIMING;
+        }
+    }
 
-		// Apply velocity to the player
-		player.setVelocity(player.getVelocity().getX() + vx,
-				player.getVelocity().getY() + vy,
-				player.getVelocity().getZ() + vz);
-	}
+    @Unique
+    private void onBlockRelease() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        if (this.blockTimer >= 1) {
+            this.blockTimer = 0;
+            if (AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.AMETHYST_SLIDE_COST) {
+                this.onAmethystSlide();
+            }
+            return;
+        }
+        this.blockTimer = AmethystShield.AMETHYST_SLIDE_TIMING;
+    }
+
+    @Unique
+    private void onAmethystSlide() {
+        this.applyMovementVelocity();
+        this.isSliding = true;
+        this.onAbilityUse(AmethystShield.AMETHYST_SLIDE_COST);
+    }
+
+    @Unique
+    public void applyMovementVelocity() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        // Get the player's current direction vector
+        Vec3d facing = player.getRotationVec(1.0F);
+
+        // Initialize movement vector
+        Vec3d movement = Vec3d.ZERO;
+
+        // Get movement inputs
+        boolean forward = player.input.pressingForward;
+        boolean back = player.input.pressingBack;
+        boolean left = player.input.pressingLeft;
+        boolean right = player.input.pressingRight;
+
+        // Calculate movement direction
+        if (forward) {
+            movement = movement.add(facing);
+        }
+        if (back) {
+            movement = movement.add(facing.negate());
+        }
+        if (left) {
+            movement = movement.add(facing.rotateY((float) Math.toRadians(90)));
+        }
+        if (right) {
+            movement = movement.add(facing.rotateY((float) Math.toRadians(-90)));
+        }
+
+        // Normalize movement vector
+        if (movement.lengthSquared() > 0) {
+            movement = movement.normalize();
+        }
+        movement = movement.multiply(2);
+
+        // Apply velocity to the player
+        player.setVelocity(movement.x + player.getVelocity().x, player.getVelocity().getY() * 0.5, movement.z + player.getVelocity().z);
+    }
+
+    //chatGPTs code since IDK math like that
+    @Unique
+    private void flingPlayer(double speed) {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        float yaw = player.getYaw();
+        float pitch = player.getPitch();
+
+        // Convert yaw and pitch to radians
+        double yawRadians = Math.toRadians(yaw);
+        double pitchRadians = Math.toRadians(pitch);
+
+        // Calculate velocity components
+        double vx = -Math.sin(yawRadians) * Math.cos(pitchRadians) * speed;
+        double vy = -Math.sin(pitchRadians) * speed;
+        double vz = Math.cos(yawRadians) * Math.cos(pitchRadians) * speed;
+
+        // Apply velocity to the player
+        player.setVelocity(player.getVelocity().getX() + vx,
+                player.getVelocity().getY() + vy,
+                player.getVelocity().getZ() + vz);
+    }
 }

@@ -5,7 +5,6 @@ import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.BlockingListener;
 import net.fabricmc.api.ModInitializer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +13,12 @@ public class AmethystShield implements ModInitializer {
 
 	public static String MOD_ID = "amyshield";
 
+	//TODO
+	// Make Abilities stronger because they are too weak against players (2.5 hearts max with the push which is the strongest ability) (Slash does not do shit) -Should be fixed can't confirm till tested.
+	// Make that the items you need to craft the shield are actually obtainable.
+	// BUGS:
+	// Shield gets disabled when you use a shield ability with the axe in the main hand (axe main and shield in off) -Should be fixed can't confirm till tested.
+	// Shield can block other shield abilities (maybe not a bug but wierd) -Should be fixed can't confirm till tested.
 	//Abilities
 	public final static float MAX_CHARGE = 100f; //The maximum amethyst shield charge
 	public final static float MIN_CHARGE = 0f; //The minimum amethyst shield charge
@@ -33,9 +38,12 @@ public class AmethystShield implements ModInitializer {
 	public final static float AMETHYST_PUSH_RADIUS = 6f; //The radius around the player in which entities get damaged and flung
 	public final static float AMETHYST_PUSH_STRENGTH_X = 0.5f; //how strong they get pushed away on x and z plane
 	public final static float AMETHYST_PUSH_STRENGTH_Y = 0.6f; //how strong they get knocked up
-	public final static float AMETHYST_PUSH_DAMAGE = 19f; //How much a amethyst push hit does (hit points)
+	public final static float AMETHYST_PUSH_DAMAGE = 16f; //How much an amethyst push hit does (hit points)
+	//Amethyst Slide
+	public static final int AMETHYST_SLIDE_TIMING = 5; //How quickly the double block has to be executed for the ability to activate
+	public static final float AMETHYST_SLIDE_COST = 25f; //How much charge the amethyst slide costs
 	//MOVEMENT CHARGE GAIN
-	public final static int MOVEMENT_CHARGE_TIMING = 10; //After how many tick the packet for movement charge gain gets send
+	public final static int MOVEMENT_CHARGE_TIMING = 20; //After how many tick the packet for movement charge gain gets send
 	public final static float MIN_MOVEMENT_DELTA = 0.001f; //The minimum movement distance required for charge contribution
 
 	@Override
