@@ -27,9 +27,6 @@ public class ModItems {
         return Registry.register(Registries.ITEM, new Identifier(AmethystShield.MOD_ID, name), item);
     }
 
-    private static void addItemsToToolsTabItemGroup(FabricItemGroupEntries entries) {
-    }
-
     private static void addItemsToCombatTabItemGroup(FabricItemGroupEntries entries) {
         entries.add(AMETHYST_SHIELD);
     }
@@ -37,8 +34,6 @@ public class ModItems {
     private static void addItemsToIngredientsTabItemGroup(FabricItemGroupEntries entries) {
         entries.add(OXIWINE_BOLT);
         entries.add(SCULK_LATCH);
-    }
-    private static void addItemsToFoodTabItemGroup(FabricItemGroupEntries entries) {
     }
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::addItemsToCombatTabItemGroup);

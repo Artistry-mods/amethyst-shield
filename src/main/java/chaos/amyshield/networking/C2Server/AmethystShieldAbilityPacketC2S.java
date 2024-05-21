@@ -16,7 +16,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
 import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
-import static net.minecraft.particle.ParticleTypes.PORTAL;
 
 public class AmethystShieldAbilityPacketC2S {
     public static void receiver(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {

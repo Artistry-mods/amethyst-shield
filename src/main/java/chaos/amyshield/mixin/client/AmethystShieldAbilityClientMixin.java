@@ -34,6 +34,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     //double jump mod I ripped :)
     @Unique
     private boolean jumpedLastTick = false;
+    @Unique
     private boolean isSliding = false;
     @Unique
     private boolean hasSneakedLastTick = false;
@@ -228,6 +229,9 @@ public abstract class AmethystShieldAbilityClientMixin {
         boolean left = player.input.pressingLeft;
         boolean right = player.input.pressingRight;
 
+        if (!back && !left && !forward && !right) {
+            forward = true;
+        }
         // Calculate movement direction
         if (forward) {
             movement = movement.add(facing);
