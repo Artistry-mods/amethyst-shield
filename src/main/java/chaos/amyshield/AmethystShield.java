@@ -13,14 +13,6 @@ public class AmethystShield implements ModInitializer {
 
 	public static String MOD_ID = "amyshield";
 
-	//TODO
-	// Make that the items you need to craft the shield are actually obtainable.
-	// If no direction is pressed on the side move forwards
-	// BUGS:
-	// Damage does not connect sometimes (maybe because of I frames?)
-	//
-
-
 	//Abilities
 	public final static float MAX_CHARGE = 100f; //The maximum amethyst shield charge
 	public final static float MIN_CHARGE = 0f; //The minimum amethyst shield charge
