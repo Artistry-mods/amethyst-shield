@@ -1,10 +1,12 @@
 package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.BlockingListener;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,9 @@ public class AmethystShield implements ModInitializer {
 		ModItems.registerModItems();
 		ModPackets.registerGlobalReceiversC2S();
 		ModParticles.registerModParticles();
+		if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
+			ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
+		}
 		BlockingListener.init();
 		LOGGER.info("Hello, Blockixel :)");
 	}
