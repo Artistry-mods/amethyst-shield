@@ -3,15 +3,16 @@
 	"id": "amyshield",
 	"version": "${version}",
 	"name": "Amethyst Shield",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "This mod adds the Amethyst shield concept from Blockixel Artistry",
 	"authors": [
-		"Me!"
+		"Herr Chaos",
+		"Ruby"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://discord.gg/jufZucSF24",
+		"sources": "https://github.com/HerrChaos/amethyst-shield"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/amyshield/icon.png",
 	"environment": "*",
 	"entrypoints": {

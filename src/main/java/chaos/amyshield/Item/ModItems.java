@@ -17,13 +17,10 @@ public class ModItems {
     public static final Item AMETHYST_SHIELD = registerItem("amethyst_shield",
             new AmethystShieldItem(new FabricItemSettings().maxCount(1).maxDamage(512), 100, 14, Items.AMETHYST_SHARD));
 
-    public static final Item SCULK_LATCH = registerItem("sculk_latch",
-            new Item(new FabricItemSettings()));
-
     public static final Item OXIWINE_BOLT = registerItem("oxiwine_bolt",
             new Item(new FabricItemSettings()));
 
-    private static Item registerItem(String name, Item item) {
+    public static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(AmethystShield.MOD_ID, name), item);
     }
 
@@ -33,7 +30,6 @@ public class ModItems {
 
     private static void addItemsToIngredientsTabItemGroup(FabricItemGroupEntries entries) {
         entries.add(OXIWINE_BOLT);
-        entries.add(SCULK_LATCH);
     }
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::addItemsToCombatTabItemGroup);
