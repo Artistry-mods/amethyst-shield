@@ -8,6 +8,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.Identifier;
 
@@ -34,10 +37,47 @@ public class ChargeHudOverlay implements HudRenderCallback {
                     int maxAir = player.getMaxAir();
                     int playerAir = Math.min(player.getAir(), maxAir);
                     if (player.isSubmergedIn(FluidTags.WATER) || playerAir < maxAir) yshift += 10;
+                    LivingEntity livingEntity = this.getRiddenEntity();
+                    if (livingEntity != null) {
+                        int i = this.getHeartCount(livingEntity);
+                        if (i > 10) {
+                            yshift += 10;
+                        }
+                    }
                     drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
                     drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).getPersistentData().getFloat("charge")) / 100)), 5);
                 }
             }
         }
+    }
+    private LivingEntity getRiddenEntity() {
+        PlayerEntity playerEntity = this.getCameraPlayer();
+        if (playerEntity != null) {
+            Entity entity = playerEntity.getVehicle();
+            if (entity == null) {
+                return null;
+            }
+            if (entity instanceof LivingEntity) {
+                return (LivingEntity)entity;
+            }
+        }
+        return null;
+    }
+    private int getHeartCount(LivingEntity entity) {
+        if (entity == null || !entity.isLiving()) {
+            return 0;
+        }
+        float f = entity.getMaxHealth();
+        int i = (int)(f + 0.5f) / 2;
+        if (i > 30) {
+            i = 30;
+        }
+        return i;
+    }
+    private PlayerEntity getCameraPlayer() {
+        if (!(MinecraftClient.getInstance().getCameraEntity() instanceof PlayerEntity)) {
+            return null;
+        }
+        return (PlayerEntity)MinecraftClient.getInstance().getCameraEntity();
     }
 }

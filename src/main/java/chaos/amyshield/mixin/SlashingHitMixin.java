@@ -43,7 +43,7 @@ public class SlashingHitMixin {
             Objects.requireNonNull(player.getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
-                        if (entity.damage(player.getDamageSources().magic(), AmethystShield.SPARKLING_SLASH_DAMAGE)) {
+                        if (entity.damage(player.getDamageSources().indirectMagic(player, player), AmethystShield.SPARKLING_SLASH_DAMAGE)) {
                             AmethystShieldItem.addCharge(((IEntityDataSaver) player), AmethystShield.SPARKLING_SLASH_CHARGE_RETURN);
                             AmethystShieldItem.syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                         }
