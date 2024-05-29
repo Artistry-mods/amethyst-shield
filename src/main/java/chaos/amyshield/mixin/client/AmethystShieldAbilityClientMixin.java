@@ -9,6 +9,8 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec2f;
@@ -162,13 +164,19 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onDoubleJump() {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
-        //Setting velocity to make the player jump
-        player.jump();
-        player.setVelocity(player.getVelocity().getX(), AmethystShield.DOUBLE_JUMP_STRENGTH, player.getVelocity().getZ());
-        //setting the double jump timer to 10, so that we can use it later for the sword slash
-        this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
+        for (ItemStack itemStack : player.getHandItems()) {
+            Item shield = itemStack.getItem();
+            if (shield == ModItems.AMETHYST_SHIELD) {
+                //Setting velocity to make the player jump
+                player.jump();
+                player.setVelocity(player.getVelocity().getX(), AmethystShield.DOUBLE_JUMP_STRENGTH, player.getVelocity().getZ());
+                //setting the double jump timer to 10, so that we can use it later for the sword slash
+                this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
 
-        this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST);
+                this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST);
+                return;
+            }
+        }
     }
 
     @Unique

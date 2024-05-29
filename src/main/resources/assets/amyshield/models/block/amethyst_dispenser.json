@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "amyshield:block/amethyst_dispenser_top",
+    "down": "minecraft:block/furnace_top",
+    "up": "amyshield:block/amethyst_dispenser_top",
+    "north": "amyshield:block/amethyst_dispenser_front",
+    "east": "minecraft:block/furnace_side",
+    "south": "minecraft:block/furnace_side",
+    "west": "amyshield:block/amethyst_dispenser_west"
+  }
+}

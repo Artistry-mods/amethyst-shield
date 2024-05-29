@@ -17,7 +17,6 @@ import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
 public class BlockingListener {
     public static void init() {
         ShieldBlockCallback.EVENT.register(BlockingListener::listener);
-
     }
     private static ActionResult listener(LivingEntity defender, DamageSource damageSource, float amount, Hand hand, ItemStack itemStack) {
         if (!defender.isInvulnerableTo(damageSource) && defender.canTakeDamage() && itemStack.getItem() == ModItems.AMETHYST_SHIELD && defender instanceof ServerPlayerEntity && !damageSource.isOf(DamageTypes.INDIRECT_MAGIC) && !damageSource.isOf(DamageTypes.MAGIC)) {

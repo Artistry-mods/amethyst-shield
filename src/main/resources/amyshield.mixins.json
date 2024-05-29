@@ -3,6 +3,8 @@
   "package": "chaos.amyshield.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AmethystDispenserConverterMixin",
+    "AmethystDispenserShootingMixin",
     "EntityDataSaverMixin",
     "SlashingHitMixin"
   ],
