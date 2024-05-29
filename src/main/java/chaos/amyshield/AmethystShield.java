@@ -2,6 +2,8 @@ package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
+import chaos.amyshield.block.ModBlocks;
+import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.BlockingListener;
@@ -15,6 +17,8 @@ public class AmethystShield implements ModInitializer {
 
 	public static String MOD_ID = "amyshield";
 
+	public static final float AMETHYST_DISPENSER_STRENGTH = 2.0f; //How strong the amethyst dispenser shoots
+	public static final float AMETHYST_DISPENSER_SPREAD = 0f; //How much spread the amethyst dispenser has
 	//Abilities
 	public final static float MAX_CHARGE = 100f; //The maximum amethyst shield charge
 	public final static float MIN_CHARGE = 0f; //The minimum amethyst shield charge
@@ -44,15 +48,18 @@ public class AmethystShield implements ModInitializer {
 	//Block charge gain
 	public static final float BLOCK_GAIN_MULTIPLIER = 0.4F;
 
+	//
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();
+		ModBlocks.registerModBlocks();
 		ModPackets.registerGlobalReceiversC2S();
 		ModParticles.registerModParticles();
+		BlockingListener.init();
+		ModBlockEntities.registerModBlockEntities();
 		if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
 			ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
 		}
-		BlockingListener.init();
 		LOGGER.info("Hello, Blockixel :)");
 	}
 }

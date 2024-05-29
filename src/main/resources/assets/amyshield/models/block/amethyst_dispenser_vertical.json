@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "minecraft:block/furnace_top",
+    "down": "amyshield:block/amethyst_dispenser_top",
+    "up": "amyshield:block/amethyst_dispenser_front",
+    "north": "minecraft:block/furnace_top",
+    "east": "minecraft:block/furnace_top",
+    "south": "minecraft:block/furnace_top",
+    "west": "minecraft:block/furnace_top"
+  }
+}

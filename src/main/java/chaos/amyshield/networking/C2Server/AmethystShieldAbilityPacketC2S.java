@@ -32,6 +32,7 @@ public class AmethystShieldAbilityPacketC2S {
                 }
                 AmethystShieldItem.addCharge(((IEntityDataSaver) player), amount);
                 syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
+                return;
             }
         }
     }

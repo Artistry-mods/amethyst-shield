@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "amyshield:block/amethyst_dispenser_vertical",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "amyshield:block/amethyst_dispenser",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "amyshield:block/amethyst_dispenser"
+    },
+    "facing=south": {
+      "model": "amyshield:block/amethyst_dispenser",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "amyshield:block/amethyst_dispenser_vertical"
+    },
+    "facing=west": {
+      "model": "amyshield:block/amethyst_dispenser",
+      "y": 270
+    }
+  }
+}
