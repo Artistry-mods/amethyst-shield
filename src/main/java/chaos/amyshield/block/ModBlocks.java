@@ -16,6 +16,6 @@ public class ModBlocks {
         return Registry.register(Registries.BLOCK, new Identifier(AmethystShield.MOD_ID, name), item);
     }
     public static void registerModBlocks() {
-        AmethystShield.LOGGER.info("Registering Blocks for Mod " + AmethystShield.MOD_ID);
+        AmethystShield.LOGGER.info("Registering Blocks for " + AmethystShield.MOD_ID);
     }
 }
