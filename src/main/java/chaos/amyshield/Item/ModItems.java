@@ -34,6 +34,6 @@ public class ModItems {
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::addItemsToCombatTabItemGroup);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItems::addItemsToIngredientsTabItemGroup);
-        AmethystShield.LOGGER.info("Registering Items for Mod " + AmethystShield.MOD_ID);
+        AmethystShield.LOGGER.info("Registering Items for " + AmethystShield.MOD_ID);
     }
 }

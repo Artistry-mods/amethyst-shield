@@ -17,6 +17,6 @@ public class ModBlockEntities {
     );
 
     public static void registerModBlockEntities() {
-        AmethystShield.LOGGER.info("registering block entities for " + AmethystShield.MOD_ID);
+        AmethystShield.LOGGER.info("Registering Block Entities for " + AmethystShield.MOD_ID);
     }
 }
