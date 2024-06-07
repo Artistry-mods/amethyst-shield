@@ -55,7 +55,7 @@ public class AmethystShield implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModPackets.registerGlobalReceiversC2S();
 		ModParticles.registerModParticles();
-		BlockingListener.init();
+		BlockingListener.registerBlockListener();
 		ModBlockEntities.registerModBlockEntities();
 		if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
 			ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
