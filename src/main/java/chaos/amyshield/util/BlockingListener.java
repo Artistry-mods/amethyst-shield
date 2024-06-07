@@ -15,7 +15,7 @@ import net.minecraft.util.Hand;
 import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
 
 public class BlockingListener {
-    public static void init() {
+    public static void registerBlockListener() {
         ShieldBlockCallback.EVENT.register(BlockingListener::listener);
     }
     private static ActionResult listener(LivingEntity defender, DamageSource damageSource, float amount, Hand hand, ItemStack itemStack) {
