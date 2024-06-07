@@ -53,7 +53,7 @@ dependencies {
 
 	modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabricasm_version}"
 
-	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
+	//modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 
 	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
 	implementation("com.eliotlash.mclib:mclib:20")
