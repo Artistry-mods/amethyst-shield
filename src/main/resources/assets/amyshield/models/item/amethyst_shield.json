@@ -12,7 +12,7 @@
   "overrides": [
     {
       "predicate": {
-        "blocking": 1
+        "amethyst_blocking": 1
       },
       "model": "amyshield:item/amethyst_shield_blocking"
     }

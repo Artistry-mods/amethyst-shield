@@ -25,7 +25,7 @@ public class AmethystShieldItem extends ShieldItem {
         super(settings);
         this.repairItem = repairItem;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ModelPredicateProviderRegistry.register(new Identifier("blocking"), AmethystShieldItem::getBlocking);
+            ModelPredicateProviderRegistry.register(new Identifier("amethyst_blocking"), AmethystShieldItem::getBlocking);
         }
     }
 
