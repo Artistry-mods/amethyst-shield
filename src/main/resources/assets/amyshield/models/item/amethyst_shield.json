@@ -8,6 +8,7 @@
   "textures": {
     "particle": "amyshield:item/amethyst_shield"
   },
+  "gui_light": "front",
   "overrides": [
     {
       "predicate": {
@@ -18,95 +19,39 @@
   ],
   "display": {
     "thirdperson_righthand": {
-      "rotation": [
-        0,
-        -90,
-        0
-      ],
-      "translation": [
-        3,
-        -13,
-        3.75
-      ]
+      "rotation": [ 0, 90, 0 ],
+      "translation": [ 11, 19, -4 ],
+      "scale": [ 1, 1, 1 ]
     },
     "thirdperson_lefthand": {
-      "rotation": [
-        0,
-        -90,
-        0
-      ],
-      "translation": [
-        3,
-        -13,
-        3.75
-      ]
+      "rotation": [ 0, 90, 0 ],
+      "translation": [ 11, 19, 12 ],
+      "scale": [ 1, 1, 1 ]
     },
     "firstperson_righthand": {
-      "rotation": [
-        0,
-        0,
-        -2
-      ],
-      "translation": [
-        -0.5,
-        -16,
-        0.5
-      ]
+      "rotation": [ 0, 180, 5 ],
+      "translation": [ -9, 19, -10 ],
+      "scale": [ 1.25, 1.25, 1.25 ]
     },
     "firstperson_lefthand": {
-      "rotation": [
-        0,
-        0,
-        -2
-      ],
-      "translation": [
-        -0.5,
-        -16,
-        0.5
-      ]
-    },
-    "ground": {
-      "translation": [
-        0,
-        -3,
-        0
-      ],
-      "scale": [
-        0.2,
-        0.2,
-        0.2
-      ]
+      "rotation": [ 0, 180, 5 ],
+      "translation": [ 11, 17, -10 ],
+      "scale": [ 1.25, 1.25, 1.25 ]
     },
     "gui": {
-      "rotation": [
-        12,
-        150,
-        0
-      ],
-      "translation": [
-        0,
-        -7.5,
-        0
-      ],
-      "scale": [
-        0.7,
-        0.7,
-        0.7
-      ]
-    },
-    "head": {
-      "translation": [
-        0,
-        -11,
-        -7.25
-      ]
+      "rotation": [ 15, -25, -5 ],
+      "translation": [ 3, 11, 0 ],
+      "scale": [ 0.65, 0.65, 0.65 ]
     },
     "fixed": {
-      "translation": [
-        0,
-        -11,
-        0
-      ]
+      "rotation": [ 0, 180, 0 ],
+      "translation": [ -4.5, 4.5, -5],
+      "scale":[ 0.55, 0.55, 0.55]
+    },
+    "ground": {
+      "rotation": [ 0, 0, 0 ],
+      "translation": [ 2, 8, 2],
+      "scale":[ 0.25, 0.25, 0.25]
     }
   }
 }

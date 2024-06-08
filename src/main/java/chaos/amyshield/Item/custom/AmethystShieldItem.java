@@ -2,7 +2,6 @@ package chaos.amyshield.Item.custom;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.client.renderer.custom.AmethystShieldRenderer;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.api.EnvType;
@@ -11,7 +10,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
@@ -19,21 +17,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public class AmethystShieldItem extends ShieldItem implements GeoItem, GeoAnimatable {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+public class AmethystShieldItem extends ShieldItem {
     private final Item repairItem;
-
 
     public AmethystShieldItem(Settings settings, Item repairItem) {
         super(settings);
@@ -41,13 +27,11 @@ public class AmethystShieldItem extends ShieldItem implements GeoItem, GeoAnimat
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             ModelPredicateProviderRegistry.register(new Identifier("blocking"), AmethystShieldItem::getBlocking);
         }
-
-        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     private static float getBlocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity != null) {
-            if (livingEntity.isBlocking() && livingEntity.getActiveItem().getItem() == ModItems.AMETHYST_SHIELD) {
+            if (livingEntity.getActiveItem().getItem() == ModItems.AMETHYST_SHIELD) {
                 return 1;
             }
         }
@@ -106,32 +90,5 @@ public class AmethystShieldItem extends ShieldItem implements GeoItem, GeoAnimat
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeFloat(charge);
         ServerPlayNetworking.send(player, ModPackets.SYNC_CHARGE_S2C, buffer);
-    }
-
-    @Override
-    public void createRenderer(Consumer<Object> consumer) {
-        consumer.accept(new RenderProvider() {
-            private final AmethystShieldRenderer renderer = new AmethystShieldRenderer();
-
-            @Override
-            public BuiltinModelItemRenderer getCustomRenderer() {
-                return this.renderer;
-            }
-        });
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderProvider;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
     }
 }
