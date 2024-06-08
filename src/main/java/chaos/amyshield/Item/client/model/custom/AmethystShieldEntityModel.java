@@ -10,32 +10,21 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 public class AmethystShieldEntityModel extends Model {
 	private final ModelPart root;
-	private final ModelPart amethist_shield;
-	private final ModelPart mainshield;
-	private final ModelPart skulk;
-	private final ModelPart glow;
-	private final ModelPart amethist;
-	private final ModelPart budinfront;
-	private final ModelPart right_font;
-	private final ModelPart left_font;
-	private final ModelPart budinback;
-	private final ModelPart left_back;
-	private final ModelPart right_back;
 
-	public AmethystShieldEntityModel(ModelPart root) {
+    public AmethystShieldEntityModel(ModelPart root) {
 		super(RenderLayer::getEntitySolid);
         this.root = root;
-        this.amethist_shield = root.getChild("amethist_shield");
-		this.mainshield = amethist_shield.getChild("mainshield");
-		this.skulk = amethist_shield.getChild("skulk");
-		this.glow = skulk.getChild("glow");
-		this.amethist = amethist_shield.getChild("amethist");
-		this.budinfront = amethist.getChild("budinfront");
-		this.right_font = budinfront.getChild("right_font");
-		this.left_font = budinfront.getChild("left_font");
-		this.budinback = amethist.getChild("budinback");
-		this.left_back = budinback.getChild("left_back");
-		this.right_back = budinback.getChild("right_back");
+        ModelPart amethist_shield = root.getChild("amethist_shield");
+        ModelPart mainshield = amethist_shield.getChild("mainshield");
+        ModelPart skulk = amethist_shield.getChild("skulk");
+        ModelPart glow = skulk.getChild("glow");
+        ModelPart amethist = amethist_shield.getChild("amethist");
+        ModelPart budinfront = amethist.getChild("budinfront");
+        ModelPart right_font = budinfront.getChild("right_font");
+        ModelPart left_font = budinfront.getChild("left_font");
+        ModelPart budinback = amethist.getChild("budinback");
+        ModelPart left_back = budinback.getChild("left_back");
+        ModelPart right_back = budinback.getChild("right_back");
 	}
 
 	public static TexturedModelData getTexturedModelData() {
