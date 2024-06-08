@@ -49,9 +49,9 @@ dependencies {
 
 	//modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
-	modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
+	//modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
 
-	modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabricasm_version}"
+	//modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabricasm_version}"
 
 	//modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 
