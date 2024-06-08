@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
 public class AmethystShieldEntityRenderer extends BuiltinModelItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
-    private AmethystShieldEntityModel modelShield;
+    private final AmethystShieldEntityModel modelShield;
 
     public AmethystShieldEntityRenderer(ModelPart model) {
         super(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());

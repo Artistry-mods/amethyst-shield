@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class AmethystShield implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Amethyst Shield");
 
-	public static String MOD_ID = "amyshield";
+	public static final String MOD_ID = "amyshield";
 
 	//Amethyst dispenser
 	public static final float AMETHYST_DISPENSER_STRENGTH = 2.0f; //How strong the amethyst dispenser shoots
