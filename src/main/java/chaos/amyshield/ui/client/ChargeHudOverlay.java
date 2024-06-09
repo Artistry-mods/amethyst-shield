@@ -17,7 +17,6 @@ import net.minecraft.util.Identifier;
 public class ChargeHudOverlay implements HudRenderCallback {
 
     private static final Identifier CHARGE_UI_ATLAS = new Identifier(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
-    //assets/amyshield/textures/ui/charge_ui_frame.png
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
         RenderSystem.disableDepthTest();

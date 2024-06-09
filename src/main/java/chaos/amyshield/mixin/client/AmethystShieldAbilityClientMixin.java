@@ -64,10 +64,9 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         if (this.movementChargeTimer >= 1) this.movementChargeTimer -= 1;
         if (this.movementChargeTimer == 0) {
-            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-            passedData.writeFloat((float) this.movementCharge);
-            passedData.writeBoolean(false);
-            ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
+            if (this.movementCharge > 0) {
+                this.onAbilityUse((float) this.movementCharge, 2);
+            }
             this.movementChargeTimer = AmethystShield.MOVEMENT_CHARGE_TIMING;
             this.movementCharge = 0;
         }
@@ -112,7 +111,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 //dashing code
                 if (this.isDoubleJumpingTimer >= 1 &&
                         player.handSwinging &&
-                        AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.SPARKLING_SLASH_COST &&
+                        canUseAbility(player, AmethystShield.SPARKLING_SLASH_COST) &&
                         player.getMainHandStack().getItem() instanceof SwordItem) {
                     this.onSparklingSlash();
                 }
@@ -120,8 +119,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 //double jumping code
                 if (player.getVelocity().getY() < 0f) {
                     if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
-                    if ((AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.DOUBLE_JUMP_COST ||
-                            AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.DOUBLE_JUMP_COST) &&
+                    if (canUseAbility(player, AmethystShield.DOUBLE_JUMP_COST) &&
                             player.isBlocking() &&
                             player.input.jumping) {
                         this.onDoubleJump();
@@ -134,16 +132,21 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
+    private static boolean canUseAbility(ClientPlayerEntity player, float cost) {
+        return AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= cost * -(1);
+    }
+
+    @Unique
     private boolean canJump(ClientPlayerEntity player) {
         return !player.isFallFlying() && !player.hasVehicle()
                 && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
     }
 
     @Unique
-    private void onAbilityUse(float cost) {
+    private void onAbilityUse(float cost, int particleTrieState) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeFloat(-cost);
-        passedData.writeBoolean(true);
+        passedData.writeFloat(cost);
+        passedData.writeInt(particleTrieState);
         //sending the packed to remove charge
         ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
     }
@@ -157,7 +160,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         flingPlayer(AmethystShield.SPARKLING_SLASH_STRENGTH);
         this.isDoubleJumpingTimer = 0;
 
-        this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST);
+        this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST, 1);
     }
 
     @Unique
@@ -173,7 +176,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 //setting the double jump timer to 10, so that we can use it later for the sword slash
                 this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
 
-                this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST);
+                this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST, 3);
                 return;
             }
         }
@@ -184,7 +187,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         //sending the packed to remove charge
         ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
-        this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST);
+        this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST, 3);
     }
 
     @Unique
@@ -193,7 +196,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         if (player.isBlocking()) {
             if (this.sneakTimer >= 1) {
                 this.sneakTimer = 0;
-                if (AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.AMETHYST_PUSH_COST) {
+                if (canUseAbility(player, AmethystShield.AMETHYST_PUSH_COST)) {
                     this.onAmethystBurst();
                 }
                 return;
@@ -207,7 +210,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
         if (this.blockTimer >= 1) {
             this.blockTimer = 0;
-            if (AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= AmethystShield.AMETHYST_SLIDE_COST) {
+            if (canUseAbility(player, AmethystShield.AMETHYST_SLIDE_COST)) {
                 this.onAmethystSlide();
             }
             return;
@@ -219,7 +222,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onAmethystSlide() {
         this.applyMovementVelocity();
         this.isSliding = true;
-        this.onAbilityUse(AmethystShield.AMETHYST_SLIDE_COST);
+        this.onAbilityUse(AmethystShield.AMETHYST_SLIDE_COST, 3);
     }
 
     @Unique
