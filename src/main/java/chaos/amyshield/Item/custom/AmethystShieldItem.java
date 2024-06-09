@@ -1,51 +1,49 @@
 package chaos.amyshield.Item.custom;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.client.renderer.custom.AmethystShieldRenderer;
+import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.util.IEntityDataSaver;
-import com.github.crimsondawn45.fabricshieldlib.lib.object.FabricShieldItem;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
-import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.util.Identifier;
 
-import java.util.Collection;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+public class AmethystShieldItem extends ShieldItem {
+    private final Item repairItem;
 
-public class AmethystShieldItem extends FabricShieldItem implements GeoItem, GeoAnimatable {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
-    public AmethystShieldItem(Settings settings, int coolDownTicks, int enchantability, Item... repairItems) {
-        super(settings, coolDownTicks, enchantability, repairItems);
-
-        SingletonGeoAnimatable.registerSyncedAnimatable(this);
+    public AmethystShieldItem(Settings settings, Item repairItem) {
+        super(settings);
+        this.repairItem = repairItem;
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            ModelPredicateProviderRegistry.register(new Identifier("amethyst_blocking"), AmethystShieldItem::getBlocking);
+        }
     }
 
-    public AmethystShieldItem(Settings settings, int coolDownTicks, ToolMaterial material) {
-        super(settings, coolDownTicks, material);
+    private static float getBlocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, int i) {
+        if (livingEntity != null) {
+            if (livingEntity.getActiveItem().getItem() == ModItems.AMETHYST_SHIELD) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
-    public AmethystShieldItem(Settings settings, int coolDownTicks, int enchantability, TagKey<Item> repairItemTag) {
-        super(settings, coolDownTicks, enchantability, repairItemTag);
-    }
 
-    public AmethystShieldItem(Settings settings, int coolDownTicks, int enchantability, Collection<TagKey<Item>> repairItemTags) {
-        super(settings, coolDownTicks, enchantability, repairItemTags);
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return ingredient.getItem() == repairItem;
     }
 
     public static float setCharge(IEntityDataSaver player, float amount) {
@@ -94,32 +92,5 @@ public class AmethystShieldItem extends FabricShieldItem implements GeoItem, Geo
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeFloat(charge);
         ServerPlayNetworking.send(player, ModPackets.SYNC_CHARGE_S2C, buffer);
-    }
-
-    @Override
-    public void createRenderer(Consumer<Object> consumer) {
-        consumer.accept(new RenderProvider() {
-            private final AmethystShieldRenderer renderer = new AmethystShieldRenderer();
-
-            @Override
-            public BuiltinModelItemRenderer getCustomRenderer() {
-                return this.renderer;
-            }
-        });
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderProvider;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return cache;
     }
 }

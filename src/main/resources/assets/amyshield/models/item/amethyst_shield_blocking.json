@@ -8,97 +8,32 @@
   "textures": {
     "particle": "amyshield:item/amethyst_shield"
   },
+  "gui_light": "front",
   "display": {
     "thirdperson_righthand": {
-      "rotation": [
-        34,
-        -28,
-        -4
-      ],
-      "translation": [
-        2.25,
-        -9.5,
-        -8.25
-      ]
+      "rotation": [ 45, 135, 0 ],
+      "translation": [ 3.51, 22, 7 ],
+      "scale": [ 1, 1, 1 ]
     },
     "thirdperson_lefthand": {
-      "rotation": [
-        34,
-        -15,
-        0
-      ],
-      "translation": [
-        1.5,
-        -9.75,
-        -7.25
-      ]
+      "rotation": [ 45, 135, 0 ],
+      "translation": [ 13.51, 13, 14 ],
+      "scale": [ 1, 1, 1 ]
     },
     "firstperson_righthand": {
-      "rotation": [
-        0,
-        0,
-        -2
-      ],
-      "translation": [
-        -3.5,
-        -15,
-        0.5
-      ]
+      "rotation": [ 0, 180, -5 ],
+      "translation": [  -16, 21, -10 ],
+      "scale": [ 1.25, 1.25, 1.25 ]
     },
     "firstperson_lefthand": {
-      "rotation": [
-        0,
-        0,
-        -2
-      ],
-      "translation": [
-        -3.5,
-        -15,
-        0.5
-      ]
-    },
-    "ground": {
-      "translation": [
-        0,
-        -3,
-        0
-      ],
-      "scale": [
-        0.2,
-        0.2,
-        0.2
-      ]
+      "rotation": [ 0, 180, -5 ],
+      "translation": [ 2, 19, -10 ],
+      "scale": [ 1.25, 1.25, 1.25 ]
     },
     "gui": {
-      "rotation": [
-        27,
-        150,
-        0
-      ],
-      "translation": [
-        0,
-        -6.5,
-        0
-      ],
-      "scale": [
-        0.7,
-        0.7,
-        0.7
-      ]
-    },
-    "head": {
-      "translation": [
-        0,
-        -11,
-        -7.25
-      ]
-    },
-    "fixed": {
-      "translation": [
-        0,
-        -11,
-        0
-      ]
+      "rotation": [ 15, -25, -5 ],
+      "translation": [ 3, 11, 0 ],
+      "scale": [ 0.65, 0.65, 0.65 ]
     }
   }
 }

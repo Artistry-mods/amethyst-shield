@@ -6,6 +6,7 @@
     "AmethystDispenserConverterMixin",
     "AmethystDispenserShootingMixin",
     "EntityDataSaverMixin",
+    "ShieldBrakeMixin",
     "SlashingHitMixin"
   ],
   "injectors": {

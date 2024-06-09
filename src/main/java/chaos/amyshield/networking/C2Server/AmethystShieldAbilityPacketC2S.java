@@ -20,7 +20,20 @@ import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
 public class AmethystShieldAbilityPacketC2S {
     public static void receiver(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         float amount = buf.readFloat();
-        boolean playSoundAndParticles = buf.readBoolean();
+        int fuckedUpTrieState = buf.readInt();
+
+        boolean playSoundAndParticles;
+        boolean playSoundAndFlatParticles = false;
+
+        if (fuckedUpTrieState == 1) {
+            playSoundAndParticles = true;
+        } else if (fuckedUpTrieState == 2){
+            playSoundAndParticles = false;
+        } else {
+            playSoundAndParticles = false;
+            playSoundAndFlatParticles = true;
+        }
+
         for (ItemStack itemStack : player.getHandItems()) {
             Item shield = itemStack.getItem();
             if (shield == ModItems.AMETHYST_SHIELD) {
@@ -28,8 +41,15 @@ public class AmethystShieldAbilityPacketC2S {
                     player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 0.2F, 1.0F);
                     player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 0.2F, 1.0F);
                     player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1.5f, 1.0F);
-                    ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY(), player.getZ(),1,0, 0, 0,0);
+                    ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(),1,0, 0, 0,0);
                 }
+                if (playSoundAndFlatParticles) {
+                    player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 0.2F, 1.0F);
+                    player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 0.2F, 1.0F);
+                    player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1.5f, 1.0F);
+                    ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE_FLAT, player.getX(), player.getY() + 1, player.getZ(),1,0, 0, 0,0);
+                }
+
                 AmethystShieldItem.addCharge(((IEntityDataSaver) player), amount);
                 syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                 return;

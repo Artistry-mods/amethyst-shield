@@ -55,6 +55,10 @@
         {
           "type": "minecraft:item",
           "name": "amyshield:oxiwine_bolt"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "amyshield:amethyst_monocle"
         }
       ],
       "rolls": 1.0

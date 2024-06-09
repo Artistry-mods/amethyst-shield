@@ -17,12 +17,14 @@ import net.minecraft.util.Identifier;
 public class ChargeHudOverlay implements HudRenderCallback {
 
     private static final Identifier CHARGE_UI_ATLAS = new Identifier(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
-    //assets/amyshield/textures/ui/charge_ui_frame.png
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         MinecraftClient client = MinecraftClient.getInstance();
         if (client != null) {
+            client.getProfiler().swap("charge");
             int width = client.getWindow().getScaledWidth();
             int height = client.getWindow().getScaledHeight();
             int x = width / 2;
@@ -49,7 +51,11 @@ public class ChargeHudOverlay implements HudRenderCallback {
                     drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).getPersistentData().getFloat("charge")) / 100)), 5);
                 }
             }
+            client.getProfiler().pop();
         }
+        RenderSystem.disableBlend();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
     }
     private LivingEntity getRiddenEntity() {
         PlayerEntity playerEntity = this.getCameraPlayer();
