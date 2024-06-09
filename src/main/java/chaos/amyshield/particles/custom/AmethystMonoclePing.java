@@ -7,25 +7,26 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class AmethystChargeParticle extends SpriteBillboardParticle {
+public class AmethystMonoclePing extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
-    private final boolean isFlat;
+    private final Direction facing;
 
-    protected AmethystChargeParticle(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider, boolean isFlat) {
+    protected AmethystMonoclePing(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider, Direction isFlat) {
         super(world, x, y, z, 0, 0, 0);
         this.setSpriteForAge(spriteProvider);
 
-        this.isFlat = isFlat;
+        this.facing = isFlat;
         this.age = 0;
         this.spriteProvider = spriteProvider;
         this.maxAge = 12;
-        this.scale = 2F;
+        this.scale = 0.5F;
     }
 
 
@@ -34,14 +35,19 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
         float f = (float)(MathHelper.lerp(tickDelta, this.prevPosX, this.x) - vec3d.getX());
         float g = (float)(MathHelper.lerp(tickDelta, this.prevPosY, this.y) - vec3d.getY());
         float h = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
-        Quaternionf quaternionf;
-        if (this.isFlat) {
+        Quaternionf quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F));
+        if (this.facing == Direction.UP) {
             quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateX((float) Math.toRadians(90)));
-        } else if (this.angle == 0.0F) {
-            quaternionf = camera.getRotation();
-        } else {
-            quaternionf = new Quaternionf(camera.getRotation());
-            quaternionf.rotateZ(MathHelper.lerp(tickDelta, this.prevAngle, this.angle));
+        } else if (this.facing == Direction.DOWN) {
+            quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateX((float) Math.toRadians(-90)));
+        } else if (this.facing == Direction.NORTH) {
+            quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F));
+        } else if (this.facing == Direction.SOUTH) {
+            quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateX((float) Math.toRadians(-180)));
+        } else if (this.facing == Direction.WEST) {
+            quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateY((float) Math.toRadians(90)));
+        } else if (this.facing == Direction.EAST) {
+            quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateY((float) Math.toRadians(-90)));
         }
 
         Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
@@ -85,17 +91,17 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
     @Environment(EnvType.CLIENT)
     public static class Factory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
-        private final boolean isFlat;
+        private final Direction faceing;
 
-        public Factory(SpriteProvider spriteProvider, boolean isFlat) {
+        public Factory(SpriteProvider spriteProvider, Direction isFlat) {
             this.spriteProvider = spriteProvider;
-            this.isFlat = isFlat;
+            this.faceing = isFlat;
         }
 
         @Nullable
         @Override
         public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new AmethystChargeParticle(world, x, y, z, this.spriteProvider, this.isFlat);
+            return new AmethystMonoclePing(world, x, y, z, this.spriteProvider, this.faceing);
         }
     }
 }
