@@ -11,18 +11,6 @@ base {
 }
 
 repositories {
-	maven {url = 'https://jitpack.io'}
-	maven {url "https://maven.terraformersmc.com/releases/"}
-	maven {url = "https://api.modrinth.com/maven"}
-
-	maven {
-		name = 'GeckoLib'
-		url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-		content {
-			includeGroupByRegex("software\\.bernie.*")
-			includeGroup("com.eliotlash.mclib")
-		}
-	}
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -49,14 +37,14 @@ dependencies {
 
 	//modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
-	modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
+	//modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
 
-	modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabricasm_version}"
+	//modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabricasm_version}"
 
-	modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
+	//modImplementation "com.github.CrimsonDawn45:Fabric-Shield-Lib:v${project.fabric_shield_lib_version}"
 
-	modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
-	implementation("com.eliotlash.mclib:mclib:20")
+	//modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
+	//implementation("com.eliotlash.mclib:mclib:20")
 }
 
 processResources {
@@ -93,19 +81,6 @@ publishing {
 		create("mavenJava", MavenPublication) {
 			artifactId = project.archives_base_name
 			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-		allprojects {
-			repositories {
-				maven { url 'https://jitpack.io' }
-			}
 		}
 	}
 }
