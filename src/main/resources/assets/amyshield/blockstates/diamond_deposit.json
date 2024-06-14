@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "amyshield:block/diamond_deposit_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "amyshield:block/diamond_deposit"
+    },
+    "axis=z": {
+      "model": "amyshield:block/diamond_deposit_horizontal",
+      "x": 90
+    }
+  }
+}

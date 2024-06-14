@@ -3,9 +3,11 @@ package chaos.amyshield.Item;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.custom.AmethystMonocleItem;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.block.ModBlocks;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
@@ -24,6 +26,10 @@ public class ModItems {
 
     public static final Item AMETHYST_MONOCLE = registerItem("amethyst_monocle",
             new AmethystMonocleItem(new FabricItemSettings().maxCount(1).rarity(Rarity.RARE)));
+
+
+    public static final Item DIAMOND_DEPOSIT = registerItem("diamond_deposit",
+            new BlockItem(ModBlocks.DIAMOND_DEPOSIT, new FabricItemSettings()));
 
     public static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(AmethystShield.MOD_ID, name), item);
