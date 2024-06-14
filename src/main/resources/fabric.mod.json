@@ -21,6 +21,9 @@
 		],
 		"client": [
 			"chaos.amyshield.AmethystShieldClient"
+		],
+		"fabric-datagen": [
+			"chaos.amyshield.AmethystShieldDatagen"
 		]
 	},
 	"mixins": [

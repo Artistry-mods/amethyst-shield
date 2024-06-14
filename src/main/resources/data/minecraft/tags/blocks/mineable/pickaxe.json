@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "amyshield:diamond_deposit",
     "amyshield:amethyst_dispenser"
   ]
 }

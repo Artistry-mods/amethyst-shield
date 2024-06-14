@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "amyshield:block/diamond_deposit",
+    "side": "amyshield:block/diamond_deposit_side"
+  }
+}

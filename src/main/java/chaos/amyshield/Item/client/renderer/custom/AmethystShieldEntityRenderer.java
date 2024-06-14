@@ -2,11 +2,12 @@ package chaos.amyshield.Item.client.renderer.custom;
 
 import chaos.amyshield.Item.client.model.custom.AmethystShieldEntityModel;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
+import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
@@ -17,8 +18,8 @@ import net.minecraft.util.Identifier;
 public class AmethystShieldEntityRenderer extends BuiltinModelItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     private final AmethystShieldEntityModel modelShield;
 
-    public AmethystShieldEntityRenderer(ModelPart model) {
-        super(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
+    public AmethystShieldEntityRenderer(ModelPart model, BlockEntityRenderDispatcher dispatcher, EntityModelLoader loader) {
+        super(dispatcher,loader);
         this.modelShield = new AmethystShieldEntityModel(model);
     }
 

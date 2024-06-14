@@ -14,6 +14,7 @@
     "minecraft:deepslate_copper_ore",
     "minecraft:gilded_blackstone",
     "minecraft:nether_quartz_ore",
-    "minecraft:ancient_debris"
+    "minecraft:ancient_debris",
+    "amyshield:diamond_deposit"
   ]
 }
