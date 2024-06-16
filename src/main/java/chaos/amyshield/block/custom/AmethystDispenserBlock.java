@@ -6,9 +6,12 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class AmethystDispenserBlock extends DispenserBlock implements BlockEntityProvider {
@@ -33,6 +36,11 @@ public class AmethystDispenserBlock extends DispenserBlock implements BlockEntit
             world.scheduleBlockTick(pos, this, 1);
             world.setBlockState(pos, state.with(TRIGGERED, false), Block.NO_REDRAW);
         }
+    }
+
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        return Items.DISPENSER.getDefaultStack();
     }
 
     @Override
