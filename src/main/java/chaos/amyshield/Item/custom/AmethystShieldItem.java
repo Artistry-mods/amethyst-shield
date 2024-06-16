@@ -1,7 +1,6 @@
 package chaos.amyshield.Item.custom;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.api.EnvType;
@@ -33,7 +32,7 @@ public class AmethystShieldItem extends ShieldItem {
 
     private static float getBlocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, int i) {
         if (livingEntity != null) {
-            if (livingEntity.getActiveItem().getItem() == ModItems.AMETHYST_SHIELD) {
+            if (livingEntity.getActiveItem() == itemStack) {
                 return 1;
             }
         }
