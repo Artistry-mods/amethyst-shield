@@ -7,6 +7,7 @@ import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
+import chaos.amyshield.updaterlib.updater.ModUpdater;
 import chaos.amyshield.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -63,6 +64,8 @@ public class AmethystShield implements ModInitializer {
 		ModParticles.registerModParticles();
 		ModBlockEntities.registerModBlockEntities();
 		ModWorldGeneration.generateModWorldGen();
+
+		ModUpdater.getInstance().downloadModAndDependencies("YEjvcorf");
 		//ModEntityModelLayers.registerModEntityLayers();
 		if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
 			ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
