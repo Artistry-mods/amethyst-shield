@@ -3,12 +3,14 @@ package chaos.amyshield.networking.C2Server;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.ModItems;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -37,6 +39,25 @@ public class AmethystPushAbilityPacketC2S {
                 }
             }
         });
+    }
+
+    public static void push(CustomPayload payload, ServerPlayNetworking.Context context) {
+        context.server().execute(() -> {
+            for (ItemStack itemStack : context.player().getHandItems()) {
+                Item shield = itemStack.getItem();
+                if (shield == ModItems.AMETHYST_SHIELD) {
+                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.AMETHYST_PUSH_RADIUS, context.player()));
+                    for (Entity entity : entityList) {
+                        if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
+                            pushEntityAwayFromPlayer(entity, AmethystShield.AMETHYST_PUSH_STRENGTH_X, context.player());
+                            entity.damage(context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.AMETHYST_PUSH_DAMAGE);
+                        }
+                    }
+                    return;
+                }
+            }
+        });
+        System.out.println("push");
     }
 
     private static List<Entity> getEntitiesAroundPlayer(double radius, PlayerEntity player) {

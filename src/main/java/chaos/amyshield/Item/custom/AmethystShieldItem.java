@@ -2,6 +2,7 @@ package chaos.amyshield.Item.custom;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.networking.ModPackets;
+import chaos.amyshield.networking.playload.SetChargePayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -26,7 +27,7 @@ public class AmethystShieldItem extends ShieldItem {
         super(settings);
         this.repairItem = repairItem;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ModelPredicateProviderRegistry.register(new Identifier("amethyst_blocking"), AmethystShieldItem::getBlocking);
+            ModelPredicateProviderRegistry.register(Identifier.of("amethyst_blocking"), AmethystShieldItem::getBlocking);
         }
     }
 
@@ -66,7 +67,8 @@ public class AmethystShieldItem extends ShieldItem {
     public static void syncSlashing(boolean value) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeBoolean(value);
-        ClientPlayNetworking.send(ModPackets.SYNC_SLASHING_S2C, buffer);
+        ClientPlayNetworking.send(new SetChargePayload());
+        //ClientPlayNetworking.send(ModPackets.SYNC_SLASHING_S2C, buffer);
     }
 
     public static float addCharge(IEntityDataSaver player, float amount) {
@@ -90,6 +92,7 @@ public class AmethystShieldItem extends ShieldItem {
     public static void syncCharge(float charge, ServerPlayerEntity player) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeFloat(charge);
-        ServerPlayNetworking.send(player, ModPackets.SYNC_CHARGE_S2C, buffer);
+        ClientPlayNetworking.send(new SetChargePayload());
+        //ServerPlayNetworking.send(player, ModPackets.SYNC_CHARGE_S2C, buffer);
     }
 }

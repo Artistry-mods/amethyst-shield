@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 public class ModBlockEntities {
     public static final BlockEntityType<AmethystDispenserBlockEntity> AMETHYST_DISPENSER_BLOCK_ENTITY = Registry.register(
             Registries.BLOCK_ENTITY_TYPE,
-            new Identifier("amyshield", "amethyst_dispenser_block_entity"),
+            Identifier.of("amyshield", "amethyst_dispenser_block_entity"),
             FabricBlockEntityTypeBuilder.create(AmethystDispenserBlockEntity::new, ModBlocks.AMETHYST_DISPENSER).build()
     );
 

@@ -25,8 +25,8 @@ public class AmethystShieldEntityRenderer implements DynamicItemRenderer {
         matrices.push();
         matrices.scale(1.0f, -1.0f, -1.0f);
 
-        VertexConsumer vertexConsumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, RenderLayer.getItemEntityTranslucentCull(new Identifier("amyshield", "textures/item/amethyst_shield.png")), false, stack.hasGlint());
-        this.modelShield.render(matrices, vertexConsumer, light, overlay, 1.0f, 1.0f, 1.0f, 1.0f);
+        VertexConsumer vertexConsumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, RenderLayer.getItemEntityTranslucentCull(Identifier.of("amyshield", "textures/item/amethyst_shield.png")), false, stack.hasGlint());
+        this.modelShield.render(matrices, vertexConsumer, light, overlay);
 
         matrices.pop();
     }

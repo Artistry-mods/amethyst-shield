@@ -11,8 +11,6 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -41,14 +39,17 @@ public class AmethystMonocleItem extends Item implements Equipment {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        user.equipStack(EquipmentSlot.HEAD, user.getStackInHand(hand));
+            /*
         if (user.getInventory().getArmorStack(3).getItem() == Items.AIR) {
             user.getInventory().armor.set(3, user.getStackInHand(hand));
             user.setStackInHand(hand, ItemStack.EMPTY);
             if (world.isClient()) {
-                world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0F);
+                world.playSoundAtBlockCenter(user.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0F);
             }
             return TypedActionResult.success(user.getStackInHand(hand));
         }
+             */
         return super.use(world, user, hand);
     }
 

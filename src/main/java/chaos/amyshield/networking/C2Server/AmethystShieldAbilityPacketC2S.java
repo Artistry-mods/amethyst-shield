@@ -5,9 +5,11 @@ import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -55,5 +57,9 @@ public class AmethystShieldAbilityPacketC2S {
                 return;
             }
         }
+    }
+
+    public static void setChargeAndSpawnParticle(CustomPayload payload, ServerPlayNetworking.Context context) {
+        System.out.println("ability packed");
     }
 }
