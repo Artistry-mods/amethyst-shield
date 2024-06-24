@@ -4,6 +4,7 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.ModPackets;
+import chaos.amyshield.networking.playload.SetChargePayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -13,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -148,7 +150,8 @@ public abstract class AmethystShieldAbilityClientMixin {
         passedData.writeFloat(cost);
         passedData.writeInt(particleTrieState);
         //sending the packed to remove charge
-        ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
+        ClientPlayNetworking.send(new SetChargePayload());
+        //ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
     }
 
     @Unique
@@ -186,7 +189,8 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onAmethystBurst() {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         //sending the packed to remove charge
-        ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
+        ClientPlayNetworking.send(new SetChargePayload());
+        //ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
         this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST, 3);
     }
 

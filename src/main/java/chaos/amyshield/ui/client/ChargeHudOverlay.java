@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,9 +17,12 @@ import net.minecraft.util.Identifier;
 
 public class ChargeHudOverlay implements HudRenderCallback {
 
-    private static final Identifier CHARGE_UI_ATLAS = new Identifier(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
+    private static final Identifier CHARGE_UI_ATLAS = Identifier.of(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
+
+
+
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();

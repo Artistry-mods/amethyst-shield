@@ -7,7 +7,8 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.util.Identifier;
 
 public class UpdaterToast implements Toast {
-    private static final Identifier ICON = new Identifier("updaterlib","textures/gui/auto-updater-logo-big.png");
+    private static final Identifier TEXTURE = Identifier.ofVanilla("toast/recipe");
+    private static final Identifier ICON = Identifier.of("updaterlib","textures/gui/auto-updater-logo-big.png");
     private static final long DEFAULT_DURATION_MS = 5000L;
     private final ModrinthVersion version;
     private final String modName;
