@@ -6,6 +6,7 @@ import chaos.amyshield.updaterlib.modrinth.version.dependency.ModrinthDependency
 import chaos.amyshield.updaterlib.modrinth.version.file.ModrinthFile;
 import chaos.amyshield.updaterlib.toast.UpdaterToast;
 import chaos.amyshield.updaterlib.updater.deletion_list.DeletionList;
+import chaos.amyshield.updaterlib.updater.update_list.UpdaterList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
@@ -30,6 +31,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class ModUpdater {
+    public UpdaterList updaterList;
+
     public static final Logger LOGGER = LoggerFactory.getLogger("Updater Lib");
 
     public static String minecraft_version = SharedConstants.getGameVersion().getName();
@@ -46,7 +49,6 @@ public class ModUpdater {
         if (INSTANCE == null) {
             INSTANCE = new ModUpdater();
         }
-        System.out.println(MOD_DIRECTORY);
         deletionInstance();
         return INSTANCE;
     }
@@ -62,7 +64,7 @@ public class ModUpdater {
     }
 
     private ModUpdater() {
-
+        this.updaterList = new UpdaterList().createOrLoad();
     }
 
     private static void downloadFile(String fileUrl, Path destination) throws IOException {
