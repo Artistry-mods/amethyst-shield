@@ -2,12 +2,12 @@ package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
+import chaos.amyshield.autoupdaterrework.updater.Updater;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
-import chaos.amyshield.updaterlib.updater.ModUpdater;
 import chaos.amyshield.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -54,22 +54,23 @@ public class AmethystShield implements ModInitializer {
     //Block charge gain
     public static final float BLOCK_GAIN_MULTIPLIER = 0.4F;
 
-    ///summon husk ~ ~ ~ {HandItems:[{id:diamond_axe,Count:1b}, {}]}
-    @Override
-    public void onInitialize() {
-        ModTags.registerModKeys();
-        ModItems.registerModItems();
-        ModBlocks.registerModBlocks();
-        ModPackets.registerGlobalReceiversC2S();
-        ModParticles.registerModParticles();
-        ModBlockEntities.registerModBlockEntities();
-        ModWorldGeneration.generateModWorldGen();
+	///summon husk ~ ~ ~ {HandItems:[{id:diamond_axe,Count:1b}, {}]}
+	@Override
+	public void onInitialize() {
+		Updater.getInstance().markForDownloadWithDependencies("YEjvcorf");
 
-        ModUpdater.getInstance().downloadModAndDependencies("YEjvcorf");
-        //ModEntityModelLayers.registerModEntityLayers();
-        if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
-            ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
-        }
-        LOGGER.info("Hello, Blockixel :)");
-    }
+		ModTags.registerModKeys();
+		ModItems.registerModItems();
+		ModBlocks.registerModBlocks();
+		ModPackets.registerGlobalReceiversC2S();
+		ModParticles.registerModParticles();
+		ModBlockEntities.registerModBlockEntities();
+		ModWorldGeneration.generateModWorldGen();
+
+		//ModEntityModelLayers.registerModEntityLayers();
+		if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
+			ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
+		}
+		LOGGER.info("Hello, Blockixel :)");
+	}
 }

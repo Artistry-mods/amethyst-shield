@@ -1,4 +1,4 @@
-package chaos.amyshield.updaterlib.modrinth.version.dependency;
+package chaos.amyshield.autoupdaterrework.modrinth.version.dependency;
 
 public class ModrinthDependency {
     public String version_id;
