@@ -25,21 +25,9 @@ public class ModrinthProjectVersionQuarry {
     }
 
     public ModrinthProjectVersionQuarry(String id) {
-        this.QuarryUrl = "https://api.modrinth.com/v2/project/" + id + "/version?game_versions=[%22"+ ModUpdater.minecraft_version + "%22]&loaders=[%22fabric%22]";
+        this.QuarryUrl = "https://api.modrinth.com/v2/project/" + id + "/version?game_versions=[%22" + ModUpdater.minecraft_version + "%22]&loaders=[%22fabric%22]";
         //System.out.println(this.QuarryUrl);
         this.versions = quarry(this.QuarryUrl).versions;
-    }
-
-    public ModrinthVersion getFittingVersion() {
-        if (this.versions != null) {
-            for (ModrinthVersion version : this.versions) {
-                if (Arrays.asList(version.game_versions).contains(ModUpdater.minecraft_version) &&
-                        Arrays.asList(version.loaders).contains("fabric")) {
-                    return version;
-                }
-            }
-        }
-        return null;
     }
 
     private static ModrinthProjectVersionQuarry quarry(String url) {
@@ -67,5 +55,17 @@ public class ModrinthProjectVersionQuarry {
             ModUpdater.LOGGER.error("Failed to build the HttpRequest");
         }
         return quarry;
+    }
+
+    public ModrinthVersion getFittingVersion() {
+        if (this.versions != null) {
+            for (ModrinthVersion version : this.versions) {
+                if (Arrays.asList(version.game_versions).contains(ModUpdater.minecraft_version) &&
+                        Arrays.asList(version.loaders).contains("fabric")) {
+                    return version;
+                }
+            }
+        }
+        return null;
     }
 }

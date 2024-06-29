@@ -11,20 +11,22 @@ import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
 public class AmethystDispenserBlock extends DispenserBlock implements BlockEntityProvider {
     public int cooldown;
+
     public AmethystDispenserBlock(Settings settings) {
         super(settings);
         this.cooldown = 0;
     }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new AmethystDispenserBlockEntity(pos, state);
     }
+
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.up());

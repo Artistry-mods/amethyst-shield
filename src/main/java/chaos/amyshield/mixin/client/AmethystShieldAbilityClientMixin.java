@@ -3,18 +3,15 @@ package chaos.amyshield.mixin.client;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
-import chaos.amyshield.networking.ModPackets;
-import chaos.amyshield.networking.playload.SetChargePayload;
+import chaos.amyshield.networking.playload.AmethystAbilityPayload;
+import chaos.amyshield.networking.playload.AmethystPushPayload;
 import chaos.amyshield.util.IEntityDataSaver;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,6 +46,11 @@ public abstract class AmethystShieldAbilityClientMixin {
     @Unique
     private int blockTimer = 0;
 
+    @Unique
+    private static boolean canUseAbility(ClientPlayerEntity player, float cost) {
+        return AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= cost * -(1);
+    }
+
     @Inject(at = @At("HEAD"), method = "tickMovement")
     public void tickMovement(CallbackInfo ci) {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
@@ -67,7 +69,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         if (this.movementChargeTimer >= 1) this.movementChargeTimer -= 1;
         if (this.movementChargeTimer == 0) {
             if (this.movementCharge > 0) {
-                this.onAbilityUse((float) this.movementCharge, 2);
+                this.onAbilityUse((float) this.movementCharge, false, false, false);
             }
             this.movementChargeTimer = AmethystShield.MOVEMENT_CHARGE_TIMING;
             this.movementCharge = 0;
@@ -134,24 +136,14 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
-    private static boolean canUseAbility(ClientPlayerEntity player, float cost) {
-        return AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= cost * -(1);
-    }
-
-    @Unique
     private boolean canJump(ClientPlayerEntity player) {
         return !player.isFallFlying() && !player.hasVehicle()
                 && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
     }
 
     @Unique
-    private void onAbilityUse(float cost, int particleTrieState) {
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeFloat(cost);
-        passedData.writeInt(particleTrieState);
-        //sending the packed to remove charge
-        ClientPlayNetworking.send(new SetChargePayload());
-        //ClientPlayNetworking.send(ModPackets.AMETHYST_ABILITY_C2S, passedData);
+    private void onAbilityUse(float cost, boolean flatParticles, boolean notFlatParticles, boolean sound) {
+        ClientPlayNetworking.send(new AmethystAbilityPayload(cost, flatParticles, notFlatParticles, sound));
     }
 
     @Unique
@@ -163,7 +155,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         flingPlayer(AmethystShield.SPARKLING_SLASH_STRENGTH);
         this.isDoubleJumpingTimer = 0;
 
-        this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST, 1);
+        this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST, false, true, true);
     }
 
     @Unique
@@ -179,7 +171,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 //setting the double jump timer to 10, so that we can use it later for the sword slash
                 this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
 
-                this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST, 3);
+                this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST, true, false, true);
                 return;
             }
         }
@@ -187,11 +179,8 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private void onAmethystBurst() {
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        //sending the packed to remove charge
-        ClientPlayNetworking.send(new SetChargePayload());
-        //ClientPlayNetworking.send(ModPackets.AMETHYST_PUSH_ABILITY_C2S, passedData);
-        this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST, 3);
+        ClientPlayNetworking.send(new AmethystPushPayload(true));
+        this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST, true, false, true);
     }
 
     @Unique
@@ -226,7 +215,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onAmethystSlide() {
         this.applyMovementVelocity();
         this.isSliding = true;
-        this.onAbilityUse(AmethystShield.AMETHYST_SLIDE_COST, 3);
+        this.onAbilityUse(AmethystShield.AMETHYST_SLIDE_COST, true, false, true);
     }
 
     @Unique

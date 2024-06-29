@@ -14,6 +14,7 @@ public class ModItemsButItsOnlyTheSculkLatch {
     private static void addItemsToIngredientsTabItemGroup(FabricItemGroupEntries entries) {
         entries.add(SCULK_LATCH);
     }
+
     public static void registerModItemsButItsOnlyTheSculkLatch() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItemsButItsOnlyTheSculkLatch::addItemsToIngredientsTabItemGroup);
     }

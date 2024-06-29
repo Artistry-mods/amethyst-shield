@@ -31,16 +31,16 @@ import java.util.zip.ZipFile;
 
 public class ModUpdater {
     public static final Logger LOGGER = LoggerFactory.getLogger("Updater Lib");
-
-    public static String minecraft_version = SharedConstants.getGameVersion().getName();
-
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-
-    public static ModUpdater INSTANCE = null;
-    public static DeletionList DELETION_LIST_INSTANCE = null;
-    //public static final Path MOD_DIRECTORY = Path.of("C:/Users/User/AppData/Roaming/.minecraft", "mods");
-
     public static final Path MOD_DIRECTORY = FabricLoader.getInstance().getGameDir().resolve("mods");
+    public static String minecraft_version = SharedConstants.getGameVersion().getName();
+    public static ModUpdater INSTANCE = null;
+    //public static final Path MOD_DIRECTORY = Path.of("C:/Users/User/AppData/Roaming/.minecraft", "mods");
+    public static DeletionList DELETION_LIST_INSTANCE = null;
+
+    private ModUpdater() {
+
+    }
 
     public static ModUpdater getInstance() {
         if (INSTANCE == null) {
@@ -51,7 +51,6 @@ public class ModUpdater {
         return INSTANCE;
     }
 
-
     private static DeletionList deletionInstance() {
         if (DELETION_LIST_INSTANCE == null) {
             DELETION_LIST_INSTANCE = new DeletionList().createOrLoad();
@@ -59,10 +58,6 @@ public class ModUpdater {
             DELETION_LIST_INSTANCE.saveToFile();
         }
         return DELETION_LIST_INSTANCE;
-    }
-
-    private ModUpdater() {
-
     }
 
     private static void downloadFile(String fileUrl, Path destination) throws IOException {
@@ -93,7 +88,7 @@ public class ModUpdater {
         return null;
     }
 
-    private static String getFilesModId(Path jarFilePath){
+    private static String getFilesModId(Path jarFilePath) {
         try {
             JsonObject modMetadata = getModMetadata(jarFilePath);
             if (modMetadata != null) {
@@ -107,7 +102,7 @@ public class ModUpdater {
         return "";
     }
 
-    private static String getFilesModName(Path jarFilePath){
+    private static String getFilesModName(Path jarFilePath) {
         try {
             JsonObject modMetadata = getModMetadata(jarFilePath);
             if (modMetadata != null) {
@@ -121,6 +116,25 @@ public class ModUpdater {
         return "";
     }
 
+    private static String removeBasePath(String fullPath) {
+        // Convert both paths to Path objects
+        int lastSlashIndex = fullPath.lastIndexOf('\\');
+
+        // Extract the substring from the last '/' to the end
+
+        return fullPath.substring(lastSlashIndex + 1);
+    }
+
+    private static boolean doesModFileExist(String fileName) {
+        try (Stream<Path> paths = Files.list(MOD_DIRECTORY)) {
+            return paths.filter(Files::isRegularFile)
+                    .anyMatch(path -> path.getFileName().toString().equals(fileName));
+        } catch (IOException e) {
+            System.err.println("Error while searching for files: " + e.getMessage());
+        }
+        return false;
+    }
+
     private String getLoadedFileNameByModID(String modID) {
         Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer(modID);
         if (modContainer.isPresent()) {
@@ -130,15 +144,6 @@ public class ModUpdater {
             ModUpdater.LOGGER.error("Mod with ID {} not found.", modID);
         }
         return "";
-    }
-
-    private static String removeBasePath(String fullPath) {
-        // Convert both paths to Path objects
-        int lastSlashIndex = fullPath.lastIndexOf('\\');
-
-        // Extract the substring from the last '/' to the end
-
-        return fullPath.substring(lastSlashIndex + 1);
     }
 
     public void downloadModAndDependencies(String id) {
@@ -177,15 +182,5 @@ public class ModUpdater {
         } else {
             ModUpdater.LOGGER.warn("can not check for updates since the client is in offline mode.");
         }
-    }
-
-    private static boolean doesModFileExist(String fileName) {
-        try (Stream<Path> paths = Files.list(MOD_DIRECTORY)) {
-            return paths.filter(Files::isRegularFile)
-                    .anyMatch(path -> path.getFileName().toString().equals(fileName));
-        } catch (IOException e) {
-            System.err.println("Error while searching for files: " + e.getMessage());
-        }
-        return false;
     }
 }

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AmethystCritParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
+
     protected AmethystCritParticle(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider) {
         super(world, x, y, z, 0, 0, 0);
         this.setSpriteForAge(spriteProvider);

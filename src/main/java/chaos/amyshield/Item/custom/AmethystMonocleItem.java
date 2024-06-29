@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -68,7 +67,7 @@ public class AmethystMonocleItem extends Item implements Equipment {
         if (slot == 3) {
             if (entity instanceof PlayerEntity) {
                 for (BlockPos blockPos : BlockPos.iterate(
-                        entity.getBlockPos().add( AmethystShield.AMETHYST_MONOCLE_RANGE,  AmethystShield.AMETHYST_MONOCLE_RANGE,  AmethystShield.AMETHYST_MONOCLE_RANGE),
+                        entity.getBlockPos().add(AmethystShield.AMETHYST_MONOCLE_RANGE, AmethystShield.AMETHYST_MONOCLE_RANGE, AmethystShield.AMETHYST_MONOCLE_RANGE),
                         entity.getBlockPos().add(-AmethystShield.AMETHYST_MONOCLE_RANGE, -AmethystShield.AMETHYST_MONOCLE_RANGE, -AmethystShield.AMETHYST_MONOCLE_RANGE))) {
                     BlockState state = world.getBlockState(blockPos);
                     if (state.isIn(ModTags.SHINY_ORES)) {

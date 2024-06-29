@@ -27,7 +27,7 @@ public class SlashingHitMixin {
         if (player != null && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
             //double x, double y, double z, int count, double deltaX, double deltaY, double deltaZ, double speed
             if (player.getRandom().nextInt(5) == 1) {
-                ((ServerWorld)player.getWorld()).spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
+                ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
                         player.getX() + player.getRandom().nextFloat() - 0.5,
                         player.getY() + player.getRandom().nextFloat() - 0.5,
                         player.getZ() + player.getRandom().nextFloat() - 0.5,
@@ -36,7 +36,7 @@ public class SlashingHitMixin {
                         player.getRandom().nextFloat(),
                         player.getRandom().nextFloat(),
                         0);
-                player.getWorld().playSound(null,player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1f, 1);
+                player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1f, 1);
             }
 
             List<Entity> entityList = new ArrayList<>(player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(AmethystShield.SPARKLING_SLASH_RADIUS)));

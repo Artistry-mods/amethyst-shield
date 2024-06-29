@@ -4,7 +4,6 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;

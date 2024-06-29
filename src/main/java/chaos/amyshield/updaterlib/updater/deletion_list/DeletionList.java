@@ -22,11 +22,11 @@ public class DeletionList {
 
     public List<String> filesToDelete;
 
-    public DeletionList () {
+    public DeletionList() {
         this.filesToDelete = new ArrayList<>();
     }
 
-    public DeletionList (List<String> filesToDelete) {
+    public DeletionList(List<String> filesToDelete) {
         this.filesToDelete = filesToDelete;
     }
 
@@ -36,7 +36,7 @@ public class DeletionList {
 
     public void deleteAllFilesMarkedForDeletion() {
         List<String> filesToDeleteCopy = this.filesToDelete;
-        for (String fileName: filesToDeleteCopy) {
+        for (String fileName : filesToDeleteCopy) {
             File file = new File(ModUpdater.MOD_DIRECTORY.resolve(fileName).toUri());
             if (file.exists()) {
                 if (file.delete()) {
