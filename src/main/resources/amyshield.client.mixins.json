@@ -3,7 +3,8 @@
 	"package": "chaos.amyshield.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"AmethystShieldAbilityClientMixin"
+      "AmethystShieldAbilityClientMixin",
+      "ModUpdaterScreenButtonMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

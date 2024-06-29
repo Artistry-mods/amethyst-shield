@@ -1,4 +1,4 @@
-package chaos.amyshield.updaterlib.modrinth.version.file;
+package chaos.amyshield.autoupdaterrework.modrinth.version.file;
 
 public class ModrinthFile {
     public Hashes hashes;
