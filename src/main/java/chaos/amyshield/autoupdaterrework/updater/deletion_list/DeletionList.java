@@ -1,8 +1,6 @@
-package chaos.amyshield.updaterlib.updater.deletion_list;
+package chaos.amyshield.autoupdaterrework.updater.deletion_list;
 
-import chaos.amyshield.updaterlib.updater.ModUpdater;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import chaos.amyshield.autoupdaterrework.updater.Updater;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
@@ -18,7 +16,6 @@ public class DeletionList {
     private static final Path DELETION_LIST_FILE_LOCATION = FabricLoader.getInstance().getConfigDir().resolve("auto-updater").resolve("deletion_list.json");
     private static final File DELETION_LIST_FILE = DELETION_LIST_FILE_LOCATION.toFile();
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public List<String> filesToDelete;
 
@@ -26,26 +23,25 @@ public class DeletionList {
         this.filesToDelete = new ArrayList<>();
     }
 
-    public DeletionList (List<String> filesToDelete) {
-        this.filesToDelete = filesToDelete;
-    }
-
     public void addToList(String fileName) {
-        this.filesToDelete.add(fileName);
+        if (!this.filesToDelete.contains(fileName)) {
+            this.filesToDelete.add(fileName);
+            this.saveToFile();
+        }
     }
 
     public void deleteAllFilesMarkedForDeletion() {
         List<String> filesToDeleteCopy = this.filesToDelete;
         for (String fileName: filesToDeleteCopy) {
-            File file = new File(ModUpdater.MOD_DIRECTORY.resolve(fileName).toUri());
+            File file = new File(fileName);
             if (file.exists()) {
                 if (file.delete()) {
-                    ModUpdater.LOGGER.info("Deleted file successfully at {}", file);
+                    Updater.LOGGER.info("Deleted file successfully at {}", file);
                 } else {
-                    ModUpdater.LOGGER.error("Failed to delete file");
+                    Updater.LOGGER.error("Failed to delete file");
                 }
             } else {
-                ModUpdater.LOGGER.error("File marked for deletion not found");
+                Updater.LOGGER.error("File marked for deletion not found");
             }
         }
         this.filesToDelete.clear();
@@ -55,9 +51,9 @@ public class DeletionList {
     public DeletionList createOrLoad() {
         if (DELETION_LIST_FILE.exists()) {
             try (FileReader fileReader = new FileReader(DELETION_LIST_FILE)) {
-                return GSON.fromJson(fileReader, DeletionList.class);
+                return Updater.GSON.fromJson(fileReader, DeletionList.class);
             } catch (IOException e) {
-                ModUpdater.LOGGER.error("Failed to create or load deletion list to file");
+                Updater.LOGGER.error("Failed to create or load deletion list to file");
             }
         }
         DeletionList deletionList = new DeletionList();
@@ -66,12 +62,12 @@ public class DeletionList {
     }
 
     public void saveToFile() {
-        String json = GSON.toJson(this);
+        String json = Updater.GSON.toJson(this);
         if (!DELETION_LIST_FILE.getParentFile().exists()) {
             if (DELETION_LIST_FILE.getParentFile().mkdirs()) {
-                ModUpdater.LOGGER.info("Directory created successfully on first time launch");
+                Updater.LOGGER.info("Directory created successfully on first time launch");
             } else {
-                ModUpdater.LOGGER.error("Failed to create directory.");
+                Updater.LOGGER.error("Failed to create directory.");
                 return; // Exit the method if directory creation fails
             }
         }
@@ -79,7 +75,7 @@ public class DeletionList {
         try (FileWriter fileWriter = new FileWriter(DELETION_LIST_FILE)) {
             fileWriter.write(json);
         } catch (IOException e) {
-            ModUpdater.LOGGER.error("Failed to save deletion list to file");
+            Updater.LOGGER.error("Failed to save deletion list to file");
         }
     }
 }

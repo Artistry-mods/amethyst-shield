@@ -1,7 +1,7 @@
-package chaos.amyshield.updaterlib.modrinth.version;
+package chaos.amyshield.autoupdaterrework.modrinth.version;
 
-import chaos.amyshield.updaterlib.modrinth.version.dependency.ModrinthDependency;
-import chaos.amyshield.updaterlib.modrinth.version.file.ModrinthFile;
+import chaos.amyshield.autoupdaterrework.modrinth.version.dependency.ModrinthDependency;
+import chaos.amyshield.autoupdaterrework.modrinth.version.file.ModrinthFile;
 
 public class ModrinthVersion {
     public String[] game_versions;
