@@ -2,6 +2,7 @@ package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
+import chaos.amyshield.autoupdaterrework.updater.Updater;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.networking.ModPackets;
@@ -56,6 +57,8 @@ public class AmethystShield implements ModInitializer {
 	///summon husk ~ ~ ~ {HandItems:[{id:diamond_axe,Count:1b}, {}]}
 	@Override
 	public void onInitialize() {
+		Updater.getInstance().markForDownloadWithDependencies("YEjvcorf");
+
 		ModTags.registerModKeys();
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
