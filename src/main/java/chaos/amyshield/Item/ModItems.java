@@ -45,6 +45,7 @@ public class ModItems {
     private static void addItemsToIngredientsTabItemGroup(FabricItemGroupEntries entries) {
         entries.add(OXIWINE_BOLT);
     }
+
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(ModItems::addItemsToToolTabItemGroup);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::addItemsToCombatTabItemGroup);

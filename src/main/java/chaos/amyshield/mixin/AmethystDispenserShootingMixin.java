@@ -8,7 +8,6 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.Direction;
@@ -29,7 +28,7 @@ public class AmethystDispenserShootingMixin {
             Position position = DispenserBlock.getOutputLocation(pointer);
             Direction direction = pointer.state().get(DispenserBlock.FACING);
             ProjectileEntity projectileEntity = createProjectile(world, position, stack);
-            projectileEntity.setVelocity(direction.getOffsetX(), (float)direction.getOffsetY() + 0.1f, direction.getOffsetZ(), AmethystShield.AMETHYST_DISPENSER_STRENGTH, AmethystShield.AMETHYST_DISPENSER_SPREAD);
+            projectileEntity.setVelocity(direction.getOffsetX(), (float) direction.getOffsetY() + 0.1f, direction.getOffsetZ(), AmethystShield.AMETHYST_DISPENSER_STRENGTH, AmethystShield.AMETHYST_DISPENSER_SPREAD);
             world.spawnEntity(projectileEntity);
             stack.decrement(1);
             cir.setReturnValue(stack);

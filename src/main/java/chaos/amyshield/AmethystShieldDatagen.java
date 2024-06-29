@@ -17,6 +17,7 @@ public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
 
          */
     }
+
     @Override
     public void buildRegistry(RegistryBuilder registryBuilder) {
         registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, ModConfiguredFeatures::boostrap);

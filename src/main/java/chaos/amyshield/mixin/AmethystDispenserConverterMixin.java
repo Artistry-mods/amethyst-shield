@@ -24,7 +24,9 @@ import java.util.Map;
 
 @Mixin(DispenserBlock.class)
 public class AmethystDispenserConverterMixin {
-    @Shadow @Final public static DirectionProperty FACING;
+    @Shadow
+    @Final
+    public static DirectionProperty FACING;
 
     @Inject(method = "neighborUpdate", at = @At("HEAD"))
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {

@@ -4,7 +4,6 @@ import chaos.amyshield.AmethystShield;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
@@ -20,7 +19,8 @@ import java.util.Map;
 
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
-    @Shadow protected abstract void loadItemModel(ModelIdentifier id);
+    @Shadow
+    protected abstract void loadItemModel(ModelIdentifier id);
 
     //"Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V"
     /*

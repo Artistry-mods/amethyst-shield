@@ -8,12 +8,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 public class AmethystShieldClient implements ClientModInitializer {
-	@Override
-	public void onInitializeClient() {
-		ModClientParticles.registerModParticlesClient();
-		ModPackets.registerGlobalReceiversS2C();
-		ModEntityModels.registerModEntityModels();
-		HudRenderCallback.EVENT.register(new ChargeHudOverlay());
-		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
-	}
+    @Override
+    public void onInitializeClient() {
+        ModClientParticles.registerModParticlesClient();
+        ModPackets.registerGlobalReceiversS2C();
+        ModEntityModels.registerModEntityModels();
+        HudRenderCallback.EVENT.register(new ChargeHudOverlay());
+        // This entrypoint is suitable for setting up client-specific logic, such as rendering.
+    }
 }

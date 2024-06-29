@@ -8,7 +8,7 @@ public class ModrinthFile {
     public int size;
     public String file_type;
 
-    public ModrinthFile () {
+    public ModrinthFile() {
 
     }
 
@@ -16,7 +16,7 @@ public class ModrinthFile {
         public String sha1;
         public String sha512;
 
-        public Hashes () {
+        public Hashes() {
 
         }
     }
