@@ -18,7 +18,7 @@ public class ModBlocks {
             new PillarBlock(AbstractBlock.Settings.copy(Blocks.DEEPSLATE)));
 
     private static Block registerBlock(String name, Block item) {
-        return Registry.register(Registries.BLOCK, new Identifier(AmethystShield.MOD_ID, name), item);
+        return Registry.register(Registries.BLOCK, Identifier.of(AmethystShield.MOD_ID, name), item);
     }
 
     public static void registerModBlocks() {

@@ -4,11 +4,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 public class AmethystCritParticle extends SpriteBillboardParticle {
     private final SpriteProvider spriteProvider;
+
     protected AmethystCritParticle(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider) {
         super(world, x, y, z, 0, 0, 0);
         this.setSpriteForAge(spriteProvider);
@@ -37,7 +38,7 @@ public class AmethystCritParticle extends SpriteBillboardParticle {
     }
 
     @Environment(EnvType.CLIENT)
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
+    public static class Factory implements ParticleFactory<SimpleParticleType> {
         private final SpriteProvider spriteProvider;
 
         public Factory(SpriteProvider spriteProvider) {
@@ -46,7 +47,7 @@ public class AmethystCritParticle extends SpriteBillboardParticle {
 
         @Nullable
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             return new AmethystCritParticle(world, x, y, z, this.spriteProvider);
         }
     }

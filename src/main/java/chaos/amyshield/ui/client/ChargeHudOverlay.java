@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,9 +17,11 @@ import net.minecraft.util.Identifier;
 
 public class ChargeHudOverlay implements HudRenderCallback {
 
-    private static final Identifier CHARGE_UI_ATLAS = new Identifier(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
+    private static final Identifier CHARGE_UI_ATLAS = Identifier.of(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
+
+
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
@@ -32,7 +35,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
             if (client.player != null && !client.player.isSpectator()) {
                 ClientPlayerEntity player = client.player;
                 if (player.getMainHandStack().getItem().equals(ModItems.AMETHYST_SHIELD) ||
-                    player.getOffHandStack().getItem().equals(ModItems.AMETHYST_SHIELD)) {
+                        player.getOffHandStack().getItem().equals(ModItems.AMETHYST_SHIELD)) {
 
                     int yshift = 53;
                     int maxAir = player.getMaxAir();
@@ -57,6 +60,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
     }
+
     private LivingEntity getRiddenEntity() {
         PlayerEntity playerEntity = this.getCameraPlayer();
         if (playerEntity != null) {
@@ -65,26 +69,28 @@ public class ChargeHudOverlay implements HudRenderCallback {
                 return null;
             }
             if (entity instanceof LivingEntity) {
-                return (LivingEntity)entity;
+                return (LivingEntity) entity;
             }
         }
         return null;
     }
+
     private int getHeartCount(LivingEntity entity) {
         if (entity == null || !entity.isLiving()) {
             return 0;
         }
         float f = entity.getMaxHealth();
-        int i = (int)(f + 0.5f) / 2;
+        int i = (int) (f + 0.5f) / 2;
         if (i > 30) {
             i = 30;
         }
         return i;
     }
+
     private PlayerEntity getCameraPlayer() {
         if (!(MinecraftClient.getInstance().getCameraEntity() instanceof PlayerEntity)) {
             return null;
         }
-        return (PlayerEntity)MinecraftClient.getInstance().getCameraEntity();
+        return (PlayerEntity) MinecraftClient.getInstance().getCameraEntity();
     }
 }

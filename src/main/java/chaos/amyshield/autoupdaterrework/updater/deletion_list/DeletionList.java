@@ -19,7 +19,7 @@ public class DeletionList {
 
     public List<String> filesToDelete;
 
-    public DeletionList () {
+    public DeletionList() {
         this.filesToDelete = new ArrayList<>();
     }
 
