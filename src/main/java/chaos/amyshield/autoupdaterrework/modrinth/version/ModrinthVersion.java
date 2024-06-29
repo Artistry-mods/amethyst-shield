@@ -21,18 +21,18 @@ public class ModrinthVersion {
     public ModrinthFile[] files;
     public ModrinthDependency[] dependencies;
 
-    public enum VersionType {
-        release,
-        alpha,
-        beta,
-    }
-
     public ModrinthFile getPrimary() {
-        for (ModrinthFile file: this.files) {
+        for (ModrinthFile file : this.files) {
             if (file.primary) {
                 return file;
             }
         }
         return null;
+    }
+
+    public enum VersionType {
+        release,
+        alpha,
+        beta,
     }
 }

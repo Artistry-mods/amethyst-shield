@@ -1,11 +1,11 @@
 package chaos.amyshield.Item.custom;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.networking.ModPackets;
+import chaos.amyshield.networking.playload.SyncChargePayload;
+import chaos.amyshield.networking.playload.SyncSlashPayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -15,7 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -26,7 +25,7 @@ public class AmethystShieldItem extends ShieldItem {
         super(settings);
         this.repairItem = repairItem;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ModelPredicateProviderRegistry.register(new Identifier("amethyst_blocking"), AmethystShieldItem::getBlocking);
+            ModelPredicateProviderRegistry.register(Identifier.of(AmethystShield.MOD_ID, "amethyst_blocking"), AmethystShieldItem::getBlocking);
         }
     }
 
@@ -39,15 +38,9 @@ public class AmethystShieldItem extends ShieldItem {
         return 0;
     }
 
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.getItem() == repairItem;
-    }
-
     public static float setCharge(IEntityDataSaver player, float amount) {
         NbtCompound nbt = player.getPersistentData();
-        if(amount >= AmethystShield.MAX_CHARGE) {
+        if (amount >= AmethystShield.MAX_CHARGE) {
             amount = AmethystShield.MAX_CHARGE;
         }
         nbt.putFloat("charge", amount);
@@ -59,20 +52,19 @@ public class AmethystShieldItem extends ShieldItem {
         nbt.putBoolean("slashing", value);
         return value;
     }
+
     public static boolean getSlashing(IEntityDataSaver player) {
         return player.getPersistentData().getBoolean("slashing");
     }
 
-    public static void syncSlashing(boolean value) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeBoolean(value);
-        ClientPlayNetworking.send(ModPackets.SYNC_SLASHING_S2C, buffer);
+    public static void syncSlashing(boolean isSlashing) {
+        ClientPlayNetworking.send(new SyncSlashPayload(isSlashing));
     }
 
     public static float addCharge(IEntityDataSaver player, float amount) {
         NbtCompound nbt = player.getPersistentData();
         float charge = nbt.getFloat("charge");
-        if(charge + amount >= AmethystShield.MAX_CHARGE) {
+        if (charge + amount >= AmethystShield.MAX_CHARGE) {
             charge = AmethystShield.MAX_CHARGE;
         } else if (charge + amount <= AmethystShield.MIN_CHARGE) {
             charge = AmethystShield.MIN_CHARGE;
@@ -88,8 +80,11 @@ public class AmethystShieldItem extends ShieldItem {
     }
 
     public static void syncCharge(float charge, ServerPlayerEntity player) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeFloat(charge);
-        ServerPlayNetworking.send(player, ModPackets.SYNC_CHARGE_S2C, buffer);
+        ServerPlayNetworking.send(player, new SyncChargePayload(charge));
+    }
+
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
+        return ingredient.getItem() == repairItem;
     }
 }

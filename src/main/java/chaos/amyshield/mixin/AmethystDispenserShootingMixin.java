@@ -23,12 +23,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class AmethystDispenserShootingMixin {
     @Inject(method = "dispenseSilently", at = @At("HEAD"), cancellable = true)
     public void dispenseSilently(BlockPointer pointer, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
-        if (pointer.getBlockState().getBlock() instanceof AmethystDispenserBlock) {
-            ServerWorld world = pointer.getWorld();
+        if (pointer.state().getBlock() instanceof AmethystDispenserBlock) {
+            ServerWorld world = pointer.world();
             Position position = DispenserBlock.getOutputLocation(pointer);
-            Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
+            Direction direction = pointer.state().get(DispenserBlock.FACING);
             ProjectileEntity projectileEntity = createProjectile(world, position, stack);
-            projectileEntity.setVelocity(direction.getOffsetX(), (float)direction.getOffsetY() + 0.1f, direction.getOffsetZ(), AmethystShield.AMETHYST_DISPENSER_STRENGTH, AmethystShield.AMETHYST_DISPENSER_SPREAD);
+            projectileEntity.setVelocity(direction.getOffsetX(), (float) direction.getOffsetY() + 0.1f, direction.getOffsetZ(), AmethystShield.AMETHYST_DISPENSER_STRENGTH, AmethystShield.AMETHYST_DISPENSER_SPREAD);
             world.spawnEntity(projectileEntity);
             stack.decrement(1);
             cir.setReturnValue(stack);
@@ -37,7 +37,8 @@ public class AmethystDispenserShootingMixin {
 
     @Unique
     protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
-        ArrowEntity arrowEntity = new ArrowEntity(world, position.getX(), position.getY(), position.getZ());
+        //public ArrowEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
+        ArrowEntity arrowEntity = new ArrowEntity(world, position.getX(), position.getY(), position.getZ(), stack, null);
         arrowEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         return arrowEntity;
     }

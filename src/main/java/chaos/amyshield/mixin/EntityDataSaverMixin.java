@@ -13,28 +13,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityDataSaverMixin implements IEntityDataSaver {
-	@Unique
-	private NbtCompound persistentData;
+    @Unique
+    private NbtCompound persistentData;
 
-	@Override
-	public NbtCompound getPersistentData() {
-		if(this.persistentData == null) {
-			this.persistentData = new NbtCompound();
-		}
-		return this.persistentData;
-	}
+    @Override
+    public NbtCompound getPersistentData() {
+        if (this.persistentData == null) {
+            this.persistentData = new NbtCompound();
+        }
+        return this.persistentData;
+    }
 
-	@Inject(method = "writeNbt", at = @At("HEAD"))
-	protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable<NbtCompound> cir) {
-		if(this.persistentData != null) {
-			nbt.put(AmethystShield.MOD_ID, this.persistentData);
-		}
-	}
+    @Inject(method = "writeNbt", at = @At("HEAD"))
+    protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable<NbtCompound> cir) {
+        if (this.persistentData != null) {
+            nbt.put(AmethystShield.MOD_ID, this.persistentData);
+        }
+    }
 
-	@Inject(method = "readNbt", at = @At("HEAD"))
-	protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
-		if (nbt.contains(AmethystShield.MOD_ID)) {
-			this.persistentData = nbt.getCompound(AmethystShield.MOD_ID);
-		}
-	}
+    @Inject(method = "readNbt", at = @At("HEAD"))
+    protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
+        if (nbt.contains(AmethystShield.MOD_ID)) {
+            this.persistentData = nbt.getCompound(AmethystShield.MOD_ID);
+        }
+    }
 }

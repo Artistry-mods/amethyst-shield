@@ -4,7 +4,6 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,17 +25,11 @@ import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
 public class ShieldBrakeMixin {
 
     @Inject(method = "disableShield", at = @At("HEAD"))
-    public void disableShield(boolean sprinting, CallbackInfo ci) {
+    public void disableShield(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        float f = 0.25f + (float) EnchantmentHelper.getEfficiency(player) * 0.05f;
-        if (sprinting) {
-            f += 0.75f;
-        }
-        if (player.getRandom().nextFloat() < f) {
-            player.getItemCooldownManager().set(ModItems.AMETHYST_SHIELD, 100);
-            player.clearActiveItem();
-            player.getWorld().sendEntityStatus(player, EntityStatuses.BREAK_SHIELD);
-        }
+        player.getItemCooldownManager().set(ModItems.AMETHYST_SHIELD, 100);
+        player.clearActiveItem();
+        player.getWorld().sendEntityStatus(player, EntityStatuses.BREAK_SHIELD);
     }
 
 
@@ -58,7 +51,7 @@ public class ShieldBrakeMixin {
         if (amount >= 3.0f) {
             int i = 1 + MathHelper.floor(amount);
             Hand hand = player.getActiveHand();
-            player.getActiveItem().damage(i, player, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+            player.getActiveItem().damage(i, player, ((ShieldItem) player.getActiveItem().getItem()).getSlotType());
             if (player.getActiveItem().isEmpty()) {
                 if (hand == Hand.MAIN_HAND) {
                     player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
