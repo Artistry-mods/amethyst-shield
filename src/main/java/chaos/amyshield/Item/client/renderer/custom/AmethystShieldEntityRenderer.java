@@ -17,7 +17,6 @@ public class AmethystShieldEntityRenderer implements DynamicItemRenderer {
 
     public AmethystShieldEntityRenderer(ModelPart model) {
         this.modelShield = new AmethystShieldEntityModel(model);
-        System.out.println(this.modelShield);
     }
 
     @Override
