@@ -4,10 +4,12 @@ import chaos.amyshield.AmethystShield;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,16 +24,15 @@ public abstract class ModelLoaderMixin {
     @Shadow
     protected abstract void loadItemModel(ModelIdentifier id);
 
-    //"Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V"
-    /*
-    @Inject(method = "<init>", at = @At(value = "HEAD", target = "Lnet/minecraft/client/render/model/ModelLoader;loadItemModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 3, shift = At.Shift.AFTER))
-    public void addAmethystMonocleModel(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
-        this.loadItemModel(new ModelIdentifier(Identifier.of( AmethystShield.MOD_ID,"amethyst_monocle_3d"), "inventory"));
-    }
+    @Shadow @Final private Map<ModelIdentifier, UnbakedModel> modelsToBake;
 
-     */
+    @Shadow abstract UnbakedModel getOrLoadModel(Identifier id);
+
     @Inject(method = "<init>", at = @At("TAIL"))
     public void addAmethystMonocleModel(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
-        this.loadItemModel(new ModelIdentifier(Identifier.of(AmethystShield.MOD_ID, "amethyst_monocle_3d"), "inventory"));
+        profiler.push("special");
+        this.loadItemModel(ModelIdentifier.ofInventoryVariant(Identifier.of(AmethystShield.MOD_ID, "amethyst_monocle_3d")));
+        this.modelsToBake.values().forEach((model) -> model.setParents(this::getOrLoadModel));
+        profiler.pop();
     }
 }

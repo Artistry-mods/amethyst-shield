@@ -1,0 +1,19 @@
+{
+  "parent": "block/cube",
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [ 0, 135, 0 ],
+      "translation": [ 0, 0, 0 ],
+      "scale": [ 0.40, 0.40, 0.40 ]
+    }
+  },
+  "textures": {
+    "particle": "amyshield:item/amethyst_monocle_front",
+    "down": "amyshield:item/amethyst_monocle_bottom",
+    "up": "amyshield:item/null",
+    "north": "amyshield:item/amethyst_monocle_front",
+    "east": "amyshield:item/null",
+    "south": "amyshield:item/null",
+    "west": "amyshield:item/null"
+  }
+}
