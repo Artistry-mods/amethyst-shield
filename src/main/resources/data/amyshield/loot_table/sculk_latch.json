@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:chest",
+  "type": "minecraft:generic",
   "pools": [
     {
       "rolls": 1,

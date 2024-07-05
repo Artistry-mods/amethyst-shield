@@ -1,41 +1,53 @@
 package chaos.amyshield.Item.custom;
 
 import chaos.amyshield.AmethystShield;
+import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.networking.playload.SyncChargePayload;
 import chaos.amyshield.networking.playload.SyncSlashPayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShieldItem;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class AmethystShieldItem extends ShieldItem {
+public class AmethystShieldItem extends ShieldItem implements Equipment {
     private final Item repairItem;
 
-    public AmethystShieldItem(Settings settings, Item repairItem) {
+    public AmethystShieldItem(Item.Settings settings, Item repairItem) {
         super(settings);
         this.repairItem = repairItem;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            ModelPredicateProviderRegistry.register(Identifier.of(AmethystShield.MOD_ID, "amethyst_blocking"), AmethystShieldItem::getBlocking);
+            ModelPredicateProviderRegistry.register(ModItems.AMETHYST_SHIELD, Identifier.of(AmethystShield.MOD_ID, "amethyst_blocking"), AmethystShieldItem::getBlocking);
         }
     }
 
+    @Override
+    public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context) {
+        return enchantment.matchesKey(Enchantments.MENDING) || enchantment.matchesKey(Enchantments.UNBREAKING);
+    }
+
     private static float getBlocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, int i) {
+        return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getActiveItem() == itemStack ? 1.0F : 0.0F;
+        /*
         if (livingEntity != null) {
             if (livingEntity.getActiveItem() == itemStack) {
                 return 1;
             }
         }
         return 0;
+
+         */
     }
 
     public static float setCharge(IEntityDataSaver player, float amount) {
