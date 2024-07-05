@@ -423,7 +423,7 @@
           "name": "minecraft:silence_armor_trim_smithing_template"
         },
         {
-          "type": "minecraft:loot_table",
+          "type": "minecraft:item",
           "name": "amyshield:sculk_latch"
         }
       ],
