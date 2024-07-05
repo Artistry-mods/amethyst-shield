@@ -15,7 +15,7 @@
       "item": "amyshield:oxiwine_bolt"
     },
     "s": {
-      "item": "amyshield:sculk_latch"
+      "item": "sculk-latch:sculk_latch"
     }
   },
   "pattern": [
@@ -24,7 +24,7 @@
     "csc"
   ],
   "result": {
-    "item": "amyshield:amethyst_shield"
+    "id": "amyshield:amethyst_shield"
   },
   "show_notification": true
 }
