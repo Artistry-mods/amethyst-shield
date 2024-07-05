@@ -20,7 +20,7 @@ public class AutoUpdaterScreen extends Screen {
     private final UpdaterList updaterList;
 
     public AutoUpdaterScreen(Screen parent, UpdaterList updaterList) {
-        super(Text.translatable("options.language.title"));
+        super(Text.translatable("gui.updater.updater_screen.name"));
         this.parent = parent;
         this.updaterList = updaterList;
         this.layout.setFooterHeight(53);
@@ -47,9 +47,8 @@ public class AutoUpdaterScreen extends Screen {
         DirectionalLayoutWidget directionalLayoutWidget = this.layout.addFooter(DirectionalLayoutWidget.vertical()).spacing(8);
         directionalLayoutWidget.getMainPositioner().alignHorizontalCenter();
         DirectionalLayoutWidget directionalLayoutWidget2 = directionalLayoutWidget.add(DirectionalLayoutWidget.horizontal().spacing(8));
-        directionalLayoutWidget2.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.onDone()).build());
-
         directionalLayoutWidget2.add(ButtonWidget.builder(Text.translatable("gui.updater.updater_screen.update_button"), (button) -> this.onUpdate()).dimensions(this.width / 2, this.height - 38, 150, 20).build());
+        directionalLayoutWidget2.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.onDone()).build());
     }
 
     @Override
