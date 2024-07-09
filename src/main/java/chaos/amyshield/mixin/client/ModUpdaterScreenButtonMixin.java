@@ -17,7 +17,7 @@ public abstract class ModUpdaterScreenButtonMixin extends Screen {
         super(title);
     }
 
-    @Inject(at = @At("HEAD"), method = "initWidgetsNormal(II)V")
+    @Inject(method = "initWidgetsNormal(II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;", ordinal = 2))
     private void initWidgetsNormal(int y, int spacingY, CallbackInfo info) {
 
         if (!Updater.CONFIG.SHOW_UPDATER_SCREEN_BUTTON()) {
