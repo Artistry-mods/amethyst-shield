@@ -1,45 +1,45 @@
 {
-	"schemaVersion": 1,
-	"id": "amyshield",
-	"version": "${version}",
-	"name": "Amethyst Shield",
-	"description": "This mod adds the Amethyst shield concept from Blockixel Artistry",
-	"authors": [
-		"Herr Chaos",
-		"Ruby"
-	],
-	"contact": {
-		"homepage": "https://discord.gg/jufZucSF24",
-		"sources": "https://github.com/HerrChaos/amethyst-shield"
-	},
-	"license": "MIT",
-	"icon": "assets/amyshield/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"chaos.amyshield.AmethystShield"
-		],
-		"client": [
-			"chaos.amyshield.AmethystShieldClient"
-		],
-		"fabric-datagen": [
-			"chaos.amyshield.AmethystShieldDatagen"
-		]
-	},
-	"mixins": [
-		"amyshield.mixins.json",
-		{
-			"config": "amyshield.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.15.7",
-		"minecraft": "~1.21",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
-	}
+  "schemaVersion": 1,
+  "id": "amyshield",
+  "version": "${version}",
+  "name": "Amethyst Shield",
+  "description": "This mod adds the Amethyst shield concept from Blockixel Artistry",
+  "authors": [
+    "Herr Chaos",
+    "Ruby"
+  ],
+  "contact": {
+    "homepage": "https://discord.gg/jufZucSF24",
+    "sources": "https://github.com/HerrChaos/amethyst-shield"
+  },
+  "license": "MIT",
+  "icon": "assets/amyshield/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "chaos.amyshield.AmethystShield"
+    ],
+    "client": [
+      "chaos.amyshield.AmethystShieldClient"
+    ],
+    "fabric-datagen": [
+      "chaos.amyshield.AmethystShieldDatagen"
+    ]
+  },
+  "mixins": [
+    "amyshield.mixins.json",
+    {
+      "config": "amyshield.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.7",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
 }

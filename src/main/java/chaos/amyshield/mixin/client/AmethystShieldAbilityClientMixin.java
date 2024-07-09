@@ -58,20 +58,21 @@ public abstract class AmethystShieldAbilityClientMixin {
         //movement delta (I hate it and I will delete it)
         if (this.lastPos != null && !AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) && !this.isSliding && !player.isFallFlying()) {
             double movementDelta = new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
-                    .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ())));
-            if (movementDelta > AmethystShield.MIN_MOVEMENT_DELTA) {
+                    .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
+            if (movementDelta > AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_MOVEMENT_DELTA()) {
                 this.movementCharge += movementDelta;
                 //sending the packed to remove charge
             }
         }
         this.lastPos = player.getPos();
 
-        if (this.movementChargeTimer >= 1) this.movementChargeTimer -= 1;
-        if (this.movementChargeTimer == 0) {
+        if (this.movementChargeTimer >= 1) {
+            this.movementChargeTimer -= 1;
+        } else {
             if (this.movementCharge > 0) {
                 this.onAbilityUse((float) this.movementCharge, false, false, false);
             }
-            this.movementChargeTimer = AmethystShield.MOVEMENT_CHARGE_TIMING;
+            this.movementChargeTimer = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_TIMING();
             this.movementCharge = 0;
         }
 
@@ -115,7 +116,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 //dashing code
                 if (this.isDoubleJumpingTimer >= 1 &&
                         player.handSwinging &&
-                        canUseAbility(player, AmethystShield.SPARKLING_SLASH_COST) &&
+                        canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
                         player.getMainHandStack().getItem() instanceof SwordItem) {
                     this.onSparklingSlash();
                 }
@@ -123,7 +124,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 //double jumping code
                 if (player.getVelocity().getY() < 0f) {
                     if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
-                    if (canUseAbility(player, AmethystShield.DOUBLE_JUMP_COST) &&
+                    if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST()) &&
                             player.isBlocking() &&
                             player.input.jumping) {
                         this.onDoubleJump();
@@ -152,10 +153,10 @@ public abstract class AmethystShieldAbilityClientMixin {
         AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
         AmethystShieldItem.syncSlashing(true);
 
-        flingPlayer(AmethystShield.SPARKLING_SLASH_STRENGTH);
+        flingPlayer(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_STRENGTH());
         this.isDoubleJumpingTimer = 0;
 
-        this.onAbilityUse(AmethystShield.SPARKLING_SLASH_COST, false, true, true);
+        this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST(), false, true, true);
     }
 
     @Unique
@@ -167,11 +168,11 @@ public abstract class AmethystShieldAbilityClientMixin {
             if (shield == ModItems.AMETHYST_SHIELD) {
                 //Setting velocity to make the player jump
                 player.jump();
-                player.setVelocity(player.getVelocity().getX(), AmethystShield.DOUBLE_JUMP_STRENGTH, player.getVelocity().getZ());
+                player.setVelocity(player.getVelocity().getX(), AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_STRENGTH(), player.getVelocity().getZ());
                 //setting the double jump timer to 10, so that we can use it later for the sword slash
-                this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
+                this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
 
-                this.onAbilityUse(AmethystShield.DOUBLE_JUMP_COST, true, false, true);
+                this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST(), true, false, true);
                 return;
             }
         }
@@ -180,7 +181,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     @Unique
     private void onAmethystBurst() {
         ClientPlayNetworking.send(new AmethystPushPayload(true));
-        this.onAbilityUse(AmethystShield.AMETHYST_PUSH_COST, true, false, true);
+        this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST(), true, false, true);
     }
 
     @Unique
@@ -189,12 +190,12 @@ public abstract class AmethystShieldAbilityClientMixin {
         if (player.isBlocking()) {
             if (this.sneakTimer >= 1) {
                 this.sneakTimer = 0;
-                if (canUseAbility(player, AmethystShield.AMETHYST_PUSH_COST)) {
+                if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST())) {
                     this.onAmethystBurst();
                 }
                 return;
             }
-            this.sneakTimer = AmethystShield.AMETHYST_PUSH_SNEAKING_TIMING;
+            this.sneakTimer = AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_SNEAKING_TIMING();
         }
     }
 
@@ -203,19 +204,19 @@ public abstract class AmethystShieldAbilityClientMixin {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
         if (this.blockTimer >= 1) {
             this.blockTimer = 0;
-            if (canUseAbility(player, AmethystShield.AMETHYST_SLIDE_COST)) {
+            if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST())) {
                 this.onAmethystSlide();
             }
             return;
         }
-        this.blockTimer = AmethystShield.AMETHYST_SLIDE_TIMING;
+        this.blockTimer = AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_TIMING();
     }
 
     @Unique
     private void onAmethystSlide() {
         this.applyMovementVelocity();
         this.isSliding = true;
-        this.onAbilityUse(AmethystShield.AMETHYST_SLIDE_COST, true, false, true);
+        this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST(), true, false, true);
     }
 
     @Unique

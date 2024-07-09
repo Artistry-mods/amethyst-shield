@@ -44,7 +44,7 @@ public class ShieldBrakeMixin {
             player.incrementStat(Stats.USED.getOrCreateStat(player.getActiveItem().getItem()));
         }
         if (player.getActiveItem().getItem() instanceof AmethystShieldItem) {
-            double addedCharge = amount * AmethystShield.BLOCK_GAIN_MULTIPLIER;
+            double addedCharge = amount * AmethystShield.CONFIG.amethystShieldNested.chargeNested.BLOCK_GAIN_MULTIPLIER();
             AmethystShieldItem.addCharge(((IEntityDataSaver) player), (float) addedCharge);
             syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), (ServerPlayerEntity) player);
         }

@@ -18,7 +18,7 @@ import net.minecraft.util.Rarity;
 public class ModItems {
 
     public static final Item AMETHYST_SHIELD = registerItem("amethyst_shield",
-            new AmethystShieldItem(new Item.Settings().maxDamage(512), Items.AMETHYST_SHARD));
+            new AmethystShieldItem(new Item.Settings().maxDamage(AmethystShield.CONFIG.amethystShieldNested.AMETHYST_SHIELD_DURABILITY()), Items.AMETHYST_SHARD));
 
     public static final Item OXIWINE_BOLT = registerItem("oxiwine_bolt",
             new Item(new Item.Settings()));

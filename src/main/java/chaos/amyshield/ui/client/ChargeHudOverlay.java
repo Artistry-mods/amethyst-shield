@@ -22,7 +22,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-        RenderSystem.disableDepthTest();
+        //RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         MinecraftClient client = MinecraftClient.getInstance();
@@ -51,14 +51,14 @@ public class ChargeHudOverlay implements HudRenderCallback {
                         if (player.getAbilities().creativeMode) yshift += 17;
                     }
                     drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
-                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).getPersistentData().getFloat("charge")) / 100)), 5);
+                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
                 }
             }
             client.getProfiler().pop();
         }
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
+        //RenderSystem.enableDepthTest();
     }
 
     private LivingEntity getRiddenEntity() {
