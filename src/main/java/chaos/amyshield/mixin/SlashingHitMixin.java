@@ -39,12 +39,12 @@ public class SlashingHitMixin {
                 player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1f, 1);
             }
 
-            List<Entity> entityList = new ArrayList<>(player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(AmethystShield.SPARKLING_SLASH_RADIUS)));
+            List<Entity> entityList = new ArrayList<>(player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_RADIUS())));
             Objects.requireNonNull(player.getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
-                        if (entity.damage(player.getDamageSources().indirectMagic(player, player), AmethystShield.SPARKLING_SLASH_DAMAGE)) {
-                            AmethystShieldItem.addCharge(((IEntityDataSaver) player), AmethystShield.SPARKLING_SLASH_CHARGE_RETURN);
+                        if (entity.damage(player.getDamageSources().indirectMagic(player, player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE())) {
+                            AmethystShieldItem.addCharge(((IEntityDataSaver) player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN());
                             AmethystShieldItem.syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                         }
                     }

@@ -1,0 +1,11 @@
+{
+  "gui.updater.updater_screen.update_button": "Update",
+  "gui.updater.updater_screen.name": "Mod Updater",
+  "text.config.updater-lib-config.title": "Auto updater config",
+  "text.config.updater-lib-config.option.SHOW_UPDATER_SCREEN_BUTTON": "Show update button",
+  "text.config.updater-lib-config.option.DISABLE_UPDATER": "Disable Updater",
+  "text.config.updater-lib-config.category.updateNested": "Update",
+  "text.config.updater-lib-config.option.updateNested.AUTO_UPDATE": "Automatically Update",
+  "text.config.updater-lib-config.option.updateNested.UPDATE_TO_BETA": "Update to beta versions",
+  "text.config.updater-lib-config.option.updateNested.UPDATE_TO_ALPHA": "Update the alpha versions"
+}

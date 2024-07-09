@@ -22,11 +22,14 @@ import java.util.Map;
 @Mixin(ModelLoader.class)
 public abstract class ModelLoaderMixin {
     @Shadow
+    @Final
+    private Map<ModelIdentifier, UnbakedModel> modelsToBake;
+
+    @Shadow
     protected abstract void loadItemModel(ModelIdentifier id);
 
-    @Shadow @Final private Map<ModelIdentifier, UnbakedModel> modelsToBake;
-
-    @Shadow abstract UnbakedModel getOrLoadModel(Identifier id);
+    @Shadow
+    abstract UnbakedModel getOrLoadModel(Identifier id);
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void addAmethystMonocleModel(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {

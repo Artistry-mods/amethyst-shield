@@ -23,11 +23,11 @@ public class AmethystPushAbilityPacketC2S {
             for (ItemStack itemStack : context.player().getHandItems()) {
                 Item shield = itemStack.getItem();
                 if (shield == ModItems.AMETHYST_SHIELD) {
-                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.AMETHYST_PUSH_RADIUS, context.player()));
+                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_RADIUS(), context.player()));
                     for (Entity entity : entityList) {
                         if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
-                            pushEntityAwayFromPlayer(entity, AmethystShield.AMETHYST_PUSH_STRENGTH_X, context.player());
-                            entity.damage(context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.AMETHYST_PUSH_DAMAGE);
+                            pushEntityAwayFromPlayer(entity, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_X(), context.player());
+                            entity.damage(context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE());
                         }
                     }
                     return;
@@ -54,6 +54,6 @@ public class AmethystPushAbilityPacketC2S {
 
         Vec2f velocity = normalizedDirection.multiply((float) (speed + (player.distanceTo(entity) * 0.8)));
 
-        entity.addVelocity(new Vec3d(velocity.x, AmethystShield.AMETHYST_PUSH_STRENGTH_Y, velocity.y));
+        entity.addVelocity(new Vec3d(velocity.x, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_Y(), velocity.y));
     }
 }
