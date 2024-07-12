@@ -9,5 +9,7 @@ public class ModrinthDependency {
     public enum DependencyType {
         required,
         optional,
+        embedded,
+        incompatible
     }
 }

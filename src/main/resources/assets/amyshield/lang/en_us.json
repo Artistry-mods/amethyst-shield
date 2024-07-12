@@ -13,7 +13,7 @@
   "text.config.amethyst-shield-config.option.dispenserNested.AMETHYST_DISPENSER_STRENGTH": "Strength",
   "text.config.amethyst-shield-config.option.dispenserNested.AMETHYST_DISPENSER_SPREAD": "Spread",
   "text.config.amethyst-shield-config.category.amethystShieldNested": "Amethyst shield",
-  "text.config.amethyst-shield-config.option.amethystShieldNested.AMETHYST_SHIELD_DURABILITY": "durability",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.AMETHYST_SHIELD_DURABILITY": "Durability",
   "text.config.amethyst-shield-config.category.amethystShieldNested.chargeNested": "Charge",
   "text.config.amethyst-shield-config.option.amethystShieldNested.chargeNested.MAX_CHARGE": "Max charge",
   "text.config.amethyst-shield-config.option.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_TIMING": "Movement charge packet frequency",

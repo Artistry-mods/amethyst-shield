@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.nio.file.Files;
@@ -97,7 +98,7 @@ public class Updater {
     }
 
     private static InputStream downloadFile(String urlString) throws IOException {
-        URL url = new URL(urlString);
+        URL url = URL.of(URI.create(urlString),null);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setDoOutput(true);
@@ -162,6 +163,9 @@ public class Updater {
         }
 
         for (ModrinthDependency dependency : newestVersion.dependencies) {
+            if (dependency.dependency_type == ModrinthDependency.DependencyType.incompatible) continue;
+            if (dependency.dependency_type == ModrinthDependency.DependencyType.embedded) continue;
+            if (dependency.dependency_type == ModrinthDependency.DependencyType.optional && !CONFIG.updateNested.DOWNLOAD_OPTIONAL_DEPENDENCIES()) continue;
             INSTANCE.markForDownloadWithDependencies(dependency.project_id);
         }
 

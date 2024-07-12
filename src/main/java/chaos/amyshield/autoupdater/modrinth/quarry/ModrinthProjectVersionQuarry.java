@@ -9,7 +9,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 
 
 public class ModrinthProjectVersionQuarry {
@@ -56,14 +55,6 @@ public class ModrinthProjectVersionQuarry {
     }
 
     public ModrinthVersion getFittingVersion() {
-        if (this.versions != null) {
-            for (ModrinthVersion version : this.versions) {
-                if (Arrays.asList(version.game_versions).contains(Updater.minecraft_version) &&
-                        Arrays.asList(version.loaders).contains("fabric")) {
-                    return version;
-                }
-            }
-        }
-        return null;
+        return this.versions[0];
     }
 }

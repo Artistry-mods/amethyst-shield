@@ -6,6 +6,7 @@
   "text.config.updater-lib-config.option.DISABLE_UPDATER": "Disable Updater",
   "text.config.updater-lib-config.category.updateNested": "Update",
   "text.config.updater-lib-config.option.updateNested.AUTO_UPDATE": "Automatically Update",
+  "text.config.updater-lib-config.option.updateNested.DOWNLOAD_OPTIONAL_DEPENDENCIES": "Download optional dependencies",
   "text.config.updater-lib-config.option.updateNested.UPDATE_TO_BETA": "Update to beta versions",
   "text.config.updater-lib-config.option.updateNested.UPDATE_TO_ALPHA": "Update the alpha versions"
 }

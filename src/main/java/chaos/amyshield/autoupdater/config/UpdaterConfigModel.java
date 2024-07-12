@@ -18,6 +18,7 @@ public class UpdaterConfigModel {
 
     public static class UpdateNested {
         public boolean AUTO_UPDATE = false;
+        public boolean DOWNLOAD_OPTIONAL_DEPENDENCIES = true;
         public boolean UPDATE_TO_BETA = true;
         public boolean UPDATE_TO_ALPHA = false;
     }
