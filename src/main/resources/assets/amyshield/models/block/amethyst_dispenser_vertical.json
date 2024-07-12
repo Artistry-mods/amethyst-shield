@@ -3,7 +3,7 @@
   "textures": {
     "particle": "minecraft:block/furnace_top",
     "down": "amyshield:block/amethyst_dispenser_top",
-    "up": "amyshield:block/amethyst_dispenser_front",
+    "up": "amyshield:block/amethyst_dispenser_top_face",
     "north": "minecraft:block/furnace_top",
     "east": "minecraft:block/furnace_top",
     "south": "minecraft:block/furnace_top",
