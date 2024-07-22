@@ -32,7 +32,7 @@ public class AmethystShieldItem extends ShieldItem implements Equipment {
     }
 
     public static float setCharge(IEntityDataSaver player, float amount) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.amethyst_shield$getPersistentData();
         if (amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
             amount = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
         }
@@ -41,13 +41,13 @@ public class AmethystShieldItem extends ShieldItem implements Equipment {
     }
 
     public static boolean setSlashing(IEntityDataSaver player, boolean value) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.amethyst_shield$getPersistentData();
         nbt.putBoolean("slashing", value);
         return value;
     }
 
     public static boolean getSlashing(IEntityDataSaver player) {
-        return player.getPersistentData().getBoolean("slashing");
+        return player.amethyst_shield$getPersistentData().getBoolean("slashing");
     }
 
     public static void syncSlashing(boolean isSlashing) {
@@ -55,7 +55,7 @@ public class AmethystShieldItem extends ShieldItem implements Equipment {
     }
 
     public static float addCharge(IEntityDataSaver player, float amount) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.amethyst_shield$getPersistentData();
         float charge = nbt.getFloat("charge");
         if (charge + amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
             charge = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
@@ -69,7 +69,7 @@ public class AmethystShieldItem extends ShieldItem implements Equipment {
     }
 
     public static float getCharge(IEntityDataSaver player) {
-        return player.getPersistentData().getFloat("charge");
+        return player.amethyst_shield$getPersistentData().getFloat("charge");
     }
 
     public static void syncCharge(float charge, ServerPlayerEntity player) {

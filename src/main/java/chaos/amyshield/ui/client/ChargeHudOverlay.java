@@ -51,7 +51,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
                         if (player.getAbilities().creativeMode) yshift += 17;
                     }
                     drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
-                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
+                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
                 }
             }
             client.getProfiler().pop();

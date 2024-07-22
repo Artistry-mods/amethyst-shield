@@ -16,6 +16,5 @@ public class AmethystShieldClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(new ChargeHudOverlay());
         ModModelPredicates.registerModModelPredicates();
         ModClientParticles.registerModParticlesClient();
-        // This entrypoint is suitable for setting up client-specific logic, such as rendering.
     }
 }

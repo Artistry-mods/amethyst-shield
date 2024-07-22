@@ -4,7 +4,11 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AmethystShieldAbilityClientMixin",
-    "ModUpdaterScreenButtonMixin"
+    "ModUpdaterScreenButtonMixin",
+    "F3ChargePercentageMixin",
+    "ItemRendererAccessor",
+    "ItemRendererMixin",
+    "ModelLoaderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
