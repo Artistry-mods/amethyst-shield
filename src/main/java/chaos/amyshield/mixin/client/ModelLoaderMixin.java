@@ -1,4 +1,4 @@
-package chaos.amyshield.mixin;
+package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.AmethystShield;
 import net.minecraft.client.color.block.BlockColors;

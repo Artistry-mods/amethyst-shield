@@ -1,4 +1,4 @@
-package chaos.amyshield.mixin;
+package chaos.amyshield.mixin.client;
 
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.item.ItemRenderer;

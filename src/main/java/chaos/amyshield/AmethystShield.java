@@ -2,6 +2,7 @@ package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
+import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.autoupdater.updater.Updater;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
@@ -9,8 +10,10 @@ import chaos.amyshield.config.AmethystShieldConfig;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
+import chaos.amyshield.util.IEntityDataSaver;
 import chaos.amyshield.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +78,11 @@ public class AmethystShield implements ModInitializer {
         if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
             ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
         }
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            float charge = AmethystShieldItem.getCharge((IEntityDataSaver) handler.player);
+            AmethystShieldItem.syncCharge(charge, handler.player);
+        });
         LOGGER.info("Hello, Blockixel :)");
     }
 }
