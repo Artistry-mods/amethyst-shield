@@ -27,6 +27,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
         RenderSystem.enableBlend();
         MinecraftClient client = MinecraftClient.getInstance();
         if (client != null) {
+
             client.getProfiler().swap("charge");
             int width = client.getWindow().getScaledWidth();
             int height = client.getWindow().getScaledHeight();
@@ -50,8 +51,10 @@ public class ChargeHudOverlay implements HudRenderCallback {
                         }
                         if (player.getAbilities().creativeMode) yshift += 17;
                     }
-                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
-                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
+                    if (!client.options.hudHidden) {
+                        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
+                        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
+                    }
                 }
             }
             client.getProfiler().pop();
