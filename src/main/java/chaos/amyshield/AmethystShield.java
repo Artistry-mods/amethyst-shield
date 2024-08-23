@@ -1,6 +1,8 @@
 package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.Item.ModItemsButItsOnlyTheMonocle;
+import chaos.amyshield.Item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
 import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.autoupdater.updater.Updater;
@@ -75,8 +77,16 @@ public class AmethystShield implements ModInitializer {
         ModParticles.registerModParticles();
         ModBlockEntities.registerModBlockEntities();
         ModWorldGeneration.generateModWorldGen();
+
         if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
             ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
+        }
+
+        if (FabricLoader.getInstance().isModLoaded("trinkets")) {
+            System.out.println("registering the trinketed monocle");
+            ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled.init();
+        } else {
+            ModItemsButItsOnlyTheMonocle.init();
         }
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {

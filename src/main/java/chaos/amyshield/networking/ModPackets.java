@@ -31,8 +31,6 @@ public class ModPackets {
         ServerPlayNetworking.registerGlobalReceiver(AmethystPushPayload.ID, AmethystPushAbilityPacketC2S::push);
     }
 
-    //ServerPlayNetworking.registerReceiver(BoomPayload.ID, (payload, context) -> {     ModPacketHandler. createExplosion(context. player(), payload. fire()); });
-
     public static void registerGlobalReceiversS2C() {
         PayloadTypeRegistry.playS2C().register(SyncChargePayload.ID, SyncChargePayload.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(SyncChargePayload.ID, SyncChargePacketS2C::syncCharge);
