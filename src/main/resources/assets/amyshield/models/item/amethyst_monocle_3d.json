@@ -1,5 +1,13 @@
 {
   "parent": "block/cube",
+  "overrides": [
+    {
+      "predicate": {
+        "trinkets:head_slot": 1
+      },
+      "model": "minecraft:block/stone"
+    }
+  ],
   "display": {
     "firstperson_righthand": {
       "rotation": [
