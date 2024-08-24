@@ -30,22 +30,26 @@ public class AmethystDispenserConverterMixin {
 
     @Inject(method = "neighborUpdate", at = @At("HEAD"))
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        if (world.getBlockState(sourcePos).getBlock() == Blocks.AMETHYST_CLUSTER && world.getBlockState(sourcePos).get(FACING).equals(Direction.UP) && pos.equals(sourcePos.down())) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof DispenserBlockEntity) {
-                Map<ItemStack, Integer> itemStackMap = new java.util.HashMap<>(Map.of());
-                for (int i = 0; i < ((DispenserBlockEntity) blockEntity).size(); i++) {
-                    itemStackMap.put(((DispenserBlockEntity) blockEntity).getStack(i), i);
-                }
+        if (world.getBlockState(sourcePos).getBlock() != Blocks.AMETHYST_CLUSTER || !world.getBlockState(sourcePos).get(FACING).equals(Direction.UP) || !pos.equals(sourcePos.down())) {
+            return;
+        }
 
-                ((DispenserBlockEntity) blockEntity).clear();
-                world.setBlockState(pos, ModBlocks.AMETHYST_DISPENSER.getDefaultState().with(FACING, state.get(FACING)));
-                BlockEntity amethystblockEntity = world.getBlockEntity(pos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!(blockEntity instanceof DispenserBlockEntity)) {
+            return;
+        }
 
-                if (amethystblockEntity instanceof DispenserBlockEntity) {
-                    itemStackMap.forEach((stack, slot) -> ((DispenserBlockEntity) amethystblockEntity).setStack(slot, stack));
-                }
-            }
+        Map<ItemStack, Integer> itemStackMap = new java.util.HashMap<>(Map.of());
+        for (int i = 0; i < ((DispenserBlockEntity) blockEntity).size(); i++) {
+            itemStackMap.put(((DispenserBlockEntity) blockEntity).getStack(i), i);
+        }
+
+        ((DispenserBlockEntity) blockEntity).clear();
+        world.setBlockState(pos, ModBlocks.AMETHYST_DISPENSER.getDefaultState().with(FACING, state.get(FACING)));
+        BlockEntity amethystblockEntity = world.getBlockEntity(pos);
+
+        if (amethystblockEntity instanceof DispenserBlockEntity) {
+            itemStackMap.forEach((stack, slot) -> ((DispenserBlockEntity) amethystblockEntity).setStack(slot, stack));
         }
     }
 }

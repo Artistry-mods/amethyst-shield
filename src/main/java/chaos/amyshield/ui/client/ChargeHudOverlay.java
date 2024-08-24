@@ -22,59 +22,69 @@ public class ChargeHudOverlay implements HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-        //RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
+
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client != null) {
-
-            client.getProfiler().swap("charge");
-            int width = client.getWindow().getScaledWidth();
-            int height = client.getWindow().getScaledHeight();
-            int x = width / 2;
-            int y = height;
-            if (client.player != null && !client.player.isSpectator()) {
-                ClientPlayerEntity player = client.player;
-                if (player.getMainHandStack().getItem().equals(ModItems.AMETHYST_SHIELD) ||
-                        player.getOffHandStack().getItem().equals(ModItems.AMETHYST_SHIELD)) {
-
-                    int yshift = 53;
-                    int maxAir = player.getMaxAir();
-                    int playerAir = Math.min(player.getAir(), maxAir);
-                    if (player.getAbilities().creativeMode) yshift -= 17;
-                    if (player.isSubmergedIn(FluidTags.WATER) || playerAir < maxAir) yshift += 10;
-                    LivingEntity livingEntity = this.getRiddenEntity();
-                    if (livingEntity != null) {
-                        int i = this.getHeartCount(livingEntity);
-                        if (i > 10) {
-                            yshift += 10;
-                        }
-                        if (player.getAbilities().creativeMode) yshift += 17;
-                    }
-                    if (!client.options.hudHidden) {
-                        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
-                        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
-                    }
-                }
-            }
-            client.getProfiler().pop();
+        if (client == null || client.options.hudHidden) {
+            return;
         }
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        //RenderSystem.enableDepthTest();
+
+        if (client.player == null ||client.player.isSpectator()) {
+            return;
+        }
+        ClientPlayerEntity player = client.player;
+
+        if (!player.getMainHandStack().getItem().equals(ModItems.AMETHYST_SHIELD) &&
+                !player.getOffHandStack().getItem().equals(ModItems.AMETHYST_SHIELD)) {
+            return;
+        }
+
+        RenderSystem.enableDepthTest();
+        client.getProfiler().swap("charge");
+
+        int width = client.getWindow().getScaledWidth();
+        int height = client.getWindow().getScaledHeight();
+        int x = width / 2;
+        int y = height;
+
+        int yshift = 53;
+        int maxAir = player.getMaxAir();
+        int playerAir = Math.min(player.getAir(), maxAir);
+        if (player.getAbilities().creativeMode) yshift -= 17;
+        if (player.isSubmergedIn(FluidTags.WATER) || playerAir < maxAir) yshift += 10;
+        LivingEntity livingEntity = this.getRiddenEntity();
+
+        if (livingEntity != null) {
+            int i = this.getHeartCount(livingEntity);
+            if (i > 10) {
+                yshift += 10;
+            }
+            if (player.getAbilities().creativeMode) yshift += 17;
+        }
+
+        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
+        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15,
+                (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge"))
+                / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
+
+        client.getProfiler().pop();
+        RenderSystem.disableDepthTest();
     }
 
     private LivingEntity getRiddenEntity() {
         PlayerEntity playerEntity = this.getCameraPlayer();
-        if (playerEntity != null) {
-            Entity entity = playerEntity.getVehicle();
-            if (entity == null) {
-                return null;
-            }
-            if (entity instanceof LivingEntity) {
-                return (LivingEntity) entity;
-            }
+        if (playerEntity == null) {
+            return null;
         }
+
+        Entity entity = playerEntity.getVehicle();
+        if (entity == null) {
+            return null;
+        }
+
+        if (entity instanceof LivingEntity) {
+            return (LivingEntity) entity;
+        }
+
         return null;
     }
 
@@ -82,6 +92,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
         if (entity == null || !entity.isLiving()) {
             return 0;
         }
+
         float f = entity.getMaxHealth();
         int i = (int) (f + 0.5f) / 2;
         if (i > 30) {
