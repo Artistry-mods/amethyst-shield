@@ -55,16 +55,118 @@ public abstract class AmethystShieldAbilityClientMixin {
     public void tickMovement(CallbackInfo ci) {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
-        //movement delta (I hate it and I will delete it)
-        if (this.lastPos != null && !AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) && !this.isSliding && !player.isFallFlying()) {
-            double movementDelta = new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
-                    .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
-            if (movementDelta > AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_MOVEMENT_DELTA()) {
-                this.movementCharge += movementDelta;
-                //sending the packed to remove charge
+        this.gainMovementDeltaCharge();
+
+        if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying || player.isSwimming())) {
+            if (this.isSliding) {
+                this.isSliding = false;
+            }
+
+            if (AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
+                AmethystShieldItem.setSlashing(((IEntityDataSaver) player), false);
+                AmethystShieldItem.syncSlashing(false);
             }
         }
+
+        this.checkForSneaking();
+
+        this.checkForBlocking();
+
+        if (!player.isOnGround() &&
+                !player.isClimbing() &&
+                !this.jumpedLastTick &&
+                !player.getAbilities().flying) {
+
+            if (canJump(player)) {
+                //dashing code
+                if (this.canUseSparklingSlide()) {
+                    this.onSparklingSlash();
+                }
+
+                //double jumping code
+                if (player.getVelocity().getY() < 0f) {
+                    if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
+                    if (this.canDoubleJump()) {
+                        this.onDoubleJump();
+                    }
+                }
+            }
+        }
+
         this.lastPos = player.getPos();
+        //IDK why I need this, but it was there from the Mod I riped it from
+        this.jumpedLastTick = player.input.jumping;
+    }
+
+    @Unique
+    private boolean canDoubleJump() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        return canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST()) &&
+                player.isBlocking() &&
+                player.input.jumping;
+    }
+
+    @Unique
+    private boolean canUseSparklingSlide() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        return this.isDoubleJumpingTimer >= 1 &&
+               player.handSwinging &&
+               canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
+               player.getMainHandStack().getItem() instanceof SwordItem;
+    }
+
+    @Unique
+    public void checkForSneaking() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        if (this.sneakTimer >= 1) this.sneakTimer -= 1;
+
+        if (player.isSneaking()) {
+            this.hasSneakedLastTick = true;
+        }
+        if (!player.isSneaking() && this.hasSneakedLastTick) {
+            this.hasSneakedLastTick = false;
+            this.onSneakRelease();
+        }
+    }
+    @Unique
+    public void checkForBlocking() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        if (this.blockTimer >= 1) this.blockTimer -= 1;
+
+        if (player.isUsingItem() && player.getActiveItem().getItem().equals(ModItems.AMETHYST_SHIELD)) {
+            this.hasBlockedLastTick = true;
+        }
+
+        if (!player.isUsingItem() && this.hasBlockedLastTick) {
+            this.hasBlockedLastTick = false;
+            this.onBlockRelease();
+        }
+    }
+
+    @Unique
+    private void gainMovementDeltaCharge() {
+        this.tickMovementTimer();
+
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        if (this.lastPos == null || AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) || this.isSliding || player.isFallFlying()) {
+            return;
+        }
+        //movement delta
+        double movementDelta = new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
+                .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
+
+        if (movementDelta > AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_MOVEMENT_DELTA()) {
+            this.movementCharge += movementDelta;
+        }
+    }
+
+    @Unique
+    private void tickMovementTimer() {
 
         if (this.movementChargeTimer >= 1) {
             this.movementChargeTimer -= 1;
@@ -75,65 +177,6 @@ public abstract class AmethystShieldAbilityClientMixin {
             this.movementChargeTimer = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_TIMING();
             this.movementCharge = 0;
         }
-
-        //returning from slashing state if a player touches the ground
-        if (((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) || player.isSwimming()) && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
-            AmethystShieldItem.setSlashing(((IEntityDataSaver) player), false);
-            AmethystShieldItem.syncSlashing(false);
-        }
-
-        if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying) && this.isSliding) {
-            this.isSliding = false;
-        }
-
-        //this is just sneaking detection / ability activation
-        if (this.sneakTimer >= 1) this.sneakTimer -= 1;
-
-        if (player.isSneaking()) {
-            this.hasSneakedLastTick = true;
-        }
-        if (!player.isSneaking() && this.hasSneakedLastTick) {
-            this.hasSneakedLastTick = false;
-            this.onSneakRelease();
-        }
-
-        if (this.blockTimer >= 1) this.blockTimer -= 1;
-
-        if (player.isUsingItem() && player.getActiveItem().getItem().equals(ModItems.AMETHYST_SHIELD)) {
-            this.hasBlockedLastTick = true;
-        }
-        if (!player.isUsingItem() && this.hasBlockedLastTick) {
-            this.hasBlockedLastTick = false;
-            this.onBlockRelease();
-        }
-
-        if (!player.isOnGround() &&
-                !player.isClimbing() &&
-                !this.jumpedLastTick &&
-                !player.getAbilities().flying) {
-
-            if (canJump(player)) {
-                //dashing code
-                if (this.isDoubleJumpingTimer >= 1 &&
-                        player.handSwinging &&
-                        canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
-                        player.getMainHandStack().getItem() instanceof SwordItem) {
-                    this.onSparklingSlash();
-                }
-
-                //double jumping code
-                if (player.getVelocity().getY() < 0f) {
-                    if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
-                    if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST()) &&
-                            player.isBlocking() &&
-                            player.input.jumping) {
-                        this.onDoubleJump();
-                    }
-                }
-            }
-        }
-        //IDK why I need this, but it was there from the Mod I riped it from
-        this.jumpedLastTick = player.input.jumping;
     }
 
     @Unique
@@ -165,16 +208,18 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         for (ItemStack itemStack : player.getHandItems()) {
             Item shield = itemStack.getItem();
-            if (shield == ModItems.AMETHYST_SHIELD) {
-                //Setting velocity to make the player jump
-                player.jump();
-                player.setVelocity(player.getVelocity().getX(), AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_STRENGTH(), player.getVelocity().getZ());
-                //setting the double jump timer to 10, so that we can use it later for the sword slash
-                this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
 
-                this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST(), true, false, true);
-                return;
+            if (shield != ModItems.AMETHYST_SHIELD) {
+                continue;
             }
+
+            player.jump();
+            player.setVelocity(player.getVelocity().getX(), AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_STRENGTH(), player.getVelocity().getZ());
+
+            this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
+
+            this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST(), true, false, true);
+            return;
         }
     }
 
@@ -187,16 +232,18 @@ public abstract class AmethystShieldAbilityClientMixin {
     @Unique
     private void onSneakRelease() {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-        if (player.isBlocking()) {
-            if (this.sneakTimer >= 1) {
-                this.sneakTimer = 0;
-                if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST())) {
-                    this.onAmethystBurst();
-                }
-                return;
-            }
-            this.sneakTimer = AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_SNEAKING_TIMING();
+        if (!player.isBlocking()) {
+            return;
         }
+
+        if (this.sneakTimer >= 1) {
+            this.sneakTimer = 0;
+            if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST())) {
+                this.onAmethystBurst();
+            }
+            return;
+        }
+        this.sneakTimer = AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_SNEAKING_TIMING();
     }
 
     @Unique

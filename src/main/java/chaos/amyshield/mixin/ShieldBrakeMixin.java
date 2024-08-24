@@ -43,24 +43,31 @@ public class ShieldBrakeMixin {
         if (!player.getWorld().isClient) {
             player.incrementStat(Stats.USED.getOrCreateStat(player.getActiveItem().getItem()));
         }
+
         if (player.getActiveItem().getItem() instanceof AmethystShieldItem) {
             double addedCharge = amount * AmethystShield.CONFIG.amethystShieldNested.chargeNested.BLOCK_GAIN_MULTIPLIER();
             AmethystShieldItem.addCharge(((IEntityDataSaver) player), (float) addedCharge);
             syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), (ServerPlayerEntity) player);
         }
-        if (amount >= 3.0f) {
-            int i = 1 + MathHelper.floor(amount);
-            Hand hand = player.getActiveHand();
-            player.getActiveItem().damage(i, player, ((ShieldItem) player.getActiveItem().getItem()).getSlotType());
-            if (player.getActiveItem().isEmpty()) {
-                if (hand == Hand.MAIN_HAND) {
-                    player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                } else {
-                    player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-                }
-                player.clearActiveItem();
-                player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8f, 0.8f + player.getWorld().random.nextFloat() * 0.4f);
-            }
+
+        if (amount <= 3.0f) {
+            return;
         }
+
+        if (!player.getActiveItem().isEmpty()) {
+            return;
+        }
+
+        int i = 1 + MathHelper.floor(amount);
+        Hand hand = player.getActiveHand();
+        player.getActiveItem().damage(i, player, ((ShieldItem) player.getActiveItem().getItem()).getSlotType());
+
+        if (hand == Hand.MAIN_HAND) {
+            player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        } else {
+            player.equipStack(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
+        }
+        player.clearActiveItem();
+        player.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8f, 0.8f + player.getWorld().random.nextFloat() * 0.4f);
     }
 }

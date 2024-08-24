@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class ItemRendererMixin {
     @ModifyVariable(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V", at = @At(value = "HEAD"), argsOnly = true)
     public BakedModel renderItem(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        //System.out.println(renderMode + "|" + stack);
         if (!FabricLoader.getInstance().isModLoaded("trinkets")) {
             if (stack.isOf(ModItemsButItsOnlyTheMonocle.AMETHYST_MONOCLE) && renderMode == ModelTransformationMode.HEAD) {
                 return ((ItemRendererAccessor) this).mccourse$getModels().getModelManager().getModel(ModelIdentifier.ofInventoryVariant(Identifier.of(AmethystShield.MOD_ID, "amethyst_monocle_3d")));

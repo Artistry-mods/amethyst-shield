@@ -23,7 +23,7 @@ public class MonocleItemTrinketRenderer implements TrinketRenderer {
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         TrinketRenderer.translateToFace(matrices, (PlayerEntityModel) contextModel, ((AbstractClientPlayerEntity) entity), headYaw - 180, -headPitch - 180);
 
-        matrices.translate(-0.05, 0.49, 0.29);
+        matrices.translate(-0.03, 0.49, 0.29);
         itemRenderer.renderItem(stack, ModelTransformationMode.FIXED, light, 0, matrices, vertexConsumers, entity.getWorld(), 1);
     }
 }
