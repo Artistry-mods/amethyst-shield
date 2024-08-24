@@ -8,7 +8,8 @@
     "F3ChargePercentageMixin",
     "ItemRendererAccessor",
     "ItemRendererMixin",
-    "ModelLoaderMixin"
+    "ModelLoaderMixin",
+    "ModUpdaterScreenButtonMixin"
   ],
   "injectors": {
     "defaultRequire": 1
