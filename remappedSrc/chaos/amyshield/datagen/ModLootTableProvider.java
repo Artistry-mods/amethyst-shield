@@ -1,6 +1,6 @@
 package chaos.amyshield.datagen;
 
-import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.item.ModItems;
 import chaos.amyshield.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;

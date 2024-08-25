@@ -22,6 +22,5 @@ public class ModBlocks {
     }
 
     public static void registerModBlocks() {
-        AmethystShield.LOGGER.info("Registering Blocks for " + AmethystShield.MOD_ID);
     }
 }

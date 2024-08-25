@@ -34,6 +34,6 @@ public class ModParticles {
     }
 
     public static void registerModParticles() {
-        AmethystShield.LOGGER.info("Registering Particles for " + AmethystShield.MOD_ID);
+
     }
 }

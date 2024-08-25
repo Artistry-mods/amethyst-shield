@@ -1,7 +1,7 @@
 package chaos.amyshield;
 
-import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
+import chaos.amyshield.item.ModItems;
+import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.networking.ModPackets;

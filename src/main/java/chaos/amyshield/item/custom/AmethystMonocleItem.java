@@ -1,4 +1,4 @@
-package chaos.amyshield.Item.custom;
+package chaos.amyshield.item.custom;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.particles.ModParticles;

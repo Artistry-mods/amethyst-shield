@@ -1,7 +1,7 @@
-package chaos.amyshield.Item;
+package chaos.amyshield.item;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.custom.AmethystMonocleItem;
+import chaos.amyshield.item.custom.AmethystMonocleTrinketItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
@@ -11,9 +11,9 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
-public class ModItemsButItsOnlyTheMonocle {
+public class ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled {
     public static final Item AMETHYST_MONOCLE = registerItem("amethyst_monocle",
-            new AmethystMonocleItem(new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
+            new AmethystMonocleTrinketItem(new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
 
     private static void addItemsToToolTabItemGroup(FabricItemGroupEntries entries) {
         entries.add(AMETHYST_MONOCLE);
@@ -25,6 +25,6 @@ public class ModItemsButItsOnlyTheMonocle {
     }
 
     public static void init() {
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(ModItemsButItsOnlyTheMonocle::addItemsToToolTabItemGroup);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled::addItemsToToolTabItemGroup);
     }
 }

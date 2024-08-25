@@ -1,7 +1,7 @@
-package chaos.amyshield.Item.client.renderer;
+package chaos.amyshield.item.client.renderer;
 
-import chaos.amyshield.Item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
-import chaos.amyshield.Item.client.renderer.custom.MonocleItemTrinketRenderer;
+import chaos.amyshield.item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
+import chaos.amyshield.item.client.renderer.custom.MonocleItemTrinketRenderer;
 import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 
 public class ModTrinketRenderers {

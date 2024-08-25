@@ -1,8 +1,8 @@
-package chaos.amyshield.Item.custom.predicate;
+package chaos.amyshield.item.custom.predicate;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.ModItems;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.util.Identifier;
 

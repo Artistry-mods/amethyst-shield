@@ -1,11 +1,11 @@
-package chaos.amyshield.Item;
+package chaos.amyshield.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 
-import static chaos.amyshield.Item.ModItems.registerItem;
+import static chaos.amyshield.item.ModItems.registerItem;
 
 public class ModItemsButItsOnlyTheSculkLatch {
     public static final Item SCULK_LATCH = registerItem("sculk_latch",

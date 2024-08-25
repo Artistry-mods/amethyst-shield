@@ -1,8 +1,8 @@
 package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.ModItems;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.util.IEntityDataSaver;
 import io.netty.buffer.Unpooled;

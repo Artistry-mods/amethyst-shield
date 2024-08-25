@@ -1,8 +1,8 @@
 package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.ModItems;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EquipmentSlot;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
+import static chaos.amyshield.item.custom.AmethystShieldItem.syncCharge;
 
 @Mixin(PlayerEntity.class)
 public class ShieldBrakeMixin {
