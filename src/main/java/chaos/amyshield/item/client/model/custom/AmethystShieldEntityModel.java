@@ -2,7 +2,7 @@
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 
-package chaos.amyshield.Item.client.model.custom;
+package chaos.amyshield.item.client.model.custom;
 
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;

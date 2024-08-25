@@ -1,7 +1,7 @@
 package chaos.amyshield.ui.client;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.item.ModItems;
 import chaos.amyshield.util.IEntityDataSaver;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;

@@ -1,6 +1,6 @@
-package chaos.amyshield.Item.client.renderer.custom;
+package chaos.amyshield.item.client.renderer.custom;
 
-import chaos.amyshield.Item.client.model.custom.AmethystShieldEntityModel;
+import chaos.amyshield.item.client.model.custom.AmethystShieldEntityModel;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.DynamicItemRenderer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;

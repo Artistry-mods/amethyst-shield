@@ -1,7 +1,7 @@
 package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.minecraft.entity.Entity;

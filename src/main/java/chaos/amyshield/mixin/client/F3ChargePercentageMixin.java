@@ -1,6 +1,6 @@
 package chaos.amyshield.mixin.client;
 
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.DebugHud;

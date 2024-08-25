@@ -1,4 +1,4 @@
-package chaos.amyshield.Item.client.renderer.custom;
+package chaos.amyshield.item.client.renderer.custom;
 
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.client.TrinketRenderer;

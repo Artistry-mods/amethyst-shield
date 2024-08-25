@@ -1,8 +1,8 @@
-package chaos.amyshield.Item.client.model;
+package chaos.amyshield.item.client.model;
 
-import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.client.model.custom.AmethystShieldEntityModel;
-import chaos.amyshield.Item.client.renderer.custom.AmethystShieldEntityRenderer;
+import chaos.amyshield.item.ModItems;
+import chaos.amyshield.item.client.model.custom.AmethystShieldEntityModel;
+import chaos.amyshield.item.client.renderer.custom.AmethystShieldEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 
 public class ModEntityModels {

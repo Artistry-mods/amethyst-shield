@@ -1,7 +1,7 @@
 package chaos.amyshield.networking.C2Server;
 
-import chaos.amyshield.Item.ModItems;
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.ModItems;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.playload.AmethystAbilityPayload;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.IEntityDataSaver;
@@ -13,7 +13,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
-import static chaos.amyshield.Item.custom.AmethystShieldItem.syncCharge;
+import static chaos.amyshield.item.custom.AmethystShieldItem.syncCharge;
 
 public class AmethystShieldAbilityPacketC2S {
     public static void setChargeAndSpawnParticle(AmethystAbilityPayload payload, ServerPlayNetworking.Context context) {

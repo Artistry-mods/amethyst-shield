@@ -1,7 +1,7 @@
-package chaos.amyshield.Item;
+package chaos.amyshield.item;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.custom.AmethystShieldItem;
+import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.block.ModBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -39,6 +39,5 @@ public class ModItems {
     public static void registerModItems() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(ModItems::addItemsToCombatTabItemGroup);
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItems::addItemsToIngredientsTabItemGroup);
-        AmethystShield.LOGGER.info("Registering Items for " + AmethystShield.MOD_ID);
     }
 }

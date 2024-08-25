@@ -1,7 +1,7 @@
 package chaos.amyshield.networking.C2Server;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.item.ModItems;
 import chaos.amyshield.networking.playload.AmethystPushPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;

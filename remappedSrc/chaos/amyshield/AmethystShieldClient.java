@@ -1,6 +1,6 @@
 package chaos.amyshield;
 
-import chaos.amyshield.Item.client.model.ModEntityModels;
+import chaos.amyshield.item.client.model.ModEntityModels;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.client.ModClientParticles;
 import chaos.amyshield.ui.client.ChargeHudOverlay;

@@ -1,7 +1,7 @@
 package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItems;
+import chaos.amyshield.item.ModItems;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;

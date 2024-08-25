@@ -1,8 +1,8 @@
 package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.AmethystShield;
-import chaos.amyshield.Item.ModItemsButItsOnlyTheMonocle;
-import chaos.amyshield.Item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
+import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
+import chaos.amyshield.item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
