@@ -8,7 +8,10 @@ import net.minecraft.network.packet.CustomPayload;
 
 public record SyncChargePayload(Float chargeAmount) implements CustomPayload {
     public static final CustomPayload.Id<SyncChargePayload> ID = new CustomPayload.Id<>(ModPackets.SYNC_CHARGE_S2C);
-    public static final PacketCodec<RegistryByteBuf, SyncChargePayload> CODEC = PacketCodec.tuple(PacketCodecs.FLOAT, SyncChargePayload::chargeAmount, SyncChargePayload::new);
+    public static final PacketCodec<RegistryByteBuf, SyncChargePayload> CODEC =
+            PacketCodec.tuple(PacketCodecs.FLOAT,
+                    SyncChargePayload::chargeAmount,
+                    SyncChargePayload::new);
 
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {

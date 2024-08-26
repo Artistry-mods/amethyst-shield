@@ -25,6 +25,7 @@ public class ModPackets {
         PayloadTypeRegistry.playC2S().register(AmethystAbilityPayload.ID, AmethystAbilityPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(SyncSlashPayload.ID, SyncSlashPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(AmethystPushPayload.ID, AmethystPushPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SyncChargePayload.ID, SyncChargePayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(AmethystAbilityPayload.ID, AmethystShieldAbilityPacketC2S::setChargeAndSpawnParticle);
         ServerPlayNetworking.registerGlobalReceiver(SyncSlashPayload.ID, AmethystSlashAbilitySyncPacketC2S::syncSlash);
@@ -32,7 +33,6 @@ public class ModPackets {
     }
 
     public static void registerGlobalReceiversS2C() {
-        PayloadTypeRegistry.playS2C().register(SyncChargePayload.ID, SyncChargePayload.CODEC);
         ClientPlayNetworking.registerGlobalReceiver(SyncChargePayload.ID, SyncChargePacketS2C::syncCharge);
     }
 }
