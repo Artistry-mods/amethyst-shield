@@ -21,6 +21,8 @@ public class AmethystShieldConfigModel {
     public static class AmethystShieldNested {
         @RestartRequired
         public int AMETHYST_SHIELD_DURABILITY = 512; //The durability of the amethyst shield.
+
+        public int CHARGE_BAR_OFFSET = 0; //The durability of the amethyst shield.
         @Nest
         public ChargeNested chargeNested = new ChargeNested();
         //Abilities
