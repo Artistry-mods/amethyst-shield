@@ -46,7 +46,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
         int x = width / 2;
         int y = height;
 
-        int yshift = 53;
+        int yshift = 53 + AmethystShield.CONFIG.amethystShieldNested.CHARGE_BAR_OFFSET();
         int maxAir = player.getMaxAir();
         int playerAir = Math.min(player.getAir(), maxAir);
         if (player.getAbilities().creativeMode) yshift -= 17;
