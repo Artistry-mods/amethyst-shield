@@ -34,10 +34,11 @@
     }
   ],
   "depends": {
-    "fabricloader": ">=0.15.7",
-    "minecraft": "1.21",
+    "fabricloader": ">=0.16.7",
+    "minecraft": "1.21.1",
     "java": ">=21",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "owo": "0.12.15+1.21"
   },
   "suggests": {
     "trinkets": ">=3.10.0"

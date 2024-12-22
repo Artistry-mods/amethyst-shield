@@ -14,8 +14,6 @@ public class ModParticles {
             "amethyst_charge_flat_particle");
     public static SimpleParticleType AMETHYST_CRIT_PARTICLE = register(FabricParticleTypes.simple(true),
             "amethyst_crit_particle");
-
-
     public static SimpleParticleType AMETHYST_MONOCLE_PING_UP = register(FabricParticleTypes.simple(true),
             "amethyst_monocle_ping_up");
     public static SimpleParticleType AMETHYST_MONOCLE_PING_DOWN = register(FabricParticleTypes.simple(true),
