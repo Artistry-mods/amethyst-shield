@@ -5,7 +5,6 @@ import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
 import chaos.amyshield.item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.item.custom.AmethystShieldItem;
-import chaos.amyshield.autoupdater.updater.Updater;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.config.AmethystShieldConfig;
@@ -68,14 +67,13 @@ public class AmethystShield implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Updater.getInstance().markForDownloadWithDependencies("YEjvcorf");
-
         ModTags.registerModKeys();
         ModItems.registerModItems();
         ModBlocks.registerModBlocks();
         ModPackets.registerGlobalReceiversC2S();
         ModParticles.registerModParticles();
         ModBlockEntities.registerModBlockEntities();
+        LootTableModifier.init();
         ModWorldGeneration.generateModWorldGen();
 
         if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
