@@ -1,10 +1,8 @@
 package chaos.amyshield.block.custom;
 
-import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DispenserBlock;
+import chaos.amyshield.block.blockEntities.ModBlockEntities;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -16,15 +14,20 @@ import net.minecraft.world.WorldView;
 
 public class AmethystDispenserBlock extends DispenserBlock implements BlockEntityProvider {
     public int cooldown;
+    public static final MapCodec<AmethystDispenserBlock> CODEC = createCodec(AmethystDispenserBlock::new);
 
     public AmethystDispenserBlock(Settings settings) {
         super(settings);
         this.cooldown = 0;
     }
 
+    public MapCodec<AmethystDispenserBlock> getCodec() {
+        return CODEC;
+    }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new AmethystDispenserBlockEntity(pos, state);
+        return ModBlockEntities.AMETHYST_DISPENSER_BLOCK_ENTITY.instantiate(pos, state);
     }
 
     @Override
