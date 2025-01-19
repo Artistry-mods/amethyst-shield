@@ -1,6 +1,7 @@
 package chaos.amyshield.mixin;
 
 import chaos.amyshield.block.ModBlocks;
+import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -45,11 +46,15 @@ public class AmethystDispenserConverterMixin {
         }
 
         ((DispenserBlockEntity) blockEntity).clear();
-        world.setBlockState(pos, ModBlocks.AMETHYST_DISPENSER.getDefaultState().with(FACING, state.get(FACING)));
+        world.removeBlockEntity(pos);
+        world.setBlockState(pos, ModBlocks.AMETHYST_DISPENSER.getDefaultState().with(FACING, state.get(FACING)), 3);
         BlockEntity amethystblockEntity = world.getBlockEntity(pos);
+        if (amethystblockEntity instanceof AmethystDispenserBlockEntity) {
+            amethystblockEntity.markDirty();
+        }
 
-        if (amethystblockEntity instanceof DispenserBlockEntity) {
-            itemStackMap.forEach((stack, slot) -> ((DispenserBlockEntity) amethystblockEntity).setStack(slot, stack));
+        if (amethystblockEntity instanceof AmethystDispenserBlockEntity) {
+            itemStackMap.forEach((stack, slot) -> ((AmethystDispenserBlockEntity) amethystblockEntity).setStack(slot, stack));
         }
     }
 }
