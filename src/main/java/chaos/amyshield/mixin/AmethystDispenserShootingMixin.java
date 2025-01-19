@@ -28,7 +28,7 @@ public class AmethystDispenserShootingMixin {
             Position position = DispenserBlock.getOutputLocation(pointer);
             Direction direction = pointer.getBlockState().get(DispenserBlock.FACING);
             ProjectileEntity projectileEntity = createProjectile(world, position, stack);
-            projectileEntity.setVelocity(direction.getOffsetX(), (float)direction.getOffsetY() + 0.1f, direction.getOffsetZ(), AmethystShield.AMETHYST_DISPENSER_STRENGTH, AmethystShield.AMETHYST_DISPENSER_SPREAD);
+            projectileEntity.setVelocity(direction.getOffsetX(), (float)direction.getOffsetY() + 0.1f, direction.getOffsetZ(), AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_STRENGTH(), AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_SPREAD());
             world.spawnEntity(projectileEntity);
             stack.decrement(1);
             cir.setReturnValue(stack);

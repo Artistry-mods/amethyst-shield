@@ -34,7 +34,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
                 if (player.getMainHandStack().getItem().equals(ModItems.AMETHYST_SHIELD) ||
                     player.getOffHandStack().getItem().equals(ModItems.AMETHYST_SHIELD)) {
 
-                    int yshift = 53;
+                    int yshift = 53 + AmethystShield.CONFIG.amethystShieldNested.CHARGE_BAR_OFFSET();;
                     int maxAir = player.getMaxAir();
                     int playerAir = Math.min(player.getAir(), maxAir);
                     if (player.getAbilities().creativeMode) yshift -= 17;
@@ -47,8 +47,10 @@ public class ChargeHudOverlay implements HudRenderCallback {
                         }
                         if (player.getAbilities().creativeMode) yshift += 17;
                     }
-                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
-                    drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).getPersistentData().getFloat("charge")) / 100)), 5);
+                    if (!client.options.hudHidden) {
+                        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
+                        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15, (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge")) / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
+                    }
                 }
             }
             client.getProfiler().pop();

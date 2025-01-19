@@ -10,7 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class AmethystSlashAbilitySyncPacketC2S {
     public static void receiver(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         if (player != null) {
-            ((IEntityDataSaver) player).getPersistentData().putBoolean("slashing", buf.readBoolean());
+            ((IEntityDataSaver) player).amethyst_shield$getPersistentData().putBoolean("slashing", buf.readBoolean());
         }
     }
 }

@@ -2,14 +2,17 @@ package chaos.amyshield;
 
 import chaos.amyshield.Item.ModItems;
 import chaos.amyshield.Item.ModItemsButItsOnlyTheSculkLatch;
-import chaos.amyshield.autoupdaterrework.updater.Updater;
+import chaos.amyshield.Item.custom.AmethystShieldItem;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
+import chaos.amyshield.config.AmethystShieldConfig;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
+import chaos.amyshield.util.IEntityDataSaver;
 import chaos.amyshield.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,9 @@ public class AmethystShield implements ModInitializer {
 
 	public static final String MOD_ID = "amyshield";
 
+    public static final AmethystShieldConfig CONFIG = AmethystShieldConfig.createAndLoad();
+
+	/*
 	//Amethyst monocle
 	public static final int AMETHYST_MONOCLE_TIMER = 3 * 20; //How many ticks should pass before the amethyst monocle pings again. (sec * ticksPerSec)
 	public static final int AMETHYST_MONOCLE_RANGE = 4; //How many blocks get checked around the player
@@ -53,12 +59,11 @@ public class AmethystShield implements ModInitializer {
 	public final static float MIN_MOVEMENT_DELTA = 0.001f; //The minimum movement distance required for charge contribution
 	//Block charge gain
 	public static final float BLOCK_GAIN_MULTIPLIER = 0.4F;
+	 */
 
 	///summon husk ~ ~ ~ {HandItems:[{id:diamond_axe,Count:1b}, {}]}
 	@Override
 	public void onInitialize() {
-		Updater.getInstance().markForDownloadWithDependencies("YEjvcorf");
-
 		ModTags.registerModKeys();
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
@@ -67,6 +72,10 @@ public class AmethystShield implements ModInitializer {
 		ModBlockEntities.registerModBlockEntities();
 		ModWorldGeneration.generateModWorldGen();
 
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            float charge = AmethystShieldItem.getCharge((IEntityDataSaver) handler.player);
+            AmethystShieldItem.syncCharge(charge, handler.player);
+        });
 		//ModEntityModelLayers.registerModEntityLayers();
 		if (!FabricLoader.getInstance().isModLoaded("sculk-latch")) {
 			ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();

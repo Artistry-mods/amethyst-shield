@@ -31,12 +31,15 @@ public class AmethystShieldItem extends ShieldItem {
     }
 
     private static float getBlocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, int i) {
+        return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getActiveItem() == itemStack ? 1.0F : 0.0F;
+        /*
         if (livingEntity != null) {
             if (livingEntity.getActiveItem() == itemStack) {
                 return 1;
             }
         }
         return 0;
+        */
     }
 
 
@@ -46,21 +49,22 @@ public class AmethystShieldItem extends ShieldItem {
     }
 
     public static float setCharge(IEntityDataSaver player, float amount) {
-        NbtCompound nbt = player.getPersistentData();
-        if(amount >= AmethystShield.MAX_CHARGE) {
-            amount = AmethystShield.MAX_CHARGE;
+        NbtCompound nbt = player.amethyst_shield$getPersistentData();
+        if(amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
+            amount = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
         }
         nbt.putFloat("charge", amount);
         return amount;
     }
 
     public static boolean setSlashing(IEntityDataSaver player, boolean value) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.amethyst_shield$getPersistentData();
         nbt.putBoolean("slashing", value);
         return value;
     }
+
     public static boolean getSlashing(IEntityDataSaver player) {
-        return player.getPersistentData().getBoolean("slashing");
+        return player.amethyst_shield$getPersistentData().getBoolean("slashing");
     }
 
     public static void syncSlashing(boolean value) {
@@ -70,12 +74,12 @@ public class AmethystShieldItem extends ShieldItem {
     }
 
     public static float addCharge(IEntityDataSaver player, float amount) {
-        NbtCompound nbt = player.getPersistentData();
+        NbtCompound nbt = player.amethyst_shield$getPersistentData();
         float charge = nbt.getFloat("charge");
-        if(charge + amount >= AmethystShield.MAX_CHARGE) {
-            charge = AmethystShield.MAX_CHARGE;
-        } else if (charge + amount <= AmethystShield.MIN_CHARGE) {
-            charge = AmethystShield.MIN_CHARGE;
+        if(charge + amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
+            charge = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
+        } else if (charge + amount <= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_CHARGE()) {
+            charge = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_CHARGE();
         } else {
             charge += amount;
         }
@@ -84,7 +88,7 @@ public class AmethystShieldItem extends ShieldItem {
     }
 
     public static float getCharge(IEntityDataSaver player) {
-        return player.getPersistentData().getFloat("charge");
+        return player.amethyst_shield$getPersistentData().getFloat("charge");
     }
 
     public static void syncCharge(float charge, ServerPlayerEntity player) {

@@ -42,13 +42,15 @@ public class AmethystMonocleItem extends Item implements Equipment {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (user.getInventory().getArmorStack(3).getItem() == Items.AIR) {
-            user.getInventory().armor.set(3, user.getStackInHand(hand));
+            //user.getInventory().armor.set(3, user.getStackInHand(hand));
+            user.equipStack(EquipmentSlot.HEAD, user.getStackInHand(hand));
             user.setStackInHand(hand, ItemStack.EMPTY);
             if (world.isClient()) {
-                world.playSound(null, user.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0F);
+                world.playSoundAtBlockCenter(user.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0F, true);
             }
             return TypedActionResult.success(user.getStackInHand(hand));
         }
+
         return super.use(world, user, hand);
     }
 
@@ -58,17 +60,20 @@ public class AmethystMonocleItem extends Item implements Equipment {
             this.activationTimer--;
         } else if (this.activationTimer == 0) {
             this.onPing(world, entity, slot);
-            activationTimer = AmethystShield.AMETHYST_MONOCLE_TIMER;
+            this.activationTimer = AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_TIMER();
         }
         super.inventoryTick(stack, world, entity, slot, selected);
     }
 
     private void onPing(World world, Entity entity, int slot) {
+        if (!world.isClient()) {
+            return;
+        }
         if (slot == 3) {
             if (entity instanceof PlayerEntity) {
                 for (BlockPos blockPos : BlockPos.iterate(
-                        entity.getBlockPos().add( AmethystShield.AMETHYST_MONOCLE_RANGE,  AmethystShield.AMETHYST_MONOCLE_RANGE,  AmethystShield.AMETHYST_MONOCLE_RANGE),
-                        entity.getBlockPos().add(-AmethystShield.AMETHYST_MONOCLE_RANGE, -AmethystShield.AMETHYST_MONOCLE_RANGE, -AmethystShield.AMETHYST_MONOCLE_RANGE))) {
+                        entity.getBlockPos().add( AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(),  AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(),  AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE()),
+                        entity.getBlockPos().add(-AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE()))) {
                     BlockState state = world.getBlockState(blockPos);
                     if (state.isIn(ModTags.SHINY_ORES)) {
                         if (world.isClient()) {

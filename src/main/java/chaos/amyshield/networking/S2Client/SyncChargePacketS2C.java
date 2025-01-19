@@ -10,7 +10,7 @@ public class SyncChargePacketS2C {
     public static void receive(MinecraftClient client, ClientPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
         if (client.player != null) {
-            ((IEntityDataSaver) client.player).getPersistentData().putFloat("charge", buf.readFloat());
+            ((IEntityDataSaver) client.player).amethyst_shield$getPersistentData().putFloat("charge", buf.readFloat());
         }
     }
 }

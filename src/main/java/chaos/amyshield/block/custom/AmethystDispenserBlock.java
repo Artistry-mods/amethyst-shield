@@ -1,6 +1,6 @@
 package chaos.amyshield.block.custom;
 
-import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
+import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -16,13 +16,14 @@ import net.minecraft.world.World;
 
 public class AmethystDispenserBlock extends DispenserBlock implements BlockEntityProvider {
     public int cooldown;
+
     public AmethystDispenserBlock(Settings settings) {
         super(settings);
         this.cooldown = 0;
     }
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new AmethystDispenserBlockEntity(pos, state);
+        return ModBlockEntities.AMETHYST_DISPENSER_BLOCK_ENTITY.instantiate(pos, state);
     }
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {

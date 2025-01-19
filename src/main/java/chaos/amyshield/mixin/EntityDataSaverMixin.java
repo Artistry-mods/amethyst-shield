@@ -17,7 +17,7 @@ public class EntityDataSaverMixin implements IEntityDataSaver {
 	private NbtCompound persistentData;
 
 	@Override
-	public NbtCompound getPersistentData() {
+	public NbtCompound amethyst_shield$getPersistentData() {
 		if(this.persistentData == null) {
 			this.persistentData = new NbtCompound();
 		}
