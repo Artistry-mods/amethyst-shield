@@ -424,7 +424,7 @@
         },
         {
           "type": "minecraft:loot_table",
-          "value": "amyshield:sculk_latch",
+          "name": "amyshield:sculk_latch",
           "weight": 10
         }
       ],
