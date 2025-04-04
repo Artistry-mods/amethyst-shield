@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AmethystShieldAbilityClientMixin",
-    "F3ChargePercentageMixin",
-    "ItemRendererMixin",
-    "ModelLoaderMixin"
+    "F3ChargePercentageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

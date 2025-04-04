@@ -1,12 +1,12 @@
 package chaos.amyshield;
 
+import chaos.amyshield.block.ModBlocks;
+import chaos.amyshield.block.blockEntities.ModBlockEntities;
+import chaos.amyshield.config.AmethystShieldConfig;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.item.custom.AmethystShieldItem;
-import chaos.amyshield.block.ModBlocks;
-import chaos.amyshield.block.blockEntities.ModBlockEntities;
-import chaos.amyshield.config.AmethystShieldConfig;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
@@ -15,7 +15,6 @@ import chaos.amyshield.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

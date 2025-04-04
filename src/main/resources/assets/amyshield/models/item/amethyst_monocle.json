@@ -2,14 +2,5 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "amyshield:item/amethyst_monocle"
-  },
-
-  "overrides": [
-    {
-      "predicate": {
-        "trinkets:head_slot": 1
-      },
-      "model": "minecraft:block/stone"
-    }
-  ]
+  }
 }

@@ -3,9 +3,7 @@ package chaos.amyshield.ui.client;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.util.IEntityDataSaver;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
@@ -19,8 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profilers;
-
-import java.util.function.Function;
 
 public class ChargeHudOverlay implements HudLayerRegistrationCallback {
 
