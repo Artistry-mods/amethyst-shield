@@ -4,16 +4,22 @@
 
 package chaos.amyshield.item.client.model.custom;
 
+import chaos.amyshield.AmethystShield;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class AmethystShieldEntityModel extends Model {
+    public static final EntityModelLayer AMETHYST_SHIELD = new EntityModelLayer(Identifier.of(AmethystShield.MOD_ID, "amethyst_shield_model"), "main");
+
     private final ModelPart root;
 
     public AmethystShieldEntityModel(ModelPart root) {
-        super(root, RenderLayer::getEntitySolid);
+        super(root, RenderLayer::getEntityCutout);
         this.root = root;
     }
 

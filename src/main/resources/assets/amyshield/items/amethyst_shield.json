@@ -1,0 +1,20 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:special",
+      "base": "amyshield:item/amethyst_shield",
+      "model": {
+        "type": "amyshield:amethyst_shield_model"
+      }
+    },
+    "on_true": {
+      "type": "minecraft:special",
+      "base": "amyshield:item/amethyst_shield_blocking",
+      "model": {
+        "type": "amyshield:amethyst_shield_model"
+      }
+    },
+    "property": "minecraft:using_item"
+  }
+}

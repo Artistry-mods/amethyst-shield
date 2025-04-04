@@ -3,14 +3,6 @@
     "particle": "amyshield:item/amethyst_shield"
   },
   "gui_light": "front",
-  "overrides": [
-    {
-      "predicate": {
-        "amyshield:amethyst_blocking": 0.0001
-      },
-      "model": "amyshield:item/amethyst_shield_blocking"
-    }
-  ],
   "display": {
     "thirdperson_righthand": {
       "rotation": [

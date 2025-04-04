@@ -3,7 +3,6 @@ package chaos.amyshield.block.blockEntities;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityType;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;

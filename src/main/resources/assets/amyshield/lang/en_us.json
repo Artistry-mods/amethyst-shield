@@ -6,7 +6,7 @@
   "block.amyshield.diamond_deposit": "Diamond deposit",
   "item.amyshield.diamond_deposit": "Diamond deposit",
 
-  "tag.item.amyshield.block.shiny_ores": "Shiny Ores",
+  "tag.block.amyshield.shiny_ores": "Shiny Ores",
 
   "text.config.amethyst-shield-config.title": "Amethyst shield config",
   "text.config.amethyst-shield-config.category.monocleNested": "Monocle",
