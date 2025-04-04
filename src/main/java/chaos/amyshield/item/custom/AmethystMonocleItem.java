@@ -3,18 +3,22 @@ package chaos.amyshield.item.custom;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
+import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.consume.UseAction;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -22,7 +26,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
-public class AmethystMonocleItem extends Item implements Equipment {
+public class AmethystMonocleItem extends Item {
     private int activationTimer = 0;
 
     public AmethystMonocleItem(Settings settings) {
@@ -30,17 +34,13 @@ public class AmethystMonocleItem extends Item implements Equipment {
     }
 
     @Override
-    public EquipmentSlot getSlotType() {
-        return EquipmentSlot.HEAD;
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
+    public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context) {
         return false;
     }
 
+    /*
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         if (user.getInventory().getArmorStack(3).getItem() == Items.AIR) {
             //user.getInventory().armor.set(3, user.getStackInHand(hand));
             user.equipStack(EquipmentSlot.HEAD, user.getStackInHand(hand));
@@ -48,11 +48,13 @@ public class AmethystMonocleItem extends Item implements Equipment {
             if (world.isClient()) {
                 world.playSoundAtBlockCenter(user.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC.value(), SoundCategory.PLAYERS, 1.0f, 1.0F, true);
             }
-            return TypedActionResult.success(user.getStackInHand(hand));
+            return ActionResult.SUCCESS;
         }
 
         return super.use(world, user, hand);
     }
+
+     */
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {

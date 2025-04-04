@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "#": {
+    "b": {
       "item": "minecraft:shield"
     },
     "a": {
@@ -20,7 +20,7 @@
   },
   "pattern": [
     "aaa",
-    "o#o",
+    "obo",
     "csc"
   ],
   "result": {

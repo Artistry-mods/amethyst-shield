@@ -27,7 +27,7 @@ public class AmethystPushAbilityPacketC2S {
                     for (Entity entity : entityList) {
                         if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
                             pushEntityAwayFromPlayer(entity, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_X(), context.player());
-                            entity.damage(context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE());
+                            entity.damage(context.player().getServerWorld(), context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE());
                         }
                     }
                     return;

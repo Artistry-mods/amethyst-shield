@@ -2,7 +2,6 @@ package chaos.amyshield;
 
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
-import chaos.amyshield.item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.block.ModBlocks;
@@ -16,8 +15,11 @@ import chaos.amyshield.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 
 public class AmethystShield implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Amethyst Shield");
@@ -80,11 +82,7 @@ public class AmethystShield implements ModInitializer {
             ModItemsButItsOnlyTheSculkLatch.registerModItemsButItsOnlyTheSculkLatch();
         }
 
-        if (FabricLoader.getInstance().isModLoaded("trinkets")) {
-            ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled.init();
-        } else {
-            ModItemsButItsOnlyTheMonocle.init();
-        }
+        ModItemsButItsOnlyTheMonocle.init();
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             float charge = AmethystShieldItem.getCharge((IEntityDataSaver) handler.player);
