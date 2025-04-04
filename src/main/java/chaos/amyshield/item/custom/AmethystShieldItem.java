@@ -11,24 +11,19 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
+import net.minecraft.item.consume.UseAction;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-public class AmethystShieldItem extends ShieldItem implements Equipment {
-    private final Item repairItem;
+public class AmethystShieldItem extends ShieldItem {
 
-    public AmethystShieldItem(Item.Settings settings, Item repairItem) {
+    public AmethystShieldItem(Item.Settings settings) {
         super(settings);
-        this.repairItem = repairItem;
-    }
-
-    public static float getBlocking(ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, int i) {
-        return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getActiveItem() == itemStack ? 1.0F : 0.0F;
     }
 
     public static float setCharge(IEntityDataSaver player, float amount) {
@@ -79,10 +74,5 @@ public class AmethystShieldItem extends ShieldItem implements Equipment {
     @Override
     public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context) {
         return enchantment.matchesKey(Enchantments.MENDING) || enchantment.matchesKey(Enchantments.UNBREAKING);
-    }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        return ingredient.getItem() == repairItem;
     }
 }

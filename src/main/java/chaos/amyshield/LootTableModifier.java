@@ -2,7 +2,6 @@ package chaos.amyshield;
 
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
-import chaos.amyshield.item.ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -27,17 +26,10 @@ public class LootTableModifier {
                     .with(ItemEntry.builder(Items.AIR).weight(100));
 				tableBuilder.pool(pb);
 
-                if (FabricLoader.getInstance().isModLoaded("trinkets")) {
-                    LootPool.Builder pbe = LootPool.builder()
-                        .with(ItemEntry.builder(ModItemsButItsOnlyTheMonocleWhenTrinketIsEnabled.AMETHYST_MONOCLE).weight(2))
-					    .with(ItemEntry.builder(Items.AIR).weight(100));
-                    tableBuilder.pool(pbe);
-                } else {
-                    LootPool.Builder pbf = LootPool.builder()
-                        .with(ItemEntry.builder(ModItemsButItsOnlyTheMonocle.AMETHYST_MONOCLE).weight(1))
-					.with(ItemEntry.builder(Items.AIR).weight(100));
-                    tableBuilder.pool(pbf);
-                }
+                LootPool.Builder pbf = LootPool.builder()
+                    .with(ItemEntry.builder(ModItemsButItsOnlyTheMonocle.AMETHYST_MONOCLE).weight(1))
+				.with(ItemEntry.builder(Items.AIR).weight(100));
+                tableBuilder.pool(pbf);
             }
 
             if (key.equals(LootTables.ANCIENT_CITY_CHEST) && !FabricLoader.getInstance().isModLoaded("sculk-latch")) {

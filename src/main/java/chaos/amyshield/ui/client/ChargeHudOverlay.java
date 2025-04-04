@@ -4,25 +4,29 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.util.IEntityDataSaver;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profilers;
 
-public class ChargeHudOverlay implements HudRenderCallback {
+import java.util.function.Function;
 
-    private static final Identifier CHARGE_UI_ATLAS = Identifier.of(AmethystShield.MOD_ID, "textures/ui/amethyst_shield_ui.png");
+public class ChargeHudOverlay implements HudLayerRegistrationCallback {
 
+    private static final Identifier CHARGE_UI_ATLAS = Identifier.of(AmethystShield.MOD_ID, "hud/amethyst_shield_ui");
 
-    @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.options.hudHidden) {
             return;
@@ -38,11 +42,10 @@ public class ChargeHudOverlay implements HudRenderCallback {
             return;
         }
 
-        RenderSystem.enableDepthTest();
-        client.getProfiler().swap("charge");
+        Profilers.get().swap("charge");
 
-        int width = client.getWindow().getScaledWidth();
-        int height = client.getWindow().getScaledHeight();
+        int width = drawContext.getScaledWindowWidth();
+        int height = drawContext.getScaledWindowHeight();
         int x = width / 2;
         int y = height;
 
@@ -50,7 +53,7 @@ public class ChargeHudOverlay implements HudRenderCallback {
         int maxAir = player.getMaxAir();
         int playerAir = Math.min(player.getAir(), maxAir);
         if (player.getAbilities().creativeMode) yshift -= 17;
-        if (player.isSubmergedIn(FluidTags.WATER) || playerAir < maxAir) yshift += 10;
+        if ((player.isSubmergedIn(FluidTags.WATER) || playerAir < maxAir) && !player.getAbilities().creativeMode) yshift += 10;
         LivingEntity livingEntity = this.getRiddenEntity();
 
         if (livingEntity != null) {
@@ -61,13 +64,29 @@ public class ChargeHudOverlay implements HudRenderCallback {
             if (player.getAbilities().creativeMode) yshift += 17;
         }
 
-        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift, 0, 0, 81, 13);
-        drawContext.drawTexture(CHARGE_UI_ATLAS, x + 10, y - yshift + 5, 0, 15,
-                (int) (81f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge"))
-                / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())), 5);
+        drawContext.drawGuiTexture(RenderLayer::getGuiTextured, CHARGE_UI_ATLAS,
+                81,
+                18,
+                1,
+                15,
+                x + 11,
+                y - yshift + 5,
+                (int) (79f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge"))
+                / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())),
+                3);
 
-        client.getProfiler().pop();
-        RenderSystem.disableDepthTest();
+        drawContext.drawGuiTexture(RenderLayer::getGuiTextured, CHARGE_UI_ATLAS,
+                81,
+                18,
+                0,
+                0,
+                x + 10,
+                y - yshift,
+                81,
+                13);
+
+
+        Profilers.get().pop();
     }
 
     private LivingEntity getRiddenEntity() {
@@ -106,5 +125,11 @@ public class ChargeHudOverlay implements HudRenderCallback {
             return null;
         }
         return (PlayerEntity) MinecraftClient.getInstance().getCameraEntity();
+    }
+
+    @Override
+    public void register(LayeredDrawerWrapper layeredDrawer) {
+
+        layeredDrawer.addLayer(IdentifiedLayer.of(Identifier.of(AmethystShield.MOD_ID, "charge_hud"), this::onHudRender));
     }
 }

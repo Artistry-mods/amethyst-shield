@@ -9,10 +9,14 @@ import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
+import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.tick.ScheduledTickView;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,19 +28,26 @@ import java.util.Map;
 
 
 @Mixin(DispenserBlock.class)
-public class AmethystDispenserConverterMixin {
+public class AmethystDispenserConverterMixin extends Block {
     @Shadow
     @Final
-    public static DirectionProperty FACING;
+    public static EnumProperty<Direction> FACING;
 
-    @Inject(method = "neighborUpdate", at = @At("HEAD"))
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
+    public AmethystDispenserConverterMixin(Settings settings) {
+        super(settings);
+    }
+
+    @Inject(method = "neighborUpdate", at = @At(value = "HEAD"))
+    public void getStateForNeighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify, CallbackInfo ci) {
+        BlockPos sourcePos = pos.up();
         if (world.getBlockState(sourcePos).getBlock() != Blocks.AMETHYST_CLUSTER || !world.getBlockState(sourcePos).get(FACING).equals(Direction.UP) || !pos.equals(sourcePos.down())) {
+            super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
             return;
         }
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof DispenserBlockEntity)) {
+            super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
             return;
         }
 

@@ -1,13 +1,11 @@
 package chaos.amyshield;
 
 import chaos.amyshield.item.client.model.ModEntityModels;
-import chaos.amyshield.item.client.renderer.ModTrinketRenderers;
-import chaos.amyshield.item.custom.predicate.ModModelPredicates;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.client.ModClientParticles;
 import chaos.amyshield.ui.client.ChargeHudOverlay;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -19,8 +17,7 @@ public class AmethystShieldClient implements ClientModInitializer {
     public void onInitializeClient() {
         ModPackets.registerGlobalReceiversS2C();
         ModEntityModels.registerModEntityModels();
-        HudRenderCallback.EVENT.register(new ChargeHudOverlay());
-        ModModelPredicates.registerModModelPredicates();
+        HudLayerRegistrationCallback.EVENT.register(new ChargeHudOverlay());
         ModClientParticles.registerModParticlesClient();
 
         ResourceManagerHelper.registerBuiltinResourcePack(
@@ -29,9 +26,5 @@ public class AmethystShieldClient implements ClientModInitializer {
             Text.of("Lower Amethyst Shield"),
             ResourcePackActivationType.NORMAL
         );
-
-        if (FabricLoader.getInstance().isModLoaded("trinkets")) {
-            ModTrinketRenderers.init();
-        }
     }
 }

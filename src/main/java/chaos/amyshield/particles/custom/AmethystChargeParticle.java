@@ -29,7 +29,8 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
     }
 
 
-    public void buildGeometry(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
+    @Override
+    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d vec3d = camera.getPos();
         float f = (float) (MathHelper.lerp(tickDelta, this.prevPosX, this.x) - vec3d.getX());
         float g = (float) (MathHelper.lerp(tickDelta, this.prevPosY, this.y) - vec3d.getY());
@@ -79,7 +80,7 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_LIT;
+        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
     @Environment(EnvType.CLIENT)

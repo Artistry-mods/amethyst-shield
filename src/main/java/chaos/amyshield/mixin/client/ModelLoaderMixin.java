@@ -2,8 +2,8 @@ package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.AmethystShield;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.render.entity.equipment.EquipmentModelLoader;
 import net.minecraft.client.render.model.BlockStatesLoader;
-import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
@@ -19,8 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(ModelLoader.class)
+//@Mixin(ModelLoader.class)
+@Mixin(EquipmentModelLoader.class)
 public abstract class ModelLoaderMixin {
+    /*
     @Shadow
     @Final
     private Map<ModelIdentifier, UnbakedModel> modelsToBake;
@@ -34,8 +36,10 @@ public abstract class ModelLoaderMixin {
     @Inject(method = "<init>", at = @At("TAIL"))
     public void addAmethystMonocleModel(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         profiler.push("special");
-        this.loadItemModel(ModelIdentifier.ofInventoryVariant(Identifier.of(AmethystShield.MOD_ID, "amethyst_monocle_3d")));
+        this.loadItemModel(new ModelIdentifier(Identifier.of(AmethystShield.MOD_ID, "amethyst_monocle"), "_3d"));
         this.modelsToBake.values().forEach((model) -> model.setParents(this::getOrLoadModel));
         profiler.pop();
     }
+
+     */
 }

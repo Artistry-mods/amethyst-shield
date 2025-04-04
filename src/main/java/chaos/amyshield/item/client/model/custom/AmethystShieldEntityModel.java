@@ -13,7 +13,7 @@ public class AmethystShieldEntityModel extends Model {
     private final ModelPart root;
 
     public AmethystShieldEntityModel(ModelPart root) {
-        super(RenderLayer::getEntitySolid);
+        super(root, RenderLayer::getEntitySolid);
         this.root = root;
     }
 
@@ -51,10 +51,5 @@ public class AmethystShieldEntityModel extends Model {
                 .uv(42, 0).cuboid(0.0F, -7.0F, 0.0F, 8.0F, 14.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -7.0F, 0.0F, 0.0F, -0.3927F, 0.0F));
 
         return TexturedModelData.of(modelData, 64, 64);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-        this.root.render(matrices, vertices, light, overlay);
     }
 }

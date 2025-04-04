@@ -27,7 +27,7 @@ public class ShieldBrakeMixin {
     @Inject(method = "disableShield", at = @At("HEAD"))
     public void disableShield(CallbackInfo ci) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        player.getItemCooldownManager().set(ModItems.AMETHYST_SHIELD, 100);
+        player.getItemCooldownManager().set(player.getActiveItem(), 100);
         player.clearActiveItem();
         player.getWorld().sendEntityStatus(player, EntityStatuses.BREAK_SHIELD);
     }
@@ -60,7 +60,7 @@ public class ShieldBrakeMixin {
 
         int i = 1 + MathHelper.floor(amount);
         Hand hand = player.getActiveHand();
-        player.getActiveItem().damage(i, player, ((ShieldItem) player.getActiveItem().getItem()).getSlotType());
+        player.getActiveItem().damage(i, player.getActiveItem().getItem(), player, EquipmentSlot.OFFHAND);
 
         if (hand == Hand.MAIN_HAND) {
             player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);

@@ -95,7 +95,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         this.lastPos = player.getPos();
         //IDK why I need this, but it was there from the Mod I riped it from
-        this.jumpedLastTick = player.input.jumping;
+        this.jumpedLastTick = player.input.playerInput.jump();
     }
 
     @Unique
@@ -104,7 +104,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         return canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST()) &&
                 player.isBlocking() &&
-                player.input.jumping;
+                player.input.playerInput.jump();
     }
 
     @Unique
@@ -153,7 +153,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
-        if (this.lastPos == null || AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) || this.isSliding || player.isFallFlying()) {
+        if (this.lastPos == null || AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) || this.isSliding || player.isGliding()) {
             return;
         }
         //movement delta
@@ -181,7 +181,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private boolean canJump(ClientPlayerEntity player) {
-        return !player.isFallFlying() && !player.hasVehicle()
+        return !player.isGliding() && !player.hasVehicle()
                 && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
     }
 
@@ -276,10 +276,10 @@ public abstract class AmethystShieldAbilityClientMixin {
         Vec3d movement = Vec3d.ZERO;
 
         // Get movement inputs
-        boolean forward = player.input.pressingForward;
-        boolean back = player.input.pressingBack;
-        boolean left = player.input.pressingLeft;
-        boolean right = player.input.pressingRight;
+        boolean forward = player.input.playerInput.forward();
+        boolean back = player.input.playerInput.backward();
+        boolean left = player.input.playerInput.left();
+        boolean right = player.input.playerInput.right();
 
         if (!back && !left && !forward && !right) {
             forward = true;

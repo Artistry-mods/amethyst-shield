@@ -10,9 +10,9 @@ public record AmethystAbilityPayload(Float chargeAmount, Boolean flatParticles, 
     public static final Id<AmethystAbilityPayload> ID = new Id<>(ModPackets.AMETHYST_ABILITY_C2S);
     public static final PacketCodec<RegistryByteBuf, AmethystAbilityPayload> CODEC = PacketCodec.tuple(
             PacketCodecs.FLOAT, AmethystAbilityPayload::chargeAmount,
-            PacketCodecs.BOOL, AmethystAbilityPayload::flatParticles,
-            PacketCodecs.BOOL, AmethystAbilityPayload::notFlatParticles,
-            PacketCodecs.BOOL, AmethystAbilityPayload::sound,
+            PacketCodecs.BOOLEAN, AmethystAbilityPayload::flatParticles,
+            PacketCodecs.BOOLEAN, AmethystAbilityPayload::notFlatParticles,
+            PacketCodecs.BOOLEAN, AmethystAbilityPayload::sound,
             AmethystAbilityPayload::new);
 
     @Override
