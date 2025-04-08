@@ -38,7 +38,7 @@
     "minecraft": "1.21.1",
     "java": ">=21",
     "fabric-api": "*",
-    "owo": "0.12.15+1.21"
+    "owo": ">=0.12.15+1.21"
   },
   "suggests": {
     "trinkets": ">=3.10.0"
