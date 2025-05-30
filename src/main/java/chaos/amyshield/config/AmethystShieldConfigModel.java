@@ -48,6 +48,7 @@ public class AmethystShieldConfigModel {
     public static class DispenserNested {
         public float AMETHYST_DISPENSER_STRENGTH = 2.0f; //How strong the amethyst dispenser shoots
         public float AMETHYST_DISPENSER_SPREAD = 0f; //How much spread the amethyst dispenser has
+        public int AMETHYST_DISPENSER_COOLDOWN = 10; //How much cooldown the amethyst dispenser has
     }
 
     public static class ChargeNested {
