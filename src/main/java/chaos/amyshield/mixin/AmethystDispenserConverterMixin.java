@@ -8,7 +8,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.DispenserBlockEntity;
+import net.minecraft.client.sound.Sound;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -17,6 +20,7 @@ import net.minecraft.world.block.WireOrientation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,15 +40,18 @@ public class AmethystDispenserConverterMixin extends Block {
 
     @Inject(method = "neighborUpdate", at = @At(value = "HEAD"))
     public void getStateForNeighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify, CallbackInfo ci) {
+        convertDispenserToAmethyst(state, world, pos, sourceBlock, wireOrientation, notify);
+    }
+
+    @Unique
+    private static void convertDispenserToAmethyst(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
         BlockPos sourcePos = pos.up();
         if (world.getBlockState(sourcePos).getBlock() != Blocks.AMETHYST_CLUSTER || !world.getBlockState(sourcePos).get(FACING).equals(Direction.UP) || !pos.equals(sourcePos.down())) {
-            super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
             return;
         }
 
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof DispenserBlockEntity)) {
-            super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+        if (!(blockEntity instanceof DispenserBlockEntity) || blockEntity instanceof AmethystDispenserBlockEntity) {
             return;
         }
 

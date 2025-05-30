@@ -1,11 +1,13 @@
 package chaos.amyshield.mixin;
 
+import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.custom.AmethystDispenserBlock;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ProjectileItem;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPointer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
@@ -26,12 +28,10 @@ public class AmethystDispenserShootingMixin {
     @Inject(method = "dispenseSilently", at = @At("HEAD"), cancellable = true)
     public void dispenseSilently(BlockPointer pointer, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         if (pointer.state().getBlock() instanceof AmethystDispenserBlock) {
-            World world = pointer.world();
+            ServerWorld serverWorld = pointer.world();
             Direction direction = pointer.state().get(DispenserBlock.FACING);
             Position position = this.projectileSettings.positionFunction().getDispensePosition(pointer, direction);
-            ProjectileEntity projectileEntity = this.projectile.createEntity(world, position, stack, direction);
-            this.projectile.initializeProjectile(projectileEntity, direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ(), this.projectileSettings.power() * 2, 0);
-            world.spawnEntity(projectileEntity);
+            ProjectileEntity.spawnWithVelocity(this.projectile.createEntity(serverWorld, position, stack, direction), serverWorld, stack, direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ(), this.projectileSettings.power() * AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_STRENGTH(), this.projectileSettings.uncertainty() * AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_SPREAD());
             stack.decrement(1);
             cir.setReturnValue(stack);
         }
