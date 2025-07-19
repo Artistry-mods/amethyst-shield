@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItemsButItsOnlyTheSculkLatch {
     public static final Item SCULK_LATCH = Items.register(
-            "sculk_latch",
+            keyOf("sculk_latch"),
             Item::new,
             new Item.Settings().maxCount(16));
 
