@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "b": {
-      "item": "minecraft:shield"
-    },
-    "a": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "c": {
-      "item": "minecraft:copper_ingot"
-    },
-    "o": {
-      "item": "amyshield:oxiwine_bolt"
-    },
-    "s": {
-      "item": "sculk-latch:sculk_latch"
-    }
+    "b": "minecraft:shield",
+    "a": "minecraft:amethyst_shard",
+    "c": "minecraft:copper_ingot",
+    "o": "amyshield:oxiwine_bolt",
+    "s": "sculk-latch:sculk_latch"
   },
   "pattern": [
     "aaa",
