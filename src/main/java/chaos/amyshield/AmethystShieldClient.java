@@ -5,7 +5,7 @@ import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.client.ModClientParticles;
 import chaos.amyshield.ui.client.ChargeHudOverlay;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -17,7 +17,7 @@ public class AmethystShieldClient implements ClientModInitializer {
     public void onInitializeClient() {
         ModPackets.registerGlobalReceiversS2C();
         ModEntityModels.registerModEntityModels();
-        HudLayerRegistrationCallback.EVENT.register(new ChargeHudOverlay());
+        HudElementRegistry.addFirst(Identifier.of(AmethystShield.MOD_ID, "charge_hud_overlay"), new ChargeHudOverlay());
         ModClientParticles.registerModParticlesClient();
 
         ResourceManagerHelper.registerBuiltinResourcePack(

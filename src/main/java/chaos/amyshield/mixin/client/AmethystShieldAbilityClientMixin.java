@@ -11,7 +11,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +19,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class AmethystShieldAbilityClientMixin {
@@ -114,7 +116,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         return this.isDoubleJumpingTimer >= 1 &&
                player.handSwinging &&
                canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
-               player.getMainHandStack().getItem() instanceof SwordItem;
+               player.getMainHandStack().isIn(ItemTags.SWORDS);
     }
 
     @Unique
@@ -206,7 +208,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onDoubleJump() {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
-        for (ItemStack itemStack : player.getHandItems()) {
+        for (ItemStack itemStack : List.of(player.getOffHandStack(), player.getMainHandStack())) {
             Item shield = itemStack.getItem();
 
             if (shield != ModItems.AMETHYST_SHIELD) {

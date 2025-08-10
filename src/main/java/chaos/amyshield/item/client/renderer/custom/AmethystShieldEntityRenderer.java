@@ -13,10 +13,13 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
+import java.util.Set;
 
 public class AmethystShieldEntityRenderer implements SpecialModelRenderer<ComponentMap> {
     private final AmethystShieldEntityModel modelShield;
@@ -31,7 +34,7 @@ public class AmethystShieldEntityRenderer implements SpecialModelRenderer<Compon
         return itemStack.getImmutableComponents();
     }
 
-    public void render(@Nullable ComponentMap componentMap, ModelTransformationMode itemDisplayContext, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j, boolean bl) {
+    public void render(@Nullable ComponentMap componentMap, ItemDisplayContext displayContext, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j, boolean bl) {
         /*BannerPatternsComponent bannerPatternsComponent = componentMap != null ? componentMap.getOrDefault(DataComponentTypes.BANNER_PATTERNS, BannerPatternsComponent.DEFAULT) : BannerPatternsComponent.DEFAULT;
         DyeColor dyeColor = componentMap != null ? componentMap.get(DataComponentTypes.BASE_COLOR) : null;
         boolean bl2 = !bannerPatternsComponent.layers().isEmpty() || dyeColor != null;
@@ -59,6 +62,12 @@ public class AmethystShieldEntityRenderer implements SpecialModelRenderer<Compon
         this.modelShield.render(matrixStack, vertexConsumer, i, j);
 
         matrixStack.pop();
+    }
+
+    @Override
+    public void collectVertices(Set<Vector3f> vertices) {
+        MatrixStack matrixStack = new MatrixStack();
+        this.modelShield.getRootPart().collectVertices(matrixStack, vertices);
     }
 
     @Environment(EnvType.CLIENT)

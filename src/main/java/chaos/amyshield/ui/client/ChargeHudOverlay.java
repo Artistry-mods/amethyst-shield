@@ -3,13 +3,11 @@ package chaos.amyshield.ui.client;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -18,11 +16,11 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profilers;
 
-public class ChargeHudOverlay implements HudLayerRegistrationCallback {
-
+public class ChargeHudOverlay implements HudElement {
     private static final Identifier CHARGE_UI_ATLAS = Identifier.of(AmethystShield.MOD_ID, "hud/amethyst_shield_ui");
 
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+    @Override
+    public void render(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.options.hudHidden) {
             return;
@@ -60,18 +58,18 @@ public class ChargeHudOverlay implements HudLayerRegistrationCallback {
             if (player.getAbilities().creativeMode) yshift += 17;
         }
 
-        drawContext.drawGuiTexture(RenderLayer::getGuiTextured, CHARGE_UI_ATLAS,
+        drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
                 81,
                 18,
                 1,
                 15,
                 x + 11,
                 y - yshift + 5,
-                (int) (79f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getFloat("charge"))
+                (int) (79f * ((((IEntityDataSaver) player).amethyst_shield$getPersistentData().getCharge())
                 / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())),
                 3);
 
-        drawContext.drawGuiTexture(RenderLayer::getGuiTextured, CHARGE_UI_ATLAS,
+        drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
                 81,
                 18,
                 0,
@@ -121,11 +119,5 @@ public class ChargeHudOverlay implements HudLayerRegistrationCallback {
             return null;
         }
         return (PlayerEntity) MinecraftClient.getInstance().getCameraEntity();
-    }
-
-    @Override
-    public void register(LayeredDrawerWrapper layeredDrawer) {
-
-        layeredDrawer.addLayer(IdentifiedLayer.of(Identifier.of(AmethystShield.MOD_ID, "charge_hud"), this::onHudRender));
     }
 }

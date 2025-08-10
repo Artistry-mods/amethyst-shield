@@ -32,9 +32,9 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
     @Override
     public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
         Vec3d vec3d = camera.getPos();
-        float f = (float) (MathHelper.lerp(tickDelta, this.prevPosX, this.x) - vec3d.getX());
-        float g = (float) (MathHelper.lerp(tickDelta, this.prevPosY, this.y) - vec3d.getY());
-        float h = (float) (MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
+        float f = (float) (MathHelper.lerp(tickDelta, this.lastX, this.x) - vec3d.getX());
+        float g = (float) (MathHelper.lerp(tickDelta, this.lastY, this.y) - vec3d.getY());
+        float h = (float) (MathHelper.lerp(tickDelta, this.lastZ, this.z) - vec3d.getZ());
         Quaternionf quaternionf;
         if (this.isFlat) {
             quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateX((float) Math.toRadians(90)));
@@ -42,7 +42,7 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
             quaternionf = camera.getRotation();
         } else {
             quaternionf = new Quaternionf(camera.getRotation());
-            quaternionf.rotateZ(MathHelper.lerp(tickDelta, this.prevAngle, this.angle));
+            quaternionf.rotateZ(MathHelper.lerp(tickDelta, this.lastAngle, this.angle));
         }
 
         Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
@@ -68,9 +68,9 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
 
     @Override
     public void tick() {
-        this.prevPosX = this.x;
-        this.prevPosY = this.y;
-        this.prevPosZ = this.z;
+        this.lastX = this.x;
+        this.lastY = this.y;
+        this.lastZ = this.z;
         if (this.age++ >= this.maxAge) {
             this.markDead();
         } else {

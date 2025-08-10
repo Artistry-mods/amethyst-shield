@@ -18,16 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AmethystPushAbilityPacketC2S {
-    public static void push(AmethystPushPayload payload, ServerPlayNetworking.Context context) {
+    public static void push(AmethystPushPayload _payload, ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
-            for (ItemStack itemStack : context.player().getHandItems()) {
+            for (ItemStack itemStack : List.of(context.player().getMainHandStack(), context.player().getOffHandStack())) {
                 Item shield = itemStack.getItem();
                 if (shield == ModItems.AMETHYST_SHIELD) {
                     List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_RADIUS(), context.player()));
                     for (Entity entity : entityList) {
                         if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
                             pushEntityAwayFromPlayer(entity, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_X(), context.player());
-                            entity.damage(context.player().getServerWorld(), context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE());
+                            entity.damage(context.player().getWorld(), context.player().getDamageSources().indirectMagic(context.player(), context.player()), AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE());
                         }
                     }
                     return;

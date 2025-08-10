@@ -6,6 +6,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class SyncChargePacketS2C {
     public static void syncCharge(SyncChargePayload customPayload, ClientPlayNetworking.Context context) {
-        ((IEntityDataSaver) context.player()).amethyst_shield$getPersistentData().putFloat("charge", customPayload.chargeAmount());
+        ((IEntityDataSaver) context.player()).amethyst_shield$getPersistentData().setCharge(customPayload.chargeAmount());
     }
 }

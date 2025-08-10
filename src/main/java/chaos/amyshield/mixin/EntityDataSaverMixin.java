@@ -2,39 +2,40 @@ package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Entity.class)
+@Mixin(LivingEntity.class)
 public class EntityDataSaverMixin implements IEntityDataSaver {
     @Unique
-    private NbtCompound persistentData;
+    private AmethystShieldData persistentData;
 
     @Override
-    public NbtCompound amethyst_shield$getPersistentData() {
+    public AmethystShieldData amethyst_shield$getPersistentData() {
         if (this.persistentData == null) {
-            this.persistentData = new NbtCompound();
+            this.persistentData = new AmethystShieldData();
         }
         return this.persistentData;
     }
 
-    @Inject(method = "writeNbt", at = @At("HEAD"))
-    protected void injectWriteMethod(NbtCompound nbt, CallbackInfoReturnable<NbtCompound> cir) {
+    @WrapMethod(method = "writeCustomData")
+    protected void injectWriteMethod(WriteView writeView, Operation<Void> original) {
         if (this.persistentData != null) {
-            nbt.put(AmethystShield.MOD_ID, this.persistentData);
+            writeView.put(AmethystShield.MOD_ID, IEntityDataSaver.AMETHYST_SHIELD_DATA_CODEC, this.persistentData);
         }
+
+        original.call(writeView);
     }
 
-    @Inject(method = "readNbt", at = @At("HEAD"))
-    protected void injectReadMethod(NbtCompound nbt, CallbackInfo info) {
-        if (nbt.contains(AmethystShield.MOD_ID)) {
-            this.persistentData = nbt.getCompound(AmethystShield.MOD_ID);
-        }
+    @WrapMethod(method = "readCustomData")
+    protected void injectReadMethod(ReadView readView, Operation<Void> original) {
+        this.persistentData = readView.read(AmethystShield.MOD_ID, IEntityDataSaver.AMETHYST_SHIELD_DATA_CODEC).orElse(new AmethystShieldData());
+
+        original.call(readView);
     }
 }

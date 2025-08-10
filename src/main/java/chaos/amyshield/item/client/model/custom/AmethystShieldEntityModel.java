@@ -16,29 +16,26 @@ import net.minecraft.util.Identifier;
 public class AmethystShieldEntityModel extends Model {
     public static final EntityModelLayer AMETHYST_SHIELD = new EntityModelLayer(Identifier.of(AmethystShield.MOD_ID, "amethyst_shield_model"), "main");
 
-    private final ModelPart root;
-
     public AmethystShieldEntityModel(ModelPart root) {
         super(root, RenderLayer::getEntityCutout);
-        this.root = root;
     }
 
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData amethist_shield = modelPartData.addChild("amethist_shield", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 13.0F, 0.0F));
+        ModelPartData amethist_shield = modelPartData.addChild("amethist_shield", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 13.0F, 0.0F));
 
         amethist_shield.addChild("mainshield", ModelPartBuilder.create()
                 .uv(0, 23).cuboid(-1.0F, -3.0F, -3.0F, 2.0F, 6.0F, 6.0F, new Dilation(0.0F))
-                .uv(0, 0).cuboid(-6.0F, -11.0F, -4.0F, 12.0F, 22.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 3.0F));
+                .uv(0, 0).cuboid(-6.0F, -11.0F, -4.0F, 12.0F, 22.0F, 1.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 3.0F));
 
         ModelPartData skulk = amethist_shield.addChild("skulk", ModelPartBuilder.create()
-                .uv(10, 24).cuboid(-10.0F, -12.0F, 5.0F, 4.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(8.0F, 11.0F, -7.0F));
+                .uv(10, 24).cuboid(-10.0F, -12.0F, 5.0F, 4.0F, 4.0F, 1.0F, new Dilation(0.0F)), ModelTransform.origin(8.0F, 11.0F, -7.0F));
 
         skulk.addChild("glow", ModelPartBuilder.create()
-                .uv(0, 35).cuboid(-10.0F, -12.0F, 5.0F, 4.0F, 4.0F, 2.0F, new Dilation(-0.1F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+                .uv(0, 35).cuboid(-10.0F, -12.0F, 5.0F, 4.0F, 4.0F, 2.0F, new Dilation(-0.1F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
 
-        ModelPartData amethist = amethist_shield.addChild("amethist", ModelPartBuilder.create(), ModelTransform.pivot(16.0F, 11.0F, -15.0F));
+        ModelPartData amethist = amethist_shield.addChild("amethist", ModelPartBuilder.create(), ModelTransform.origin(16.0F, 11.0F, -15.0F));
 
         ModelPartData budinfront = amethist.addChild("budinfront", ModelPartBuilder.create(), ModelTransform.of(-16.0F, -3.5F, 12.25F, 0.2618F, 0.0F, 0.0F));
 
