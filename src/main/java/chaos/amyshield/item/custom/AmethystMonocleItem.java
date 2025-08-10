@@ -7,16 +7,19 @@ import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class AmethystMonocleItem extends Item {
     private int activationTimer = 0;
@@ -49,8 +52,8 @@ public class AmethystMonocleItem extends Item {
      */
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (slot == 3) {
+    public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot) {
+        if (slot == EquipmentSlot.HEAD) {
             if (this.activationTimer >= 1) {
                 this.activationTimer--;
             } else {
@@ -58,15 +61,12 @@ public class AmethystMonocleItem extends Item {
                 this.activationTimer = AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_TIMER();
             }
         }
-        super.inventoryTick(stack, world, entity, slot, selected);
+
+        super.inventoryTick(stack, world, entity, slot);
     }
 
     private void onPing(World world, Entity entity) {
-        if (!world.isClient()) {
-            return;
-        }
-
-        if (!(entity instanceof PlayerEntity)) {
+        if (!(world instanceof ServerWorld serverWorld) || !(entity instanceof ServerPlayerEntity player)) {
             return;
         }
 
@@ -92,17 +92,17 @@ public class AmethystMonocleItem extends Item {
             Direction facing = result.getSide();
 
             if (facing == Direction.WEST) {
-                world.addParticle(ModParticles.AMETHYST_MONOCLE_PING_WEST, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 0, 0, 0);
+                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_WEST, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.EAST) {
-                world.addParticle(ModParticles.AMETHYST_MONOCLE_PING_EAST, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 0, 0, 0);
+                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_EAST, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.NORTH) {
-                world.addParticle(ModParticles.AMETHYST_MONOCLE_PING_NORTH, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 0, 0, 0);
+                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_NORTH, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.SOUTH) {
-                world.addParticle(ModParticles.AMETHYST_MONOCLE_PING_SOUTH, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 0, 0, 0);
+                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_SOUTH, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.UP) {
-                world.addParticle(ModParticles.AMETHYST_MONOCLE_PING_UP, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 0, 0, 0);
+                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_UP, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.DOWN) {
-                world.addParticle(ModParticles.AMETHYST_MONOCLE_PING_DOWN, particlePos.getX(), particlePos.getY(), particlePos.getZ(), 0, 0, 0);
+                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_DOWN, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
             }
         }
     }

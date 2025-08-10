@@ -7,7 +7,6 @@ import chaos.amyshield.util.IEntityDataSaver;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +26,7 @@ public class SlashingHitMixin {
         if (player != null && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
             //double x, double y, double z, int count, double deltaX, double deltaY, double deltaZ, double speed
             if (player.getRandom().nextInt(5) == 1) {
-                ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
+                player.getWorld().spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
                         player.getX() + player.getRandom().nextFloat() - 0.5,
                         player.getY() + player.getRandom().nextFloat() - 0.5,
                         player.getZ() + player.getRandom().nextFloat() - 0.5,
@@ -43,7 +42,7 @@ public class SlashingHitMixin {
             Objects.requireNonNull(player.getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
-                        if (entity.damage(player.getServerWorld(), player.getDamageSources().indirectMagic(player, player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE())) {
+                        if (entity.damage(player.getWorld(), player.getDamageSources().indirectMagic(player, player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE())) {
                             AmethystShieldItem.addCharge(((IEntityDataSaver) player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN());
                             AmethystShieldItem.syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                         }

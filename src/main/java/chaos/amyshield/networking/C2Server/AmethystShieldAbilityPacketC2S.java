@@ -13,12 +13,14 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
+import java.util.List;
+
 import static chaos.amyshield.item.custom.AmethystShieldItem.syncCharge;
 
 public class AmethystShieldAbilityPacketC2S {
     public static void setChargeAndSpawnParticle(AmethystAbilityPayload payload, ServerPlayNetworking.Context context) {
         ServerPlayerEntity player = context.player();
-        for (ItemStack itemStack : player.getHandItems()) {
+        for (ItemStack itemStack : List.of(player.getMainHandStack(), player.getOffHandStack())) {
             Item shield = itemStack.getItem();
             if (shield == ModItems.AMETHYST_SHIELD) {
                 if (payload.sound()) {
@@ -27,10 +29,10 @@ public class AmethystShieldAbilityPacketC2S {
                     player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1.5f, 1.0F);
                 }
                 if (payload.flatParticles() && !payload.notFlatParticles()) {
-                    ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE_FLAT, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
+                    player.getWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE_FLAT, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                 }
                 if (payload.flatParticles() && !payload.notFlatParticles()) {
-                    ((ServerWorld) player.getWorld()).spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
+                    player.getWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                 }
 
                 AmethystShieldItem.addCharge(((IEntityDataSaver) player), payload.chargeAmount());
