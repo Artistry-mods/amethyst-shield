@@ -9,7 +9,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 
@@ -35,7 +34,7 @@ public class AmethystShieldAbilityPacketC2S {
                     player.getWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                 }
 
-                AmethystShieldItem.addCharge(((IEntityDataSaver) player), payload.chargeAmount());
+                AmethystShieldItem.addCharge((player), payload.chargeAmount());
                 syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                 return;
             }

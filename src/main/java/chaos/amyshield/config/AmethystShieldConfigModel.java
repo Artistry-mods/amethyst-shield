@@ -5,6 +5,7 @@ import io.wispforest.owo.config.annotation.*;
 
 import static io.wispforest.owo.config.Option.SyncMode.OVERRIDE_CLIENT;
 
+@SuppressWarnings("UnusedDeclaration")
 @Modmenu(modId = AmethystShield.MOD_ID)
 @Config(name = "amethyst-shield-config", wrapperName = "AmethystShieldConfig")
 public class AmethystShieldConfigModel {
@@ -38,6 +39,9 @@ public class AmethystShieldConfigModel {
         //Amethyst Slide
         @Nest
         public SlideNested slideNested = new SlideNested();
+        //Enchantments
+        @Nest
+        public EnchantmentNested enchantmentNested = new EnchantmentNested();
     }
 
     public static class MonocleNested {
@@ -49,6 +53,10 @@ public class AmethystShieldConfigModel {
         public float AMETHYST_DISPENSER_STRENGTH = 2.0f; //How strong the amethyst dispenser shoots
         public float AMETHYST_DISPENSER_SPREAD = 0f; //How much spread the amethyst dispenser has
         public int AMETHYST_DISPENSER_COOLDOWN = 10; //How much cooldown the amethyst dispenser has
+    }
+
+    public static class EnchantmentNested {
+        public float CHARGE_GAIN_INCREASE_PER_LEVEL = 1.5f;
     }
 
     public static class ChargeNested {

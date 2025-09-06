@@ -81,7 +81,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
             if (canJump(player)) {
                 //dashing code
-                if (this.canUseSparklingSlide()) {
+                if (this.canUseSparklingSlash()) {
                     this.onSparklingSlash();
                 }
 
@@ -110,13 +110,13 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
-    private boolean canUseSparklingSlide() {
+    private boolean canUseSparklingSlash() {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
 
         return this.isDoubleJumpingTimer >= 1 &&
                player.handSwinging &&
                canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
-               player.getMainHandStack().isIn(ItemTags.SWORDS);
+               player.getMainHandStack().isIn(ItemTags.WEAPON_ENCHANTABLE);
     }
 
     @Unique
