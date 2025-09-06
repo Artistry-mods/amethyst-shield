@@ -3,6 +3,7 @@ package chaos.amyshield;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.config.AmethystShieldConfig;
+import chaos.amyshield.enchantments.ModEnchantments;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
@@ -73,6 +74,7 @@ public class AmethystShield implements ModInitializer {
         ModBlocks.registerModBlocks();
         ModPackets.registerGlobalReceiversC2S();
         ModParticles.registerModParticles();
+        ModEnchantments.init();
         ModBlockEntities.registerModBlockEntities();
         LootTableModifier.init();
         ModWorldGeneration.generateModWorldGen();

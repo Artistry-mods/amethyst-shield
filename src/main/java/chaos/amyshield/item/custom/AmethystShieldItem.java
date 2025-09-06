@@ -1,19 +1,20 @@
 package chaos.amyshield.item.custom;
 
 import chaos.amyshield.AmethystShield;
+import chaos.amyshield.enchantments.ModEnchantments;
+import chaos.amyshield.item.ModItems;
 import chaos.amyshield.networking.playload.SyncChargePayload;
 import chaos.amyshield.networking.playload.SyncSlashPayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.util.stream.Stream;
 
 public class AmethystShieldItem extends ShieldItem {
 
@@ -43,8 +44,19 @@ public class AmethystShieldItem extends ShieldItem {
         ClientPlayNetworking.send(new SyncSlashPayload(isSlashing));
     }
 
-    public static float addCharge(IEntityDataSaver player, float amount) {
-        IEntityDataSaver.AmethystShieldData nbt = player.amethyst_shield$getPersistentData();
+    public static float addCharge(PlayerEntity player, float amount) {
+        if (amount > 0) {
+            int level = EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).get(),
+                    Stream.of(player.getOffHandStack(), player.getMainHandStack())
+                            .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
+                            .toList().getFirst());
+
+            if (level > 0) {
+                amount = amount * (level * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.CHARGE_GAIN_INCREASE_PER_LEVEL());
+            }
+        }
+
+        IEntityDataSaver.AmethystShieldData nbt = ((IEntityDataSaver) player).amethyst_shield$getPersistentData();
         float charge = nbt.getCharge();
         if (charge + amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
             charge = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
@@ -63,10 +75,5 @@ public class AmethystShieldItem extends ShieldItem {
 
     public static void syncCharge(float charge, ServerPlayerEntity player) {
         ServerPlayNetworking.send(player, new SyncChargePayload(charge));
-    }
-
-    @Override
-    public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context) {
-        return enchantment.matchesKey(Enchantments.MENDING) || enchantment.matchesKey(Enchantments.UNBREAKING);
     }
 }

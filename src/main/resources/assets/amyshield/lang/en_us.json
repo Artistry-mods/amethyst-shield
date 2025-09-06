@@ -6,6 +6,8 @@
   "block.amyshield.diamond_deposit": "Diamond deposit",
   "item.amyshield.diamond_deposit": "Diamond deposit",
 
+  "enchantment.amyshield.sensitivity": "Sensitivity",
+
   "tag.block.amyshield.shiny_ores": "Shiny Ores",
 
   "text.config.amethyst-shield-config.title": "Amethyst shield config",
