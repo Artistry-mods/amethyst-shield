@@ -24,6 +24,7 @@ public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
 
         pack.addProvider(ModTagProvider.ModBlockTagProvider::new);
         pack.addProvider(ModTagProvider.ModItemTagProvider::new);
+        pack.addProvider(ModTagProvider.ModEntityProvider::new);
     }
 
     @Override
@@ -51,6 +52,26 @@ public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
                                     AttributeModifierSlot.HAND
                             )
                     ).build(ModEnchantments.SENSITIVITY.getValue())
+            );
+
+
+            context.register(ModEnchantments.RELEASE, Enchantment.builder(
+                Enchantment.definition(
+                    items.getOrThrow(ModTags.AMETHYST_SHIELD_ENCHANTABLE),
+                    // this is the "weight" or probability of our enchantment showing up in the table
+                    10,
+                    // the maximum level of the enchantment
+                    3,
+                    // base cost for level 1 of the enchantment, and min levels required for something higher
+                    Enchantment.leveledCost(1, 10),
+                    // same fields as above but for max cost
+                    Enchantment.leveledCost(1, 15),
+                    // anvil cost
+                    5,
+                    // valid slots
+                    AttributeModifierSlot.HAND
+                ))
+                .build(ModEnchantments.RELEASE.getValue())
             );
         });
     }

@@ -21,6 +21,7 @@ public class AmethystShieldConfigModel {
 
     public static class AmethystShieldNested {
         @RestartRequired
+        @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_SHIELD_DURABILITY = 512; //The durability of the amethyst shield.
 
         public int CHARGE_BAR_OFFSET = 0; //The durability of the amethyst shield.
@@ -45,59 +46,94 @@ public class AmethystShieldConfigModel {
     }
 
     public static class MonocleNested {
+        @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_MONOCLE_TIMER = 3 * 20; //How many ticks should pass before the amethyst monocle pings again. (sec * ticksPerSec)
+        @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_MONOCLE_RANGE = 4; //How many blocks get checked around the player
     }
 
     public static class DispenserNested {
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_DISPENSER_STRENGTH = 2.0f; //How strong the amethyst dispenser shoots
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_DISPENSER_SPREAD = 0f; //How much spread the amethyst dispenser has
+        @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_DISPENSER_COOLDOWN = 10; //How much cooldown the amethyst dispenser has
     }
 
     public static class EnchantmentNested {
+        @Sync(OVERRIDE_CLIENT)
         public float CHARGE_GAIN_INCREASE_PER_LEVEL = 1.5f;
+        @Sync(OVERRIDE_CLIENT)
+        public float RELEASE_DOUBLE_JUMP_MULTIPLIER = .2f;
+        @Sync(OVERRIDE_CLIENT)
+        public float RELEASE_SPARKLING_SLASH_MULTIPLIER = .4f;
+        @Sync(OVERRIDE_CLIENT)
+        public float RELEASE_SLIDE_MULTIPLIER = .5f;
+        @Sync(OVERRIDE_CLIENT)
+        public float RELEASE_PUSH_MULTIPLIER = .7f;
     }
 
     public static class ChargeNested {
         @Sync(OVERRIDE_CLIENT)
         public float MAX_CHARGE = 100f; //The maximum amethyst shield charge
+        @Sync(OVERRIDE_CLIENT)
         @ExcludeFromScreen
         public float MIN_CHARGE = 0f; //The minimum amethyst shield charge
         //Movement charge gain
-        public int MOVEMENT_CHARGE_TIMING = 20; //After how many tick the packet for movement charge gain gets send
+        @Sync(OVERRIDE_CLIENT)
+        public int MOVEMENT_CHARGE_TIMING = 2; //After how many tick the packet for movement charge gain gets send
+        @Sync(OVERRIDE_CLIENT)
         public float MOVEMENT_CHARGE_MULTIPLIER = 1;
+        @Sync(OVERRIDE_CLIENT)
         @ExcludeFromScreen
         public float MIN_MOVEMENT_DELTA = 0.002f; //The minimum movement distance required for charge contribution
         //Block charge gain
+        @Sync(OVERRIDE_CLIENT)
         public float BLOCK_GAIN_MULTIPLIER = 0.4F;
     }
 
     public static class SlashNested {
+        @Sync(OVERRIDE_CLIENT)
         public float SPARKLING_SLASH_COST = -25f; //How much charge the sparkling slash costs
+        @Sync(OVERRIDE_CLIENT)
         public int SLASH_TIMING = 10; //how many ticks the player has to hit and activate the ability after starting to fall again
+        @Sync(OVERRIDE_CLIENT)
         public float SPARKLING_SLASH_STRENGTH = 2f; //How far the sparkling slash propels the use
+        @Sync(OVERRIDE_CLIENT)
         public float SPARKLING_SLASH_DAMAGE = 17f; //How much a sparkling slash hit does (hit points)
+        @Sync(OVERRIDE_CLIENT)
         public float SPARKLING_SLASH_CHARGE_RETURN = 20f; //How much charge the player get returned for landing a successful sparkling slash
+        @Sync(OVERRIDE_CLIENT)
         public float SPARKLING_SLASH_RADIUS = 0.5f; //The radius around the player in which entities get damaged and flung
     }
 
     public static class DoubleJumpNested {
+        @Sync(OVERRIDE_CLIENT)
         public float DOUBLE_JUMP_COST = -50f; //How much charge the double jump costs
+        @Sync(OVERRIDE_CLIENT)
         public float DOUBLE_JUMP_STRENGTH = 0.7f; //How high the double jump propels the user
     }
 
     public static class PushNested {
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_PUSH_COST = -50f; //How much charge the amethyst push costs
+        @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_PUSH_SNEAKING_TIMING = 10; //How quickly sneak has to be pressed twice for the ability to activate (in ticks)
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_PUSH_RADIUS = 6f; //The radius around the player in which entities get damaged and flung
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_PUSH_STRENGTH_X = 0.5f; //how strong they get pushed away on x and z plane
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_PUSH_STRENGTH_Y = 0.6f; //how strong they get knocked up
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_PUSH_DAMAGE = 16f; //How much an amethyst push hit does (hit points)
     }
 
     public static class SlideNested {
+        @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_SLIDE_TIMING = 5; //How quickly the double block has to be executed for the ability to activate
+        @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_SLIDE_COST = -25f; //How much charge the amethyst slide costs
     }
 }

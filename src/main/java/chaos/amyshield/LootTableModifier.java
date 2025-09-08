@@ -38,6 +38,24 @@ public class LootTableModifier {
 					.with(ItemEntry.builder(Items.AIR).weight(100));
                 tableBuilder.pool(pb);
             }
+
+            /*
+            if (key.equals(LootTables.TRIAL_CHAMBERS_REWARD_OMINOUS_UNIQUE_CHEST)) {
+                LootPool.Builder pb = LootPool.builder()
+                    .with(ItemEntry.builder(Items.ENCHANTED_BOOK)
+                        .apply(new SetEnchantmentsLootFunction.Builder()
+                            .enchantment(
+                                RegistryEntry.of(registries.getOrThrow(RegistryKeys.ENCHANTMENT).getOrThrow(ModEnchantments.RELEASE).value()),
+                                EnchantmentLevelLootNumberProvider.create(EnchantmentLevelBasedValue.linear(1, 2))
+                            )
+                        )
+                        .weight(400)
+                            .build()
+                    );
+
+                tableBuilder.pool(pb);
+            }
+            */
         });
     }
 }

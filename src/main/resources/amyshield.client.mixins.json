@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AmethystShieldAbilityClientMixin",
-    "F3ChargePercentageMixin"
+    "F3ChargePercentageMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

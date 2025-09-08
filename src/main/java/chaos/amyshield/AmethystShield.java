@@ -89,6 +89,7 @@ public class AmethystShield implements ModInitializer {
             float charge = AmethystShieldItem.getCharge((IEntityDataSaver) handler.player);
             AmethystShieldItem.syncCharge(charge, handler.player);
         });
+
         LOGGER.info("Hello, Blockixel :)");
     }
 }
