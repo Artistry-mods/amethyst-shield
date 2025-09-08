@@ -15,6 +15,7 @@ public class ModEnchantmentTagModifier extends EnchantmentTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries) {
-        getTagBuilder(EnchantmentTags.NON_TREASURE).add(ModEnchantments.SENSITIVITY.getValue());
+        getTagBuilder(EnchantmentTags.NON_TREASURE)
+                .add(ModEnchantments.SENSITIVITY.getValue());
     }
 }

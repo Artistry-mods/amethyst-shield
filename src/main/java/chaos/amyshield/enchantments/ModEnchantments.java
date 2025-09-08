@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class ModEnchantments {
     public static final RegistryKey<Enchantment> SENSITIVITY = of("sensitivity");
+    public static final RegistryKey<Enchantment> RELEASE = of("release");
 
     private static RegistryKey<Enchantment> of(String path) {
         Identifier id = Identifier.of(AmethystShield.MOD_ID, path);
