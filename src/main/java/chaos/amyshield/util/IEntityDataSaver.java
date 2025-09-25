@@ -1,5 +1,6 @@
 package chaos.amyshield.util;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
@@ -38,23 +39,21 @@ public interface IEntityDataSaver {
         public <T> DataResult<AmethystShieldData> read(final DynamicOps<T> ops, final T input) {
             AmethystShieldData data = new AmethystShieldData();
 
-            data.setCharge(ops.getNumberValue(input, 0f).floatValue());
-
-            DataResult<Boolean> result = ops.getBooleanValue(input);
-
-            if (result.isError()) {
-                return DataResult.error(() -> "Failed to read slashing state from input: " + result.error().get().message());
-            }
-
-            data.setSlashing(result.result().orElse(false));
+            ops.getMap(input).flatMap(map ->
+                            ops.getNumberValue(map.get(ops.createString("charge"))))
+                    .map(Number::floatValue)
+                    .result().ifPresent(data::setCharge);
 
             return DataResult.success(data);
         }
 
         @Override
         public <T> T write(final DynamicOps<T> ops, final AmethystShieldData value) {
-            ops.createNumeric(value.getCharge());
-            return ops.createBoolean(value.isSlashing());
+            T chargeValue = ops.createNumeric(value.getCharge());
+
+            return ops.createMap(ImmutableMap.of(
+                    ops.createString("charge"), chargeValue
+            ));
         }
 
         @Override

@@ -6,12 +6,12 @@ import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.playload.AmethystAbilityPayload;
 import chaos.amyshield.networking.playload.AmethystPushPayload;
+import chaos.amyshield.networking.playload.IgnoreFallDamagePayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import chaos.amyshield.util.IMinecraftClientDatasaver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -26,7 +26,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class AmethystShieldAbilityClientMixin {
@@ -175,7 +174,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private void tickMovementTimer() {
-        if (this.movementChargeTimer >= 1) {
+        if (this.movementChargeTimer >= 1 && this.movementCharge < AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE() / 4) {
             this.movementChargeTimer -= 1;
         } else {
             if (this.movementCharge > 0) {
@@ -201,7 +200,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     public double getSparklingSlashMultiplier(PlayerEntity player) {
         double multiplier = AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_STRENGTH();
 
-        return multiplier + (getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER());
+        return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER());
     }
 
     @Unique
@@ -213,6 +212,10 @@ public abstract class AmethystShieldAbilityClientMixin {
         flingPlayer(getSparklingSlashMultiplier(player));
         this.isDoubleJumpingTimer = 0;
 
+        player.currentExplosionImpactPos = player.getPos();
+        player.setIgnoreFallDamageFromCurrentExplosion(true);
+        ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getPos().subtract(0, 1000, 0)));
+
         this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST(), false, true, true);
     }
 
@@ -220,7 +223,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     public double getDoubleJumpMultiplier(PlayerEntity player) {
         double multiplier = AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_STRENGTH();
 
-        return multiplier + (getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER());
+        return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER());
     }
 
     @Unique
@@ -239,6 +242,10 @@ public abstract class AmethystShieldAbilityClientMixin {
 
             this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
 
+            player.currentExplosionImpactPos = player.getPos();
+            player.setIgnoreFallDamageFromCurrentExplosion(true);
+            ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getPos()));
+
             this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST(), true, false, true);
             return;
         }
@@ -248,14 +255,6 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onAmethystBurst() {
         ClientPlayNetworking.send(new AmethystPushPayload(true));
         this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST(), true, false, true);
-    }
-
-    @Unique
-    private double getReleaseEnchantmentLevel(PlayerEntity player) {
-        return EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).get(),
-                Stream.of(player.getOffHandStack(), player.getMainHandStack())
-                        .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
-                        .toList().getFirst());
     }
 
     @Unique
@@ -297,7 +296,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     public double getSlideMultiplier(PlayerEntity player) {
-        return getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER();
+        return ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER();
     }
 
     @Unique
