@@ -1,6 +1,7 @@
 package chaos.amyshield;
 
 import chaos.amyshield.datagen.DynamicRegistryProvider;
+import chaos.amyshield.datagen.LootTableProvider;
 import chaos.amyshield.datagen.ModEnchantmentTagModifier;
 import chaos.amyshield.datagen.ModTagProvider;
 import chaos.amyshield.enchantments.ModEnchantments;
@@ -11,7 +12,8 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.*;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 
 public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
     @Override
@@ -21,6 +23,8 @@ public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
         pack.addProvider(DynamicRegistryProvider::new);
 
         pack.addProvider(ModEnchantmentTagModifier::new);
+
+        pack.addProvider(LootTableProvider.Block::new);
 
         pack.addProvider(ModTagProvider.ModBlockTagProvider::new);
         pack.addProvider(ModTagProvider.ModItemTagProvider::new);

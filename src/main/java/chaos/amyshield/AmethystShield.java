@@ -10,6 +10,7 @@ import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.ModPackets;
 import chaos.amyshield.particles.ModParticles;
+import chaos.amyshield.sounds.ModSounds;
 import chaos.amyshield.tag.ModTags;
 import chaos.amyshield.util.IEntityDataSaver;
 import chaos.amyshield.world.gen.ModWorldGeneration;
@@ -72,6 +73,7 @@ public class AmethystShield implements ModInitializer {
         ModTags.registerModKeys();
         ModItems.registerModItems();
         ModBlocks.registerModBlocks();
+        ModSounds.init();
         ModPackets.registerGlobalReceiversC2S();
         ModParticles.registerModParticles();
         ModEnchantments.init();

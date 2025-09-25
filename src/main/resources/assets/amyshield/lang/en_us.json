@@ -10,6 +10,9 @@
   "enchantment.amyshield.release": "Release",
 
   "tag.block.amyshield.shiny_ores": "Shiny Ores",
+  "tag.item.amyshield.amethyst_shield_enchantable": "Amethyst shield enchantable",
+
+  "sound.amyshield.hyper-explosion": "Hyper Explosion going off",
 
   "text.config.amethyst-shield-config.title": "Amethyst shield config",
   "text.config.amethyst-shield-config.category.monocleNested": "Monocle",
@@ -45,5 +48,12 @@
   "text.config.amethyst-shield-config.option.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE": "Damage",
   "text.config.amethyst-shield-config.category.amethystShieldNested.slideNested": "Sliding Ability",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST": "Charge cost",
-  "text.config.amethyst-shield-config.option.amethystShieldNested.slideNested.AMETHYST_SLIDE_TIMING": "Activation Window"
+  "text.config.amethyst-shield-config.option.amethystShieldNested.slideNested.AMETHYST_SLIDE_TIMING": "Activation Window",
+
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested": "Enchantments",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.CHARGE_GAIN_INCREASE_PER_LEVEL": "Sensitivity Charge Gain Increase Per Level",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER": "Release Double Jump Multiplier",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER": "Release Sparkling Slash Multiplier",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER": "Release Slide Multiplier",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_PUSH_MULTIPLIER": "Release Push Multiplier"
 }

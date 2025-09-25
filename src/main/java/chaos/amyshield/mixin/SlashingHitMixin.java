@@ -2,12 +2,10 @@ package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.enchantments.ModEnchantments;
-import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,14 +21,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @Mixin(ServerPlayerEntity.class)
 public class SlashingHitMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     protected void tickInject(CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        if (player != null && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
+        if (player != null && player.isAlive() && !player.isRemoved() && !player.isDisconnected() && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
             //double x, double y, double z, int count, double deltaX, double deltaY, double deltaZ, double speed
             if (player.getRandom().nextInt(5) == 1) {
                 player.getWorld().spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
@@ -49,6 +46,12 @@ public class SlashingHitMixin {
             Objects.requireNonNull(player.getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved() && !entity.getType().isIn(ModTags.SLASH_IMMUNE)) {
+                        if (entity instanceof PlayerEntity otherPlayer) {
+                            if (otherPlayer != null && otherPlayer.isAlive() && !otherPlayer.isRemoved() && AmethystShieldItem.getSlashing(((IEntityDataSaver) otherPlayer))) {
+
+                            }
+                        }
+
                         if (entity.damage(player.getWorld(), player.getDamageSources().indirectMagic(player, player), (float) getSlashMultiplier(player))) {
                             AmethystShieldItem.addCharge((player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN());
                             AmethystShieldItem.syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
@@ -61,14 +64,6 @@ public class SlashingHitMixin {
 
     @Unique
     private static double getSlashMultiplier(PlayerEntity player) {
-        return AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE() * (getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER());
-    }
-
-    @Unique
-    private static double getReleaseEnchantmentLevel(PlayerEntity player) {
-        return EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).get(),
-                Stream.of(player.getOffHandStack(), player.getMainHandStack())
-                        .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
-                        .toList().getFirst());
+        return AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE() * (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER());
     }
 }

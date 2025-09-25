@@ -71,7 +71,7 @@ public class AmethystShieldConfigModel {
         @Sync(OVERRIDE_CLIENT)
         public float RELEASE_SLIDE_MULTIPLIER = .5f;
         @Sync(OVERRIDE_CLIENT)
-        public float RELEASE_PUSH_MULTIPLIER = .7f;
+        public float RELEASE_PUSH_MULTIPLIER = .6f;
     }
 
     public static class ChargeNested {
