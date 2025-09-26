@@ -4,8 +4,17 @@
   "item.amyshield.sculk_latch": "Скалкова клямка",
   "item.amyshield.amethyst_monocle": "Аметистовий монокль",
   "block.amyshield.diamond_deposit": "Діамантові поклади",
+  "item.amyshield.diamond_deposit": "Діамантові поклади",
+
+  "enchantment.amyshield.sensitivity": "Чутливість",
+  "enchantment.amyshield.release": "Випуск",
+
+  "tag.block.amyshield.shiny_ores": "Блискучі руди",
+  "tag.item.amyshield.amethyst_shield_enchantable": "Зачарування для аметистового щита",
+
+  "sound.amyshield.hyper-explosion": "Гіпервибух спрацьовує",
   
-  "text.config.amethyst-shield-config.title": "Конфігурація аметистового щита",
+  "text.config.amethyst-shield-config.title": "Налаштування Amethyst Shield",
   "text.config.amethyst-shield-config.category.monocleNested": "Монокль",
   "text.config.amethyst-shield-config.option.monocleNested.AMETHYST_MONOCLE_TIMER": "Таймер",
   "text.config.amethyst-shield-config.option.monocleNested.AMETHYST_MONOCLE_RANGE": "Діапазон",
@@ -23,7 +32,7 @@
   "text.config.amethyst-shield-config.category.amethystShieldNested.slashNested": "Ударна здатність",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SPARKLING_SLASH_COST": "Ціна заряду",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SLASH_TIMING": "Вікно активації",
-  "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SPARKLING_SLASH_STRENGTH": "Сила швидкості",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SPARKLING_SLASH_STRENGTH": "Сила швидкости",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE": "Шкода",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SPARKLING_SLASH_RADIUS": "Радіус улучання",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN": "Приріст ударного заряду",
@@ -39,5 +48,14 @@
   "text.config.amethyst-shield-config.option.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE": "Шкода",
   "text.config.amethyst-shield-config.category.amethystShieldNested.slideNested": "Здатність ковзання",
   "text.config.amethyst-shield-config.option.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST": "Ціна заряду",
-  "text.config.amethyst-shield-config.option.amethystShieldNested.slideNested.AMETHYST_SLIDE_TIMING": "Вікно активації"
+  "text.config.amethyst-shield-config.option.amethystShieldNested.slideNested.AMETHYST_SLIDE_TIMING": "Вікно активації",
+
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested": "Зачарування",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.CHARGE_GAIN_INCREASE_PER_LEVEL": "Збільшення заряду чутливости за рівень",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER": "Випуск множника подвійного стрибка",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER": "Випуск множника блискучої косої лінії",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER": "Випуск множника ковзання",
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_PUSH_MULTIPLIER": "Випуск множника штовхання",
+
+  "modmenu.descriptionTranslation.amyshield": "Додає концепцію аметистового щита із Blockixel Artistry"
 }
