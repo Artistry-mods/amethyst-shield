@@ -2,14 +2,10 @@ package chaos.amyshield.enchantments;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.ModItems;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.effect.EnchantmentEntityEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
@@ -26,10 +22,6 @@ public class ModEnchantments {
         return RegistryKey.of(RegistryKeys.ENCHANTMENT, id);
     }
 
-    private static <T extends EnchantmentEntityEffect> MapCodec<T> register(String id, MapCodec<T> codec) {
-        return Registry.register(Registries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Identifier.of(AmethystShield.MOD_ID, id), codec);
-    }
-
     public static int getReleaseEnchantmentLevel(PlayerEntity player) {
         List<ItemStack> items = Stream.of(player.getOffHandStack(), player.getMainHandStack())
                 .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
@@ -40,6 +32,18 @@ public class ModEnchantments {
         }
 
         return EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).get(), items.getFirst()) + 1;
+    }
+
+    public static int getSensitivityEnchantmentLevel(PlayerEntity player) {
+        List<ItemStack> items = Stream.of(player.getOffHandStack(), player.getMainHandStack())
+                .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
+                .toList();
+
+        if (items.isEmpty() || player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).isEmpty()) {
+            return 1;
+        }
+
+        return EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).get(), items.getFirst()) + 1;
     }
 
     public static void init() {

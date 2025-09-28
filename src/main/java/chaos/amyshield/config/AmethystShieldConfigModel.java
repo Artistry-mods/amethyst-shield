@@ -91,6 +91,8 @@ public class AmethystShieldConfigModel {
         //Block charge gain
         @Sync(OVERRIDE_CLIENT)
         public float BLOCK_GAIN_MULTIPLIER = 0.4F;
+        @Sync(OVERRIDE_CLIENT)
+        public float MACE_HIT_MULTIPLIER = .5f;
     }
 
     public static class SlashNested {

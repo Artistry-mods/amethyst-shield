@@ -24,11 +24,35 @@ import java.util.Objects;
 
 @Mixin(ServerPlayerEntity.class)
 public class SlashingHitMixin {
+    /*
+    @Unique
+    public int doomTimer = -1;
+    @Unique
+    public Entity otherDoomedPlayer;
+
+     */
+
     @Inject(method = "tick", at = @At("HEAD"))
     protected void tickInject(CallbackInfo ci) {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        /*
+        if (doomTimer > -1) {
+            doomTimer--;
+
+            player.setPos(player.lastX, player.lastY, player.lastZ);
+            player.fallDistance = 0;
+            player.setVelocity(Vec3d.ZERO);
+            player.velocityDirty = true;
+        }
+
+        if (doomTimer == 0 && otherDoomedPlayer != null) {
+            player.setVelocity(player.getPos().subtract(otherDoomedPlayer.getPos()).normalize().multiply(10));
+            player.velocityDirty = true;
+        }
+
+         */
+
         if (player != null && player.isAlive() && !player.isRemoved() && !player.isDisconnected() && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
-            //double x, double y, double z, int count, double deltaX, double deltaY, double deltaZ, double speed
             if (player.getRandom().nextInt(5) == 1) {
                 player.getWorld().spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
                         player.getX() + player.getRandom().nextFloat() - 0.5,
@@ -46,11 +70,17 @@ public class SlashingHitMixin {
             Objects.requireNonNull(player.getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved() && !entity.getType().isIn(ModTags.SLASH_IMMUNE)) {
-                        if (entity instanceof PlayerEntity otherPlayer) {
+                        /*
+                        if (entity instanceof ServerPlayerEntity otherPlayer) {
                             if (otherPlayer != null && otherPlayer.isAlive() && !otherPlayer.isRemoved() && AmethystShieldItem.getSlashing(((IEntityDataSaver) otherPlayer))) {
-
+                                doomTimer = 9;
+                                player.getWorld().playSound(player, player.getPos().x, player.getPos().y, player.getPos().z, ModSounds.HYPER_EXPLOSION, SoundCategory.PLAYERS, 1.1f, 1f);
+                                //AmethystShieldItem.setSlashing(((IEntityDataSaver) otherPlayer), false);
+                                AmethystShieldItem.setSlashing(((IEntityDataSaver) player), false);
+                                this.otherDoomedPlayer = otherPlayer;
                             }
                         }
+                        */
 
                         if (entity.damage(player.getWorld(), player.getDamageSources().indirectMagic(player, player), (float) getSlashMultiplier(player))) {
                             AmethystShieldItem.addCharge((player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN());

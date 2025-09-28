@@ -43,7 +43,7 @@ public class AmethystShieldItem extends ShieldItem {
     public static float addCharge(PlayerEntity player, float amount) {
         if (amount > 0) {
 
-            int level = ModEnchantments.getReleaseEnchantmentLevel(player);
+            int level = ModEnchantments.getSensitivityEnchantmentLevel(player);
 
             if (level > 0) {
                 amount = amount * (level * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.CHARGE_GAIN_INCREASE_PER_LEVEL());

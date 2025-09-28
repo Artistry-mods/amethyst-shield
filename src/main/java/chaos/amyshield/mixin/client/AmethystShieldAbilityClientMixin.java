@@ -338,7 +338,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         movement = movement.multiply(2 + getSlideMultiplier(player));
 
         // Apply velocity to the player
-        player.setVelocity(movement.x + player.getVelocity().x, player.getVelocity().getY() * 0.5, movement.z + player.getVelocity().z);
+        player.getRootVehicle().setVelocity(movement.x + player.getVelocity().x, player.getVelocity().getY() * 0.5, movement.z + player.getVelocity().z);
     }
 
     //chatGPTs code since IDK math like that
