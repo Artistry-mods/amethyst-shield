@@ -5,6 +5,7 @@ import chaos.amyshield.item.ModItems;
 import chaos.amyshield.tag.ModTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.RegistryWrapper;
@@ -24,6 +25,8 @@ public class ModTagProvider {
             valueLookupBuilder(ModTags.AMETHYST_SHIELD_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD);
 
             valueLookupBuilder(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD);
+
+            valueLookupBuilder(ConventionalItemTags.SHIELD_TOOLS).add(ModItems.AMETHYST_SHIELD);
         }
     }
 
