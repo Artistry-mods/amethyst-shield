@@ -21,10 +21,10 @@ public class AmethystMonoclePing extends SpriteBillboardParticle {
     protected AmethystMonoclePing(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider, Direction isFlat) {
         super(world, x, y, z, 0, 0, 0);
         this.setSpriteForAge(spriteProvider);
+        this.spriteProvider = spriteProvider;
 
         this.facing = isFlat;
         this.age = 0;
-        this.spriteProvider = spriteProvider;
         this.maxAge = 12;
         this.scale = 0.5F;
     }
