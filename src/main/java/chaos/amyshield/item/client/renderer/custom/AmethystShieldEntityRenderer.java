@@ -5,12 +5,10 @@ import chaos.amyshield.item.client.model.custom.AmethystShieldEntityModel;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.model.LoadedEntityModels;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.command.ModelCommandRenderer;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.item.ItemDisplayContext;
@@ -34,34 +32,14 @@ public class AmethystShieldEntityRenderer implements SpecialModelRenderer<Compon
         return itemStack.getImmutableComponents();
     }
 
-    public void render(@Nullable ComponentMap componentMap, ItemDisplayContext displayContext, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j, boolean bl) {
-        /*BannerPatternsComponent bannerPatternsComponent = componentMap != null ? componentMap.getOrDefault(DataComponentTypes.BANNER_PATTERNS, BannerPatternsComponent.DEFAULT) : BannerPatternsComponent.DEFAULT;
-        DyeColor dyeColor = componentMap != null ? componentMap.get(DataComponentTypes.BASE_COLOR) : null;
-        boolean bl2 = !bannerPatternsComponent.layers().isEmpty() || dyeColor != null;
-        matrixStack.push();
-        matrixStack.scale(1.0F, -1.0F, -1.0F);
-        SpriteIdentifier spriteIdentifier = bl2 ? ModelBaker.SHIELD_BASE : ModelBaker.SHIELD_BASE_NO_PATTERN;
-        VertexConsumer vertexConsumer = spriteIdentifier.getSprite().getTextureSpecificVertexConsumer(ItemRenderer.getItemGlintConsumer(vertexConsumerProvider, this.model.getLayer(spriteIdentifier.getAtlasId()), itemDisplayContext == ItemDisplayContext.GUI, bl));
-        this.model.getHandle().render(matrixStack, vertexConsumer, i, j);
-        if (bl2) {
-            BannerBlockEntityRenderer.renderCanvas(matrixStack, vertexConsumerProvider, i, j, this.model.getPlate(), spriteIdentifier, false, (DyeColor) Objects.requireNonNullElse(dyeColor, DyeColor.WHITE), bannerPatternsComponent, bl, false);
-        } else {
-            this.model.getPlate().render(matrixStack, vertexConsumer, i, j);
-        }*/
+    @Override
+    public void render(@Nullable ComponentMap data, ItemDisplayContext displayContext, MatrixStack matrices, OrderedRenderCommandQueue queue, int light, int overlay, boolean glint, int i) {
+        matrices.push();
+        matrices.scale(1.0f, -1.0f, -1.0f);
 
-        //vertexConsumer = spriteIdentifier.getSprite().getTextureSpecificVertexConsumer(ItemRenderer.getItemGlintConsumer(vertexConsumerProvider, this.model.getLayer(OnGuardClient.CRYSTAL.getAtlasId()), itemDisplayContext == ItemDisplayContext.GUI, bl));
-        //this.model.getLeftCrystal().render(matrixStack, vertexConsumer, i, j);
-        //this.model.getRightCrystal().render(matrixStack, vertexConsumer, i, j);
+        queue.submitModelPart(this.modelShield.getRootPart(), matrices, this.modelShield.getLayer(AMETHYST_SHIELD_TEXTURE), light, overlay, (Sprite)null, false, glint, -1, (ModelCommandRenderer.CrumblingOverlayCommand)null, i);
 
-        // above: slightly modified vanilla shield code. below: extraordinarily simple amy shield renderer
-
-        matrixStack.push();
-        matrixStack.scale(1.0f, -1.0f, -1.0f);
-
-        VertexConsumer vertexConsumer = ItemRenderer.getItemGlintConsumer(vertexConsumerProvider, RenderLayer.getItemEntityTranslucentCull(AMETHYST_SHIELD_TEXTURE), false, bl);
-        this.modelShield.render(matrixStack, vertexConsumer, i, j);
-
-        matrixStack.pop();
+        matrices.pop();
     }
 
     @Override
@@ -75,12 +53,13 @@ public class AmethystShieldEntityRenderer implements SpecialModelRenderer<Compon
         public static final AmethystShieldEntityRenderer.Unbaked INSTANCE = new AmethystShieldEntityRenderer.Unbaked();
         public static final MapCodec<AmethystShieldEntityRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
 
-        public MapCodec<AmethystShieldEntityRenderer.Unbaked> getCodec() {
-            return CODEC;
+        @Override
+        public @Nullable SpecialModelRenderer<?> bake(BakeContext context) {
+            return new AmethystShieldEntityRenderer(new AmethystShieldEntityModel(context.entityModelSet().getModelPart(AmethystShieldEntityModel.AMETHYST_SHIELD)));
         }
 
-        public SpecialModelRenderer<?> bake(LoadedEntityModels entityModels) {
-            return new AmethystShieldEntityRenderer(new AmethystShieldEntityModel(entityModels.getModelPart(AmethystShieldEntityModel.AMETHYST_SHIELD)));
+        public MapCodec<AmethystShieldEntityRenderer.Unbaked> getCodec() {
+            return CODEC;
         }
     }
 }

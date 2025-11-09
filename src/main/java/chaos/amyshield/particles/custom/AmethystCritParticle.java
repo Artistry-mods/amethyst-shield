@@ -2,17 +2,20 @@ package chaos.amyshield.particles.custom;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.BillboardParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
-public class AmethystCritParticle extends SpriteBillboardParticle {
+public class AmethystCritParticle extends BillboardParticle {
     private final SpriteProvider spriteProvider;
 
     protected AmethystCritParticle(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider) {
-        super(world, x, y, z, 0, 0, 0);
-        this.setSpriteForAge(spriteProvider);
+        super(world, x, y, z, spriteProvider.getFirst());
 
         this.age = 0;
         this.spriteProvider = spriteProvider;
@@ -28,13 +31,13 @@ public class AmethystCritParticle extends SpriteBillboardParticle {
         if (this.age++ >= this.maxAge) {
             this.markDead();
         } else {
-            this.setSpriteForAge(this.spriteProvider);
+            this.updateSprite(this.spriteProvider);
         }
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    protected RenderType getRenderType() {
+        return RenderType.PARTICLE_ATLAS_OPAQUE;
     }
 
     @Environment(EnvType.CLIENT)
@@ -45,9 +48,8 @@ public class AmethystCritParticle extends SpriteBillboardParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random) {
             return new AmethystCritParticle(world, x, y, z, this.spriteProvider);
         }
     }

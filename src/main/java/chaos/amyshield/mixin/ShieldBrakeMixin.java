@@ -28,7 +28,7 @@ public class ShieldBrakeMixin {
             if (!(player.getActiveItem().getItem() instanceof ShieldItem)) {
                 return;
             }
-            if (!player.getWorld().isClient) {
+            if (!player.getEntityWorld().isClient()) {
                 player.incrementStat(Stats.USED.getOrCreateStat(player.getActiveItem().getItem()));
             }
 

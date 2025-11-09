@@ -27,11 +27,11 @@ public class ModEnchantments {
                 .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
                 .toList();
 
-        if (items.isEmpty() || player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).isEmpty()) {
+        if (items.isEmpty() || player.getEntityWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).isEmpty()) {
             return 1;
         }
 
-        return EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).get(), items.getFirst()) + 1;
+        return EnchantmentHelper.getLevel(player.getEntityWorld().getRegistryManager().getOptionalEntry(ModEnchantments.RELEASE).get(), items.getFirst()) + 1;
     }
 
     public static int getSensitivityEnchantmentLevel(PlayerEntity player) {
@@ -39,11 +39,11 @@ public class ModEnchantments {
                 .filter(stack -> stack.isOf(ModItems.AMETHYST_SHIELD))
                 .toList();
 
-        if (items.isEmpty() || player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).isEmpty()) {
+        if (items.isEmpty() || player.getEntityWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).isEmpty()) {
             return 1;
         }
 
-        return EnchantmentHelper.getLevel(player.getWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).get(), items.getFirst()) + 1;
+        return EnchantmentHelper.getLevel(player.getEntityWorld().getRegistryManager().getOptionalEntry(ModEnchantments.SENSITIVITY).get(), items.getFirst()) + 1;
     }
 
     public static void init() {

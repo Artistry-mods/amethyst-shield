@@ -100,7 +100,7 @@ public abstract class AmethystShieldAbilityClientMixin {
             }
         }
 
-        this.lastPos = player.getPos();
+        this.lastPos = player.getEntityPos();
         //IDK why I need this, but it was there from the Mod I riped it from
         this.jumpedLastTick = player.input.playerInput.jump();
     }
@@ -164,7 +164,7 @@ public abstract class AmethystShieldAbilityClientMixin {
             return;
         }
         //movement delta
-        double movementDelta = new Vec2f(((float) player.getPos().getX()), ((float) player.getPos().getZ()))
+        double movementDelta = new Vec2f(((float) player.getEntityPos().getX()), ((float) player.getEntityPos().getZ()))
                 .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
 
         if (movementDelta > AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_MOVEMENT_DELTA()) {
@@ -212,9 +212,9 @@ public abstract class AmethystShieldAbilityClientMixin {
         flingPlayer(getSparklingSlashMultiplier(player));
         this.isDoubleJumpingTimer = 0;
 
-        player.currentExplosionImpactPos = player.getPos();
+        player.currentExplosionImpactPos = player.getEntityPos();
         player.setIgnoreFallDamageFromCurrentExplosion(true);
-        ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getPos().subtract(0, 1000, 0)));
+        ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getEntityPos().subtract(0, 1000, 0)));
 
         this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST(), false, true, true);
     }
@@ -242,9 +242,9 @@ public abstract class AmethystShieldAbilityClientMixin {
 
             this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
 
-            player.currentExplosionImpactPos = player.getPos();
+            player.currentExplosionImpactPos = player.getEntityPos();
             player.setIgnoreFallDamageFromCurrentExplosion(true);
-            ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getPos()));
+            ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getEntityPos()));
 
             this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST(), true, false, true);
             return;

@@ -3,23 +3,18 @@ package chaos.amyshield.particles.custom;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
-public class AmethystChargeParticle extends SpriteBillboardParticle {
+public class AmethystChargeParticle extends BillboardParticle {
     private final SpriteProvider spriteProvider;
     private final boolean isFlat;
 
     protected AmethystChargeParticle(ClientWorld world, double x, double y, double z, SpriteProvider spriteProvider, boolean isFlat) {
-        super(world, x, y, z, 0, 0, 0);
-        this.setSpriteForAge(spriteProvider);
+        super(world, x, y, z, spriteProvider.getFirst());
 
         this.isFlat = isFlat;
         this.age = 0;
@@ -28,42 +23,15 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
         this.scale = 2F;
     }
 
-
     @Override
-    public void render(VertexConsumer vertexConsumer, Camera camera, float tickDelta) {
-        Vec3d vec3d = camera.getPos();
-        float f = (float) (MathHelper.lerp(tickDelta, this.lastX, this.x) - vec3d.getX());
-        float g = (float) (MathHelper.lerp(tickDelta, this.lastY, this.y) - vec3d.getY());
-        float h = (float) (MathHelper.lerp(tickDelta, this.lastZ, this.z) - vec3d.getZ());
-        Quaternionf quaternionf;
+    protected void renderVertex(BillboardParticleSubmittable submittable, Quaternionf rotation, float x, float y, float z, float tickProgress) {
         if (this.isFlat) {
-            quaternionf = new Quaternionf(new Quaternionf(0.0F, 0.0F, 0.0F, 1.0F).rotateX((float) Math.toRadians(90)));
-        } else if (this.angle == 0.0F) {
-            quaternionf = camera.getRotation();
-        } else {
-            quaternionf = new Quaternionf(camera.getRotation());
-            quaternionf.rotateZ(MathHelper.lerp(tickDelta, this.lastAngle, this.angle));
+            super.renderVertex(submittable, new Quaternionf(-1,0,0,1), x, y, z, tickProgress);
+            super.renderVertex(submittable, new Quaternionf(1,0,0,1), x, y, z, tickProgress);
+            return;
         }
 
-        Vector3f[] vector3fs = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-        float i = this.getSize(tickDelta);
-
-        for (int j = 0; j < 4; ++j) {
-            Vector3f vector3f = vector3fs[j];
-            vector3f.rotate(quaternionf);
-            vector3f.mul(i);
-            vector3f.add(f, g, h);
-        }
-
-        float k = this.getMinU();
-        float l = this.getMaxU();
-        float m = this.getMinV();
-        float n = this.getMaxV();
-        int o = this.getBrightness(tickDelta);
-        vertexConsumer.vertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z()).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(o);
-        vertexConsumer.vertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z()).texture(l, m).color(this.red, this.green, this.blue, this.alpha).light(o);
-        vertexConsumer.vertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z()).texture(k, m).color(this.red, this.green, this.blue, this.alpha).light(o);
-        vertexConsumer.vertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z()).texture(k, n).color(this.red, this.green, this.blue, this.alpha).light(o);
+        super.renderVertex(submittable, rotation, x, y, z, tickProgress);
     }
 
     @Override
@@ -74,13 +42,13 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
         if (this.age++ >= this.maxAge) {
             this.markDead();
         } else {
-            this.setSpriteForAge(this.spriteProvider);
+            this.updateSprite(this.spriteProvider);
         }
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+    protected RenderType getRenderType() {
+        return RenderType.PARTICLE_ATLAS_OPAQUE;
     }
 
     @Environment(EnvType.CLIENT)
@@ -93,9 +61,8 @@ public class AmethystChargeParticle extends SpriteBillboardParticle {
             this.isFlat = isFlat;
         }
 
-        @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public @Nullable Particle createParticle(SimpleParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, Random random) {
             return new AmethystChargeParticle(world, x, y, z, this.spriteProvider, this.isFlat);
         }
     }

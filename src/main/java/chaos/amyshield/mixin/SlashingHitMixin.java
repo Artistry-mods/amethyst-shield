@@ -54,7 +54,7 @@ public class SlashingHitMixin {
 
         if (player != null && player.isAlive() && !player.isRemoved() && !player.isDisconnected() && AmethystShieldItem.getSlashing(((IEntityDataSaver) player))) {
             if (player.getRandom().nextInt(5) == 1) {
-                player.getWorld().spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
+                player.getEntityWorld().spawnParticles(ModParticles.AMETHYST_CRIT_PARTICLE,
                         player.getX() + player.getRandom().nextFloat() - 0.5,
                         player.getY() + player.getRandom().nextFloat() - 0.5,
                         player.getZ() + player.getRandom().nextFloat() - 0.5,
@@ -63,11 +63,11 @@ public class SlashingHitMixin {
                         player.getRandom().nextFloat(),
                         player.getRandom().nextFloat(),
                         0);
-                player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1f, 1);
+                player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1f, 1);
             }
 
-            List<Entity> entityList = new ArrayList<>(player.getWorld().getOtherEntities(player, player.getBoundingBox().expand(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_RADIUS())));
-            Objects.requireNonNull(player.getServer()).execute(() -> {
+            List<Entity> entityList = new ArrayList<>(player.getEntityWorld().getOtherEntities(player, player.getBoundingBox().expand(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_RADIUS())));
+            Objects.requireNonNull(player.getEntityWorld().getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved() && !entity.getType().isIn(ModTags.SLASH_IMMUNE)) {
                         /*
@@ -82,7 +82,7 @@ public class SlashingHitMixin {
                         }
                         */
 
-                        if (entity.damage(player.getWorld(), player.getDamageSources().indirectMagic(player, player), (float) getSlashMultiplier(player))) {
+                        if (entity.damage(player.getEntityWorld(), player.getDamageSources().indirectMagic(player, player), (float) getSlashMultiplier(player))) {
                             AmethystShieldItem.addCharge((player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN());
                             AmethystShieldItem.syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                         }
