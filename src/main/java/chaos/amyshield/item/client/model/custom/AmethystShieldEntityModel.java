@@ -17,7 +17,7 @@ public class AmethystShieldEntityModel extends Model {
     public static final EntityModelLayer AMETHYST_SHIELD = new EntityModelLayer(Identifier.of(AmethystShield.MOD_ID, "amethyst_shield_model"), "main");
 
     public AmethystShieldEntityModel(ModelPart root) {
-        super(root, RenderLayer::getEntityCutout);
+        super(root, identifier -> RenderLayer.getEntityCutout((Identifier) identifier));
     }
 
     public static TexturedModelData getTexturedModelData() {

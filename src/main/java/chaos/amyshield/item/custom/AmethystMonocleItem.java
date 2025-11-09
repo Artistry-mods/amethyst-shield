@@ -81,7 +81,7 @@ public class AmethystMonocleItem extends Item {
             }
 
             RaycastContext context = new RaycastContext(
-                    entity.getPos().add(0, 1, 0),
+                    entity.getEntityPos().add(0, 1, 0),
                     blockPos.toCenterPos(),
                     RaycastContext.ShapeType.OUTLINE,
                     RaycastContext.FluidHandling.NONE,

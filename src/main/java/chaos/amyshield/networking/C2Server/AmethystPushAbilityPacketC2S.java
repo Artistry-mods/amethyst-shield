@@ -34,18 +34,18 @@ public class AmethystPushAbilityPacketC2S {
                 Item shield = itemStack.getItem();
                 if (shield == ModItems.AMETHYST_SHIELD) {
                     SoundEvent soundEvent = context.player().fallDistance > 5.0 ? SoundEvents.ITEM_MACE_SMASH_GROUND_HEAVY : SoundEvents.ITEM_MACE_SMASH_GROUND;
-                    context.player().getWorld().playSound(null, context.player().getX(), context.player().getY(), context.player().getZ(), soundEvent, context.player().getSoundCategory(), 1.0F, 1.0F);
+                    context.player().getEntityWorld().playSound(null, context.player().getX(), context.player().getY(), context.player().getZ(), soundEvent, context.player().getSoundCategory(), 1.0F, 1.0F);
 
-                    Vec3d vec3d = context.player().getPos();
+                    Vec3d vec3d = context.player().getEntityPos();
                     int i = (int) MathHelper.clamp(50.0, 0.0, 200.0);
-                    context.player().getWorld().spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, context.player().getSteppingBlockState()), vec3d.x, vec3d.y, vec3d.z, i, 0.30000001192092896, 0.30000001192092896, 0.30000001192092896, 0.15000000596046448);
-                    context.player().getWorld().syncWorldEvent(WorldEvents.SMASH_ATTACK, context.player().getSteppingPos(), 750);
+                    context.player().getEntityWorld().spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, context.player().getSteppingBlockState()), vec3d.x, vec3d.y, vec3d.z, i, 0.30000001192092896, 0.30000001192092896, 0.30000001192092896, 0.15000000596046448);
+                    context.player().getEntityWorld().syncWorldEvent(WorldEvents.SMASH_ATTACK, context.player().getSteppingPos(), 750);
 
                     List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_RADIUS() * getBurstMultiplier(context.player()), context.player()));
                     for (Entity entity : entityList) {
                         if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
                             pushEntityAwayFromPlayer(entity, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_X() * getBurstMultiplier(context.player()), context.player());
-                            entity.damage(context.player().getWorld(), context.player().getDamageSources().indirectMagic(context.player(), context.player()), (float) (AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE() * getBurstMultiplier(context.player())));
+                            entity.damage(context.player().getEntityWorld(), context.player().getDamageSources().indirectMagic(context.player(), context.player()), (float) (AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE() * getBurstMultiplier(context.player())));
                         }
                     }
 
@@ -61,7 +61,7 @@ public class AmethystPushAbilityPacketC2S {
     }
 
     private static List<Entity> getEntitiesAroundPlayer(double radius, PlayerEntity player) {
-        World world = player.getWorld();
+        World world = player.getEntityWorld();
         Box box = new Box(
                 player.getX() - radius, player.getY() - radius, player.getZ() - radius,
                 player.getX() + radius, player.getY() + radius, player.getZ() + radius
@@ -70,8 +70,8 @@ public class AmethystPushAbilityPacketC2S {
     }
 
     private static void pushEntityAwayFromPlayer(Entity entity, double speed, PlayerEntity player) {
-        Vec2f playerPos = new Vec2f((float) -player.getPos().getX(), (float) -player.getPos().getZ());
-        Vec2f entityPos = new Vec2f((float) entity.getPos().getX(), (float) entity.getPos().getZ());
+        Vec2f playerPos = new Vec2f((float) -player.getEntityPos().getX(), (float) -player.getEntityPos().getZ());
+        Vec2f entityPos = new Vec2f((float) entity.getEntityPos().getX(), (float) entity.getEntityPos().getZ());
         Vec2f direction = entityPos.add(playerPos);
 
         Vec2f normalizedDirection = direction.normalize();
