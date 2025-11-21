@@ -27,10 +27,10 @@ public class AmethystShieldAbilityPacketC2S {
                     player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 0.2F, 1.0F);
                     player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1.5f, 1.0F);
                 }
-                if (payload.flatParticles() && !payload.notFlatParticles()) {
+                if (payload.flatParticles()) {
                     player.getEntityWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE_FLAT, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                 }
-                if (payload.flatParticles() && !payload.notFlatParticles()) {
+                if (payload.notFlatParticles()) {
                     player.getEntityWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                 }
 
