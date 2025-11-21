@@ -130,6 +130,8 @@ public class AmethystShieldConfigModel {
         public float AMETHYST_PUSH_STRENGTH_Y = 0.6f; //how strong they get knocked up
         @Sync(OVERRIDE_CLIENT)
         public float AMETHYST_PUSH_DAMAGE = 16f; //How much an amethyst push hit does (hit points)
+        @Sync(OVERRIDE_CLIENT)
+        public boolean KILL_ONLY_HOSTILE = true; //How much an amethyst push hit does (hit points)
     }
 
     public static class SlideNested {

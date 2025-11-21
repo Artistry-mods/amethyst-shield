@@ -85,7 +85,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 !player.getAbilities().flying) {
 
             if (canJump(player)) {
-                //dashing code
+                //slashing code
                 if (this.canUseSparklingSlash()) {
                     this.onSparklingSlash();
                 }

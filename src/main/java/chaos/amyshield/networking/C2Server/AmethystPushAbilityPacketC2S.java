@@ -8,6 +8,7 @@ import chaos.amyshield.networking.playload.IgnoreFallDamagePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,7 +42,11 @@ public class AmethystPushAbilityPacketC2S {
                     context.player().getEntityWorld().spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, context.player().getSteppingBlockState()), vec3d.x, vec3d.y, vec3d.z, i, 0.30000001192092896, 0.30000001192092896, 0.30000001192092896, 0.15000000596046448);
                     context.player().getEntityWorld().syncWorldEvent(WorldEvents.SMASH_ATTACK, context.player().getSteppingPos(), 750);
 
-                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_RADIUS() * getBurstMultiplier(context.player()), context.player()));
+                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_RADIUS(), context.player()));
+                    if (AmethystShield.CONFIG.amethystShieldNested.pushNested.KILL_ONLY_HOSTILE()) {
+                        entityList = entityList.stream().filter((entity) -> entity instanceof Monster || entity instanceof PlayerEntity).toList();
+                    }
+
                     for (Entity entity : entityList) {
                         if (entity instanceof LivingEntity && !((LivingEntity) entity).isDead() && !entity.isRemoved()) {
                             pushEntityAwayFromPlayer(entity, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_X() * getBurstMultiplier(context.player()), context.player());
@@ -88,6 +93,11 @@ public class AmethystPushAbilityPacketC2S {
                 if (shield == ModItems.AMETHYST_SHIELD) {
                     ServerPlayerEntity player = context.player();
 
+                    if (player.currentExplosionImpactPos != null) {
+                        if (player.currentExplosionImpactPos.y > ignoreFallDamagePayload.till().y) {
+                            return;
+                        }
+                    }
                     player.currentExplosionImpactPos = ignoreFallDamagePayload.till();
                     player.setIgnoreFallDamageFromCurrentExplosion(true);
                 }
