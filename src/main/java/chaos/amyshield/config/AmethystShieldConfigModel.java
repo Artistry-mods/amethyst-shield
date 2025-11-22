@@ -108,6 +108,8 @@ public class AmethystShieldConfigModel {
         public float SPARKLING_SLASH_CHARGE_RETURN = 20f; //How much charge the player get returned for landing a successful sparkling slash
         @Sync(OVERRIDE_CLIENT)
         public float SPARKLING_SLASH_RADIUS = 0.5f; //The radius around the player in which entities get damaged and flung
+        @Sync(OVERRIDE_CLIENT)
+        public float HYPER_SLASH_TICK_TIMING = 10; //The radius around the player in which entities get damaged and flung
     }
 
     public static class DoubleJumpNested {

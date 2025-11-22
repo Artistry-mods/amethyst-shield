@@ -24,7 +24,7 @@ public class MinecraftClientMixin implements IMinecraftClientDatasaver {
 
     @WrapMethod(method = "doAttack")
     public boolean amyshield$doAttack(Operation<Boolean> original) {
-        this.amethyst_shield$setLastAttackTick(20);
+        this.amethyst_shield$setLastAttackTick(10);
 
         return original.call();
     }

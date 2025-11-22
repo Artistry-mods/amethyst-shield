@@ -17,8 +17,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -52,6 +55,8 @@ public abstract class AmethystShieldAbilityClientMixin {
     private boolean hasBlockedLastTick = false;
     @Unique
     private int blockTimer = 0;
+    @Unique
+    private int lastSlashTimer = 0;
 
     @Unique
     private static boolean canUseAbility(ClientPlayerEntity player, float cost) {
@@ -100,9 +105,43 @@ public abstract class AmethystShieldAbilityClientMixin {
             }
         }
 
+        if (canHyperSlash()) {
+            this.onHyperSlash();
+        }
+
+        if (lastSlashTimer < 40) {
+            this.lastSlashTimer++;
+        }
+
         this.lastPos = player.getEntityPos();
         //IDK why I need this, but it was there from the Mod I riped it from
         this.jumpedLastTick = player.input.playerInput.jump();
+    }
+
+    @Unique
+    private void onHyperSlash() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        double originalAmount = player.getVelocity().length();
+
+        Vec3d rotation = player.getRotationVecClient().subtract(0, player.getRotationVecClient().y, 0).normalize();
+        Vec3d newRotation = rotation.add(0, 0.1, 0).normalize();
+
+        double multiplier = 3;
+
+        this.lastSlashTimer = 40;
+
+        player.setVelocity(newRotation.multiply(originalAmount * multiplier));
+
+        AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
+        AmethystShieldItem.syncSlashing(true);
+    }
+
+    @Unique
+    private boolean canHyperSlash() {
+        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+
+        return player.isOnGround() && player.input.playerInput.jump() && lastSlashTimer < AmethystShield.CONFIG.amethystShieldNested.slashNested.HYPER_SLASH_TICK_TIMING();
     }
 
     @Unique
@@ -211,6 +250,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         flingPlayer(getSparklingSlashMultiplier(player));
         this.isDoubleJumpingTimer = 0;
+        this.lastSlashTimer = 0;
 
         player.currentExplosionImpactPos = player.getEntityPos();
         player.setIgnoreFallDamageFromCurrentExplosion(true);
