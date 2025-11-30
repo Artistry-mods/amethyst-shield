@@ -1,11 +1,11 @@
 package chaos.amyshield.mixin.client;
 
 import chaos.amyshield.AmethystShield;
+import chaos.amyshield.abilities.*;
 import chaos.amyshield.enchantments.ModEnchantments;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.networking.playload.AmethystAbilityPayload;
-import chaos.amyshield.networking.playload.AmethystPushPayload;
 import chaos.amyshield.networking.playload.IgnoreFallDamagePayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import chaos.amyshield.util.IMinecraftClientDatasaver;
@@ -17,11 +17,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -86,7 +83,6 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         if (!player.isOnGround() &&
                 !player.isClimbing() &&
-                !this.jumpedLastTick &&
                 !player.getAbilities().flying) {
 
             if (canJump(player)) {
@@ -96,7 +92,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 }
 
                 //double jumping code
-                if (player.getVelocity().getY() < 0f) {
+                if (!this.jumpedLastTick && player.getVelocity().getY() < 0.2f) {
                     if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
                     if (this.canDoubleJump()) {
                         this.onDoubleJump();
@@ -124,17 +120,27 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         double originalAmount = player.getVelocity().length();
 
-        Vec3d rotation = player.getRotationVecClient().subtract(0, player.getRotationVecClient().y, 0).normalize();
-        Vec3d newRotation = rotation.add(0, 0.1, 0).normalize();
+//        Vec3d rotation = player.getRotationVecClient().subtract(0, player.getRotationVecClient().y, 0).normalize();
+//        Vec3d newRotation = rotation.add(0, 0.1, 0).normalize();
 
         double multiplier = 3;
 
         this.lastSlashTimer = 40;
 
-        player.setVelocity(newRotation.multiply(originalAmount * multiplier));
+        if (getMovementDirectionOfKeypresses(player) == Vec3d.ZERO) {
+            onAbilityUse(PushAmethystShieldAbility.getId());
+
+            player.setVelocity(new Vec3d(0, 0.3, 0));
+        } else {
+            player.setVelocity(getMovementDirectionOfKeypresses(player).add(0, 0.1, 0).normalize().multiply(originalAmount * multiplier));
+        }
+
+        ignoreAllFallDamageTill(player, player.getEntityPos().subtract(0, 1000, 0));
 
         AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
         AmethystShieldItem.syncSlashing(true);
+
+        onAbilityUse(HyperSlashAmethystShieldAbility.getId());
     }
 
     @Unique
@@ -214,10 +220,10 @@ public abstract class AmethystShieldAbilityClientMixin {
     @Unique
     private void tickMovementTimer() {
         if (this.movementChargeTimer >= 1 && this.movementCharge < AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE() / 4) {
-            this.movementChargeTimer -= 1;
+            this.movementChargeTimer    --;
         } else {
             if (this.movementCharge > 0) {
-                this.onAbilityUse((float) this.movementCharge, false, false, false);
+                this.onAbilityUse(ChargeGain.getId() + " " + this.movementCharge);
             }
             this.movementChargeTimer = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_TIMING();
             this.movementCharge = 0;
@@ -231,8 +237,8 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
-    private void onAbilityUse(float cost, boolean flatParticles, boolean notFlatParticles, boolean sound) {
-        ClientPlayNetworking.send(new AmethystAbilityPayload(cost, flatParticles, notFlatParticles, sound));
+    private void onAbilityUse(String abilityId) {
+        ClientPlayNetworking.send(new AmethystAbilityPayload(abilityId));
     }
 
     @Unique
@@ -252,11 +258,17 @@ public abstract class AmethystShieldAbilityClientMixin {
         this.isDoubleJumpingTimer = 0;
         this.lastSlashTimer = 0;
 
+        ignoreAllFallDamageTill(player, player.getEntityPos().subtract(0, 1000, 0));
+
+        this.onAbilityUse(SlashAmethystShieldAbility.getId());
+    }
+
+    @Unique
+    private void ignoreAllFallDamageTill(ClientPlayerEntity player, Vec3d player1) {
+        player.fallDistance = 0;
         player.currentExplosionImpactPos = player.getEntityPos();
         player.setIgnoreFallDamageFromCurrentExplosion(true);
-        ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getEntityPos().subtract(0, 1000, 0)));
-
-        this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST(), false, true, true);
+        ClientPlayNetworking.send(new IgnoreFallDamagePayload(player1));
     }
 
     @Unique
@@ -282,19 +294,16 @@ public abstract class AmethystShieldAbilityClientMixin {
 
             this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
 
-            player.currentExplosionImpactPos = player.getEntityPos();
-            player.setIgnoreFallDamageFromCurrentExplosion(true);
-            ClientPlayNetworking.send(new IgnoreFallDamagePayload(player.getEntityPos()));
+            ignoreAllFallDamageTill(player, player.getEntityPos());
 
-            this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST(), true, false, true);
+            this.onAbilityUse(DoubleJumpAmethystShieldAbility.getId());
             return;
         }
     }
 
     @Unique
     private void onAmethystBurst() {
-        ClientPlayNetworking.send(new AmethystPushPayload(true));
-        this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST(), true, false, true);
+        this.onAbilityUse(PushAmethystShieldAbility.getId());
     }
 
     @Unique
@@ -331,7 +340,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void onAmethystSlide() {
         this.applyMovementVelocity();
         this.isSliding = true;
-        this.onAbilityUse(AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST(), true, false, true);
+        this.onAbilityUse(SlideAmethystShieldAbility.getId());
     }
 
     @Unique
@@ -343,9 +352,19 @@ public abstract class AmethystShieldAbilityClientMixin {
     public void applyMovementVelocity() {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
         // Get the player's current direction vector
-        Vec3d facing = player.getRotationVec(1.0F);
 
         // Initialize movement vector
+        Vec3d movement = getMovementDirectionOfKeypresses(player);
+        movement = movement.multiply(2 + getSlideMultiplier(player));
+
+        // Apply velocity to the player
+        player.getRootVehicle().setVelocity(movement.x + player.getVelocity().x, player.getVelocity().getY() * 0.5, movement.z + player.getVelocity().z);
+    }
+
+    @Unique
+    private Vec3d getMovementDirectionOfKeypresses(ClientPlayerEntity player) {
+        Vec3d facing = player.getRotationVector(0, player.getYaw());
+
         Vec3d movement = Vec3d.ZERO;
 
         // Get movement inputs
@@ -358,16 +377,16 @@ public abstract class AmethystShieldAbilityClientMixin {
             forward = true;
         }
         // Calculate movement direction
-        if (forward) {
+        if (forward && !back) {
             movement = movement.add(facing);
         }
-        if (back) {
+        if (back && !forward) {
             movement = movement.add(facing.negate());
         }
-        if (left) {
+        if (left && !right) {
             movement = movement.add(facing.rotateY((float) Math.toRadians(90)));
         }
-        if (right) {
+        if (right && !left) {
             movement = movement.add(facing.rotateY((float) Math.toRadians(-90)));
         }
 
@@ -375,10 +394,7 @@ public abstract class AmethystShieldAbilityClientMixin {
         if (movement.lengthSquared() > 0) {
             movement = movement.normalize();
         }
-        movement = movement.multiply(2 + getSlideMultiplier(player));
-
-        // Apply velocity to the player
-        player.getRootVehicle().setVelocity(movement.x + player.getVelocity().x, player.getVelocity().getY() * 0.5, movement.z + player.getVelocity().z);
+        return movement;
     }
 
     //chatGPTs code since IDK math like that
