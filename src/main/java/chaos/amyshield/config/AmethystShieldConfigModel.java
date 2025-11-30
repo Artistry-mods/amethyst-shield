@@ -121,7 +121,7 @@ public class AmethystShieldConfigModel {
 
     public static class PushNested {
         @Sync(OVERRIDE_CLIENT)
-        public float AMETHYST_PUSH_COST = -50f; //How much charge the amethyst push costs
+        public float AMETHYST_PUSH_COST = -75f; //How much charge the amethyst push costs
         @Sync(OVERRIDE_CLIENT)
         public int AMETHYST_PUSH_SNEAKING_TIMING = 10; //How quickly sneak has to be pressed twice for the ability to activate (in ticks)
         @Sync(OVERRIDE_CLIENT)

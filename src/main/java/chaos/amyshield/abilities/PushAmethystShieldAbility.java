@@ -1,10 +1,8 @@
-package chaos.amyshield.networking.C2Server;
+package chaos.amyshield.abilities;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.enchantments.ModEnchantments;
 import chaos.amyshield.item.ModItems;
-import chaos.amyshield.networking.playload.AmethystPushPayload;
-import chaos.amyshield.networking.playload.IgnoreFallDamagePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,7 +12,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
@@ -23,13 +20,33 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AmethystPushAbilityPacketC2S {
-    public static void push(AmethystPushPayload _payload, ServerPlayNetworking.Context context) {
+public record PushAmethystShieldAbility() implements AmethystShieldAbility {
+    @Override
+    public float getChargeCost() {
+        return AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST();
+    }
+
+    @Override
+    public boolean shouldDisplayParticle() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldParticleBeFlat() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldPlaySound() {
+        return true;
+    }
+
+    @Override
+    public void onTrigger(ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
             for (ItemStack itemStack : List.of(context.player().getMainHandStack(), context.player().getOffHandStack())) {
                 Item shield = itemStack.getItem();
@@ -60,7 +77,6 @@ public class AmethystPushAbilityPacketC2S {
         });
     }
 
-    @Unique
     public static double getBurstMultiplier(PlayerEntity player) {
         return (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_PUSH_MULTIPLIER());
     }
@@ -86,22 +102,7 @@ public class AmethystPushAbilityPacketC2S {
         entity.addVelocity(new Vec3d(velocity.x, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_Y() * getBurstMultiplier(player), velocity.y));
     }
 
-    public static void ignoreFallDamage(IgnoreFallDamagePayload ignoreFallDamagePayload, ServerPlayNetworking.Context context) {
-        context.server().execute(() -> {
-            for (ItemStack itemStack : List.of(context.player().getMainHandStack(), context.player().getOffHandStack())) {
-                Item shield = itemStack.getItem();
-                if (shield == ModItems.AMETHYST_SHIELD) {
-                    ServerPlayerEntity player = context.player();
-
-                    if (player.currentExplosionImpactPos != null) {
-                        if (player.currentExplosionImpactPos.y > ignoreFallDamagePayload.till().y) {
-                            return;
-                        }
-                    }
-                    player.currentExplosionImpactPos = ignoreFallDamagePayload.till();
-                    player.setIgnoreFallDamageFromCurrentExplosion(true);
-                }
-            }
-        });
+    public static String getId() {
+        return "push";
     }
 }
