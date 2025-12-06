@@ -18,7 +18,7 @@ public class IgnorFallDamagePacketC2S {
                     ServerPlayerEntity player = context.player();
 
                     if (player.currentExplosionImpactPos != null) {
-                        if (player.currentExplosionImpactPos.y > ignoreFallDamagePayload.till().y) {
+                        if (player.currentExplosionImpactPos.y < ignoreFallDamagePayload.till().y) {
                             return;
                         }
                     }
