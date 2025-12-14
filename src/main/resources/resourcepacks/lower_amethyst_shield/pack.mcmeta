@@ -1,6 +1,7 @@
 {
   "pack": {
-    "pack_format": 61,
+    "min_format": [65, 0],
+    "max_format": [999, 0],
     "description": "A lower Version of the Amethyst Shield"
   }
 }
