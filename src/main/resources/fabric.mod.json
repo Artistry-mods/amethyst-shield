@@ -41,10 +41,10 @@
     }
   },
   "depends": {
-    "fabricloader": ">=0.17.3",
-    "minecraft": "1.21.10",
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}",
     "java": ">=21",
     "fabric-api": "*",
-    "owo": "0.12.24+1.21.9"
+    "owo": "${owo_version}"
   }
 }

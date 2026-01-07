@@ -64,5 +64,7 @@
   "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER": "Release Double Jump Multiplier",
   "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER": "Release Sparkling Slash Multiplier",
   "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER": "Release Slide Multiplier",
-  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_PUSH_MULTIPLIER": "Release Push Multiplier"
+  "text.config.amethyst-shield-config.option.amethystShieldNested.enchantmentNested.RELEASE_PUSH_MULTIPLIER": "Release Push Multiplier",
+
+  "resourcePack.amyshield.name": "Lower Amethyst Shield"
 }

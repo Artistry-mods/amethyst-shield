@@ -15,9 +15,9 @@ import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-import java.util.Set;
+import java.util.function.Consumer;
 
 public class AmethystShieldEntityRenderer implements SpecialModelRenderer<ComponentMap> {
     private final AmethystShieldEntityModel modelShield;
@@ -43,9 +43,10 @@ public class AmethystShieldEntityRenderer implements SpecialModelRenderer<Compon
     }
 
     @Override
-    public void collectVertices(Set<Vector3f> vertices) {
+    public void collectVertices(Consumer<Vector3fc> consumer) {
+
         MatrixStack matrixStack = new MatrixStack();
-        this.modelShield.getRootPart().collectVertices(matrixStack, vertices);
+        this.modelShield.getRootPart().collectVertices(matrixStack, consumer);
     }
 
     @Environment(EnvType.CLIENT)

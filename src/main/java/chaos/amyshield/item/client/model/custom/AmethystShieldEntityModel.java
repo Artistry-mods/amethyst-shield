@@ -8,16 +8,16 @@ import chaos.amyshield.AmethystShield;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class AmethystShieldEntityModel extends Model {
+public class AmethystShieldEntityModel extends Model<AmethystShield> {
     public static final EntityModelLayer AMETHYST_SHIELD = new EntityModelLayer(Identifier.of(AmethystShield.MOD_ID, "amethyst_shield_model"), "main");
 
     public AmethystShieldEntityModel(ModelPart root) {
-        super(root, identifier -> RenderLayer.getEntityCutout((Identifier) identifier));
+        super(root, identifier -> RenderLayers.entityCutout((Identifier) identifier));
     }
 
     public static TexturedModelData getTexturedModelData() {
