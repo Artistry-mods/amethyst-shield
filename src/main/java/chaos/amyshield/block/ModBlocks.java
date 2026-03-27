@@ -2,43 +2,43 @@ package chaos.amyshield.block;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.custom.AmethystDispenserBlock;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
 public class ModBlocks {
     public static final Block AMETHYST_DISPENSER = register("amethyst_dispenser",
-            AmethystDispenserBlock::new, AbstractBlock.Settings.copy(Blocks.DISPENSER));
+            AmethystDispenserBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DISPENSER));
 
     public static final Block DIAMOND_DEPOSIT = register("diamond_deposit",
-            PillarBlock::new, AbstractBlock.Settings.copy(Blocks.DEEPSLATE));
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE));
 
-	public static Block register(RegistryKey<Block> key, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
-		Block block = (Block)factory.apply(settings.registryKey(key));
-		return (Block)Registry.register(Registries.BLOCK, (RegistryKey)key, block);
+	public static Block register(ResourceKey<Block> key, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties settings) {
+		Block block = (Block)factory.apply(settings.setId(key));
+		return (Block) Registry.register(BuiltInRegistries.BLOCK, (ResourceKey)key, block);
 	}
 
-	public static Block register(RegistryKey<Block> key, AbstractBlock.Settings settings) {
+	public static Block register(ResourceKey<Block> key, BlockBehaviour.Properties settings) {
 		return register(key, Block::new, settings);
 	}
 
-	private static RegistryKey<Block> keyOf(String id) {
-		return RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(AmethystShield.MOD_ID, id));
+	private static ResourceKey<Block> keyOf(String id) {
+		return ResourceKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, id));
 	}
 
-	private static Block register(String id, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+	private static Block register(String id, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties settings) {
 		return register(keyOf(id), factory, settings);
 	}
 
-	private static Block register(String id, AbstractBlock.Settings settings) {
+	private static Block register(String id, BlockBehaviour.Properties settings) {
 		return register(id, Block::new, settings);
 	}
 

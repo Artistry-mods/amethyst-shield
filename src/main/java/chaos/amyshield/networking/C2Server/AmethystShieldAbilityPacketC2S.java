@@ -7,11 +7,11 @@ import chaos.amyshield.networking.playload.AmethystAbilityPayload;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +29,8 @@ public class AmethystShieldAbilityPacketC2S {
 
 
     public static void setChargeAndSpawnParticle(AmethystAbilityPayload payload, ServerPlayNetworking.Context context) {
-        ServerPlayerEntity player = context.player();
-        for (ItemStack itemStack : List.of(player.getMainHandStack(), player.getOffHandStack())) {
+        ServerPlayer player = context.player();
+        for (ItemStack itemStack : List.of(player.getMainHandItem(), player.getOffhandItem())) {
             Item shield = itemStack.getItem();
             if (shield == ModItems.AMETHYST_SHIELD) {
                 if (isChargeGainPacket(payload.abilityIdentifier())) {
@@ -42,16 +42,16 @@ public class AmethystShieldAbilityPacketC2S {
                 AmethystShieldAbility ability = abilities.get(payload.abilityIdentifier());
 
                 if (ability.shouldPlaySound()) {
-                    player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_USE, SoundCategory.PLAYERS, 0.2F, 1.0F);
-                    player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_BELL_RESONATE, SoundCategory.PLAYERS, 0.2F, 1.0F);
-                    player.getEntityWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.PLAYERS, 1.5f, 1.0F);
+                    player.level().playSound(null, player.blockPosition(), SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 0.2F, 1.0F);
+                    player.level().playSound(null, player.blockPosition(), SoundEvents.BELL_RESONATE, SoundSource.PLAYERS, 0.2F, 1.0F);
+                    player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5f, 1.0F);
                 }
 
                 if (ability.shouldDisplayParticle()) {
                     if (ability.shouldParticleBeFlat()) {
-                        player.getEntityWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE_FLAT, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
+                        player.level().sendParticles(ModParticles.AMETHYST_CHARGE_PARTICLE_FLAT, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                     } else {
-                        player.getEntityWorld().spawnParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
+                        player.level().sendParticles(ModParticles.AMETHYST_CHARGE_PARTICLE, player.getX(), player.getY() + 1, player.getZ(), 1, 0, 0, 0, 0);
                     }
                 }
 

@@ -1,11 +1,11 @@
 package chaos.amyshield.block.blockEntities.custom;
 
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.DispenserBlockEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ public class AmethystDispenserBlockEntity extends DispenserBlockEntity {
     }
 
     public List<ItemStack> getInventory() {
-        return this.getHeldStacks();
+        return this.getItems();
     }
 }

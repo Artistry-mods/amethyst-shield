@@ -3,12 +3,12 @@ package chaos.amyshield.mixin.client;
 import chaos.amyshield.util.IMinecraftClientDatasaver;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin implements IMinecraftClientDatasaver {
+@Mixin(Minecraft.class)
+public class MinecraftMixin implements IMinecraftClientDatasaver {
     @Unique
     int lastAttackTick = 0;
 
@@ -22,7 +22,7 @@ public class MinecraftClientMixin implements IMinecraftClientDatasaver {
         this.lastAttackTick = tick;
     }
 
-    @WrapMethod(method = "doAttack")
+    @WrapMethod(method = "startAttack")
     public boolean amyshield$doAttack(Operation<Boolean> original) {
         this.amethyst_shield$setLastAttackTick(10);
 

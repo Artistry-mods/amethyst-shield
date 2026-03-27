@@ -3,22 +3,22 @@ package chaos.amyshield.datagen;
 import chaos.amyshield.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.condition.MatchToolLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.component.ComponentPredicateTypes;
-import net.minecraft.predicate.component.ComponentsPredicate;
-import net.minecraft.predicate.item.EnchantmentPredicate;
-import net.minecraft.predicate.item.EnchantmentsPredicate;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
+import net.minecraft.advancements.criterion.DataComponentMatchers;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.HolderLookup;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,32 +26,32 @@ import java.util.concurrent.CompletableFuture;
 public class LootTableProvider {
     public static class Block extends FabricBlockLootTableProvider {
 
-        public Block(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+        public Block(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
             super(dataOutput, registryLookup);
         }
 
         @Override
         public void generate() {
-            addDrop(ModBlocks.AMETHYST_DISPENSER, LootTable.builder().pool(addSurvivesExplosionCondition(Items.DISPENSER, LootPool.builder().with(ItemEntry.builder(Items.DISPENSER)))));
+            add(ModBlocks.AMETHYST_DISPENSER, LootTable.lootTable().withPool(applyExplosionCondition(Items.DISPENSER, LootPool.lootPool().add(LootItem.lootTableItem(Items.DISPENSER)))));
 
-            addDropWithSilkTouch(ModBlocks.DIAMOND_DEPOSIT);
+            dropWhenSilkTouch(ModBlocks.DIAMOND_DEPOSIT);
 
-            addDrop(ModBlocks.DIAMOND_DEPOSIT, LootTable.builder().pool(
-                            LootPool.builder().conditionally(this.createSilkTouchCondition())
-                                    .rolls(ConstantLootNumberProvider.create(1.0F))
-                                    .with(ItemEntry.builder(ModBlocks.DIAMOND_DEPOSIT.asItem()))
-                    ).pool(
-                        addSurvivesExplosionCondition(ModBlocks.DIAMOND_DEPOSIT.asItem(), LootPool.builder()
-                            .conditionally(MatchToolLootCondition.builder(ItemPredicate.Builder.create().components(ComponentsPredicate.Builder.create().partial(ComponentPredicateTypes.ENCHANTMENTS, EnchantmentsPredicate.enchantments(List.of(new EnchantmentPredicate(this.registries.getOrThrow(RegistryKeys.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH), NumberRange.IntRange.atLeast(1))))).build())).invert())
-                            .rolls(new UniformLootNumberProvider(new ConstantLootNumberProvider(3), new ConstantLootNumberProvider(9)))
-                            .with(ItemEntry.builder(Items.DIAMOND))
-                            .bonusRolls(new ConstantLootNumberProvider(2)))
-                    ).pool(
-                        addSurvivesExplosionCondition(ModBlocks.DIAMOND_DEPOSIT.asItem(), LootPool.builder()
-                            .conditionally(MatchToolLootCondition.builder(ItemPredicate.Builder.create().components(ComponentsPredicate.Builder.create().partial(ComponentPredicateTypes.ENCHANTMENTS, EnchantmentsPredicate.enchantments(List.of(new EnchantmentPredicate(this.registries.getOrThrow(RegistryKeys.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH), NumberRange.IntRange.atLeast(1))))).build())).invert())
-                            .rolls(new UniformLootNumberProvider(new ConstantLootNumberProvider(1), new ConstantLootNumberProvider(3)))
-                            .with(ItemEntry.builder(Items.DIAMOND_BLOCK))
-                            .bonusRolls(new ConstantLootNumberProvider(1)))
+            add(ModBlocks.DIAMOND_DEPOSIT, LootTable.lootTable().withPool(
+                            LootPool.lootPool().when(this.hasSilkTouch())
+                                    .setRolls(ConstantValue.exactly(1.0F))
+                                    .add(LootItem.lootTableItem(ModBlocks.DIAMOND_DEPOSIT.asItem()))
+                    ).withPool(
+                        applyExplosionCondition(ModBlocks.DIAMOND_DEPOSIT.asItem(), LootPool.lootPool()
+                            .when(MatchTool.toolMatches(ItemPredicate.Builder.item().withComponents(net.minecraft.advancements.criterion.DataComponentMatchers.Builder.components().partial(DataComponentPredicates.ENCHANTMENTS, EnchantmentsPredicate.enchantments(List.of(new EnchantmentPredicate(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH), MinMaxBounds.Ints.atLeast(1))))).build())).invert())
+                            .setRolls(new UniformGenerator(new ConstantValue(3), new ConstantValue(9)))
+                            .add(LootItem.lootTableItem(Items.DIAMOND))
+                            .setBonusRolls(new ConstantValue(2)))
+                    ).withPool(
+                        applyExplosionCondition(ModBlocks.DIAMOND_DEPOSIT.asItem(), LootPool.lootPool()
+                            .when(MatchTool.toolMatches(ItemPredicate.Builder.item().withComponents(net.minecraft.advancements.criterion.DataComponentMatchers.Builder.components().partial(DataComponentPredicates.ENCHANTMENTS, EnchantmentsPredicate.enchantments(List.of(new EnchantmentPredicate(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH), MinMaxBounds.Ints.atLeast(1))))).build())).invert())
+                            .setRolls(new UniformGenerator(new ConstantValue(1), new ConstantValue(3)))
+                            .add(LootItem.lootTableItem(Items.DIAMOND_BLOCK))
+                            .setBonusRolls(new ConstantValue(1)))
                     )
             );
         }

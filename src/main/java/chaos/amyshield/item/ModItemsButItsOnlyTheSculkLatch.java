@@ -3,28 +3,28 @@ package chaos.amyshield.item;
 import chaos.amyshield.AmethystShield;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 
 public class ModItemsButItsOnlyTheSculkLatch {
-    public static final Item SCULK_LATCH = Items.register(
+    public static final Item SCULK_LATCH = Items.registerItem(
             keyOf("sculk_latch"),
             Item::new,
-            new Item.Settings().maxCount(16));
+            new Item.Properties().stacksTo(16));
 
     private static void addItemsToIngredientsTabItemGroup(FabricItemGroupEntries entries) {
-        entries.add(SCULK_LATCH);
+        entries.accept(SCULK_LATCH);
     }
 
-    private static RegistryKey<Item> keyOf(String id) {
-		return RegistryKey.of(RegistryKeys.ITEM, Identifier.of(AmethystShield.MOD_ID, id));
+    private static ResourceKey<Item> keyOf(String id) {
+		return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, id));
 	}
 
     public static void registerModItemsButItsOnlyTheSculkLatch() {
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(ModItemsButItsOnlyTheSculkLatch::addItemsToIngredientsTabItemGroup);
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS).register(ModItemsButItsOnlyTheSculkLatch::addItemsToIngredientsTabItemGroup);
     }
 }

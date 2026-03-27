@@ -3,83 +3,86 @@ package chaos.amyshield.block.custom;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.math.BlockPointer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.tick.TickPriority;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.ticks.TickPriority;
 
-public class AmethystDispenserBlock extends DispenserBlock implements BlockEntityProvider {
-    public AmethystDispenserBlock(Settings settings) {
+public class AmethystDispenserBlock extends DispenserBlock implements EntityBlock {
+    public AmethystDispenserBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, TRIGGERED);
     }
 
     @Override
-    protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
-        ItemStack stack = Items.DISPENSER.asItem().getDefaultStack();
+    protected ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state, boolean includeData) {
+        ItemStack stack = Items.DISPENSER.asItem().getDefaultInstance();
         if (includeData && world.getBlockEntity(pos) instanceof AmethystDispenserBlockEntity amethystDispenserBlockEntity) {
-            ComponentMap map = ComponentMap.builder().add(DataComponentTypes.CONTAINER, ContainerComponent.fromStacks(amethystDispenserBlockEntity.getInventory())).build();
+            DataComponentMap map = DataComponentMap.builder().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(amethystDispenserBlockEntity.getInventory())).build();
 
-            stack.applyComponentsFrom(map);
+            stack.applyComponents(map);
         }
         return stack;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new AmethystDispenserBlockEntity(pos, state);
     }
 
     @Override
-    protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    protected void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (!(world.getBlockEntity(pos) instanceof AmethystDispenserBlockEntity amethystDispenserBlockEntity)) {
             return;
         }
 
-        if (amethystDispenserBlockEntity.cooldown == 0 && state.get(TRIGGERED)) {
-            super.scheduledTick(state, world, pos, random);
+        if (amethystDispenserBlockEntity.cooldown == 0 && state.getValue(TRIGGERED)) {
+            super.tick(state, world, pos, random);
             amethystDispenserBlockEntity.cooldown = AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_COOLDOWN();
-            world.scheduleBlockTick(pos, state.getBlock(), 1, TickPriority.NORMAL);
+            world.scheduleTick(pos, state.getBlock(), 1, TickPriority.NORMAL);
         } else {
             amethystDispenserBlockEntity.cooldown = Math.max(0, amethystDispenserBlockEntity.cooldown - 1);
             if (amethystDispenserBlockEntity.cooldown != 0) {
-                world.scheduleBlockTick(pos, state.getBlock(), 1, TickPriority.NORMAL);
+                world.scheduleTick(pos, state.getBlock(), 1, TickPriority.NORMAL);
             }
         }
     }
 
     @Override
-    protected void dispense(ServerWorld world, BlockState state, BlockPos pos) {
+    protected void dispenseFrom(ServerLevel world, BlockState state, BlockPos pos) {
         AmethystDispenserBlockEntity dispenserBlockEntity = world.getBlockEntity(pos, ModBlockEntities.AMETHYST_DISPENSER_BLOCK_ENTITY).orElse(null);
         if (dispenserBlockEntity == null) {
             AmethystShield.LOGGER.warn("Ignoring dispensing attempt for Dispenser without matching block entity at {}", pos);
         } else {
-            BlockPointer blockPointer = new BlockPointer(world, pos, state, dispenserBlockEntity);
-            int i = dispenserBlockEntity.chooseNonEmptySlot(world.random);
+            BlockSource blockPointer = new BlockSource(world, pos, state, dispenserBlockEntity);
+            int i = dispenserBlockEntity.getRandomSlot(world.random);
             if (i < 0) {
-                world.syncWorldEvent(1001, pos, 0);
-                world.emitGameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Emitter.of(dispenserBlockEntity.getCachedState()));
+                world.levelEvent(1001, pos, 0);
+                world.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(dispenserBlockEntity.getBlockState()));
             } else {
-                ItemStack itemStack = dispenserBlockEntity.getStack(i);
-                DispenserBehavior dispenserBehavior = this.getBehaviorForItem(world, itemStack);
-                if (dispenserBehavior != DispenserBehavior.NOOP) {
-                    dispenserBlockEntity.setStack(i, dispenserBehavior.dispense(blockPointer, itemStack));
+                ItemStack itemStack = dispenserBlockEntity.getItem(i);
+                DispenseItemBehavior dispenserBehavior = this.getDispenseMethod(world, itemStack);
+                if (dispenserBehavior != DispenseItemBehavior.NOOP) {
+                    dispenserBlockEntity.setItem(i, dispenserBehavior.dispense(blockPointer, itemStack));
                 }
             }
         }

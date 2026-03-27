@@ -10,15 +10,15 @@ import chaos.amyshield.networking.playload.IgnoreFallDamagePayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import chaos.amyshield.util.IMinecraftClientDatasaver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,14 +27,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@Mixin(ClientPlayerEntity.class)
+@Mixin(LocalPlayer.class)
 public abstract class AmethystShieldAbilityClientMixin {
     //My stuff
     @Unique
     public int isDoubleJumpingTimer = 0;
     //for movement charge stuff
     @Unique
-    public Vec3d lastPos;
+    public Vec3 lastPos;
     @Unique
     public int movementChargeTimer = 0;
     @Unique
@@ -56,17 +56,17 @@ public abstract class AmethystShieldAbilityClientMixin {
     private int lastSlashTimer = 0;
 
     @Unique
-    private static boolean canUseAbility(ClientPlayerEntity player, float cost) {
+    private static boolean canUseAbility(LocalPlayer player, float cost) {
         return AmethystShieldItem.getCharge(((IEntityDataSaver) player)) >= cost * -(1);
     }
 
-    @Inject(at = @At("HEAD"), method = "tickMovement")
+    @Inject(at = @At("HEAD"), method = "aiStep")
     public void tickMovement(CallbackInfo ci) {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
         this.gainMovementDeltaCharge();
 
-        if ((player.isOnGround() || player.isClimbing() || player.getAbilities().flying || player.isSwimming())) {
+        if ((player.onGround() || player.onClimbable() || player.getAbilities().flying || player.isSwimming())) {
             if (this.isSliding) {
                 this.isSliding = false;
             }
@@ -81,8 +81,8 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         this.checkForBlocking();
 
-        if (!player.isOnGround() &&
-                !player.isClimbing() &&
+        if (!player.onGround() &&
+                !player.onClimbable() &&
                 !player.getAbilities().flying) {
 
             if (canJump(player)) {
@@ -92,7 +92,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 }
 
                 //double jumping code
-                if (!this.jumpedLastTick && player.getVelocity().getY() < 0.2f) {
+                if (!this.jumpedLastTick && player.getDeltaMovement().y() < 0.2f) {
                     if (this.isDoubleJumpingTimer >= 1) this.isDoubleJumpingTimer -= 1;
                     if (this.canDoubleJump()) {
                         this.onDoubleJump();
@@ -109,16 +109,16 @@ public abstract class AmethystShieldAbilityClientMixin {
             this.lastSlashTimer++;
         }
 
-        this.lastPos = player.getEntityPos();
+        this.lastPos = player.position();
         //IDK why I need this, but it was there from the Mod I riped it from
-        this.jumpedLastTick = player.input.playerInput.jump();
+        this.jumpedLastTick = player.input.keyPresses.jump();
     }
 
     @Unique
     private void onHyperSlash() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
-        double originalAmount = player.getVelocity().length();
+        double originalAmount = player.getDeltaMovement().length();
 
 //        Vec3d rotation = player.getRotationVecClient().subtract(0, player.getRotationVecClient().y, 0).normalize();
 //        Vec3d newRotation = rotation.add(0, 0.1, 0).normalize();
@@ -127,15 +127,15 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         this.lastSlashTimer = 40;
 
-        if (getMovementDirectionOfKeypresses(player) == Vec3d.ZERO) {
+        if (getMovementDirectionOfKeypresses(player) == Vec3.ZERO) {
             onAbilityUse(PushAmethystShieldAbility.getId());
 
-            player.setVelocity(new Vec3d(0, 0.3, 0));
+            player.setDeltaMovement(new Vec3(0, 0.3, 0));
         } else {
-            player.setVelocity(getMovementDirectionOfKeypresses(player).add(0, 0.1, 0).normalize().multiply(originalAmount * multiplier));
+            player.setDeltaMovement(getMovementDirectionOfKeypresses(player).add(0, 0.1, 0).normalize().scale(originalAmount * multiplier));
         }
 
-        ignoreAllFallDamageTill(player, player.getEntityPos().subtract(0, 1000, 0));
+        ignoreAllFallDamageTill(player, player.position().subtract(0, 1000, 0));
 
         AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
         AmethystShieldItem.syncSlashing(true);
@@ -145,51 +145,51 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private boolean canHyperSlash() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
-        return player.isOnGround() && player.input.playerInput.jump() && lastSlashTimer < AmethystShield.CONFIG.amethystShieldNested.slashNested.HYPER_SLASH_TICK_TIMING();
+        return player.onGround() && player.input.keyPresses.jump() && lastSlashTimer < AmethystShield.CONFIG.amethystShieldNested.slashNested.HYPER_SLASH_TICK_TIMING();
     }
 
     @Unique
     private boolean canDoubleJump() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
         return canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST()) &&
                 player.isBlocking() &&
-                player.input.playerInput.jump();
+                player.input.keyPresses.jump();
     }
 
     @Unique
     private boolean canUseSparklingSlash() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
         return this.isDoubleJumpingTimer >= 1 &&
-               ((IMinecraftClientDatasaver) MinecraftClient.getInstance()).amethyst_shield$getLastAttackTick() != 0 &&
+               ((IMinecraftClientDatasaver) Minecraft.getInstance()).amethyst_shield$getLastAttackTick() != 0 &&
                canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
-               player.getMainHandStack().isIn(ItemTags.WEAPON_ENCHANTABLE);
+               player.getMainHandItem().is(ItemTags.WEAPON_ENCHANTABLE);
     }
 
     @Unique
     public void checkForSneaking() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
         if (this.sneakTimer >= 1) this.sneakTimer -= 1;
 
-        if (player.isSneaking()) {
+        if (player.isShiftKeyDown()) {
             this.hasSneakedLastTick = true;
         }
-        if (!player.isSneaking() && this.hasSneakedLastTick) {
+        if (!player.isShiftKeyDown() && this.hasSneakedLastTick) {
             this.hasSneakedLastTick = false;
             this.onSneakRelease();
         }
     }
     @Unique
     public void checkForBlocking() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
         if (this.blockTimer >= 1) this.blockTimer -= 1;
 
-        if (player.isUsingItem() && player.getActiveItem().getItem().equals(ModItems.AMETHYST_SHIELD)) {
+        if (player.isUsingItem() && player.getUseItem().getItem().equals(ModItems.AMETHYST_SHIELD)) {
             this.hasBlockedLastTick = true;
         }
 
@@ -203,14 +203,14 @@ public abstract class AmethystShieldAbilityClientMixin {
     private void gainMovementDeltaCharge() {
         this.tickMovementTimer();
 
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
-        if (this.lastPos == null || AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) || this.isSliding || player.isGliding()) {
+        if (this.lastPos == null || AmethystShieldItem.getSlashing(((IEntityDataSaver) player)) || this.isSliding || player.isFallFlying()) {
             return;
         }
         //movement delta
-        double movementDelta = new Vec2f(((float) player.getEntityPos().getX()), ((float) player.getEntityPos().getZ()))
-                .distanceSquared(new Vec2f(((float) lastPos.getX()), ((float) lastPos.getZ()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
+        double movementDelta = new Vec2(((float) player.position().x()), ((float) player.position().z()))
+                .distanceToSqr(new Vec2(((float) lastPos.x()), ((float) lastPos.z()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
 
         if (movementDelta > AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_MOVEMENT_DELTA()) {
             this.movementCharge += movementDelta;
@@ -231,9 +231,9 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
-    private boolean canJump(ClientPlayerEntity player) {
-        return !player.isGliding() && !player.hasVehicle()
-                && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
+    private boolean canJump(LocalPlayer player) {
+        return !player.isFallFlying() && !player.isPassenger()
+                && !player.isInWater() && !player.hasEffect(MobEffects.LEVITATION);
     }
 
     @Unique
@@ -242,7 +242,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
-    public double getSparklingSlashMultiplier(PlayerEntity player) {
+    public double getSparklingSlashMultiplier(Player player) {
         double multiplier = AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_STRENGTH();
 
         return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER());
@@ -250,7 +250,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private void onSparklingSlash() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
         AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
         AmethystShieldItem.syncSlashing(true);
 
@@ -258,21 +258,21 @@ public abstract class AmethystShieldAbilityClientMixin {
         this.isDoubleJumpingTimer = 0;
         this.lastSlashTimer = 0;
 
-        ignoreAllFallDamageTill(player, player.getEntityPos().subtract(0, 1000, 0));
+        ignoreAllFallDamageTill(player, player.position().subtract(0, 1000, 0));
 
         this.onAbilityUse(SlashAmethystShieldAbility.getId());
     }
 
     @Unique
-    private void ignoreAllFallDamageTill(ClientPlayerEntity player, Vec3d player1) {
+    private void ignoreAllFallDamageTill(LocalPlayer player, Vec3 player1) {
         player.fallDistance = 0;
-        player.currentExplosionImpactPos = player.getEntityPos();
-        player.setIgnoreFallDamageFromCurrentExplosion(true);
+        player.currentImpulseImpactPos = player.position();
+        player.setIgnoreFallDamageFromCurrentImpulse(true);
         ClientPlayNetworking.send(new IgnoreFallDamagePayload(player1));
     }
 
     @Unique
-    public double getDoubleJumpMultiplier(PlayerEntity player) {
+    public double getDoubleJumpMultiplier(Player player) {
         double multiplier = AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_STRENGTH();
 
         return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER());
@@ -280,21 +280,21 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private void onDoubleJump() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
 
-        for (ItemStack itemStack : List.of(player.getOffHandStack(), player.getMainHandStack())) {
+        for (ItemStack itemStack : List.of(player.getOffhandItem(), player.getMainHandItem())) {
             Item shield = itemStack.getItem();
 
             if (shield != ModItems.AMETHYST_SHIELD) {
                 continue;
             }
 
-            player.jump();
-            player.setVelocity(player.getVelocity().getX(), getDoubleJumpMultiplier(player) , player.getVelocity().getZ());
+            player.jumpFromGround();
+            player.setDeltaMovement(player.getDeltaMovement().x(), getDoubleJumpMultiplier(player) , player.getDeltaMovement().z());
 
             this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
 
-            ignoreAllFallDamageTill(player, player.getEntityPos());
+            ignoreAllFallDamageTill(player, player.position());
 
             this.onAbilityUse(DoubleJumpAmethystShieldAbility.getId());
             return;
@@ -308,7 +308,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private void onSneakRelease() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
         if (!player.isBlocking()) {
             return;
         }
@@ -325,7 +325,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     private void onBlockRelease() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
         if (this.blockTimer >= 1) {
             this.blockTimer = 0;
             if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST())) {
@@ -344,34 +344,34 @@ public abstract class AmethystShieldAbilityClientMixin {
     }
 
     @Unique
-    public double getSlideMultiplier(PlayerEntity player) {
+    public double getSlideMultiplier(Player player) {
         return ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER();
     }
 
     @Unique
     public void applyMovementVelocity() {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
+        LocalPlayer player = (LocalPlayer) (Object) this;
         // Get the player's current direction vector
 
         // Initialize movement vector
-        Vec3d movement = getMovementDirectionOfKeypresses(player);
-        movement = movement.multiply(2 + getSlideMultiplier(player));
+        Vec3 movement = getMovementDirectionOfKeypresses(player);
+        movement = movement.scale(2 + getSlideMultiplier(player));
 
         // Apply velocity to the player
-        player.getRootVehicle().setVelocity(movement.x + player.getVelocity().x, player.getVelocity().getY() * 0.5, movement.z + player.getVelocity().z);
+        player.getRootVehicle().setDeltaMovement(movement.x + player.getDeltaMovement().x, player.getDeltaMovement().y() * 0.5, movement.z + player.getDeltaMovement().z);
     }
 
     @Unique
-    private Vec3d getMovementDirectionOfKeypresses(ClientPlayerEntity player) {
-        Vec3d facing = player.getRotationVector(0, player.getYaw());
+    private Vec3 getMovementDirectionOfKeypresses(LocalPlayer player) {
+        Vec3 facing = player.calculateViewVector(0, player.getYRot());
 
-        Vec3d movement = Vec3d.ZERO;
+        Vec3 movement = Vec3.ZERO;
 
         // Get movement inputs
-        boolean forward = player.input.playerInput.forward();
-        boolean back = player.input.playerInput.backward();
-        boolean left = player.input.playerInput.left();
-        boolean right = player.input.playerInput.right();
+        boolean forward = player.input.keyPresses.forward();
+        boolean back = player.input.keyPresses.backward();
+        boolean left = player.input.keyPresses.left();
+        boolean right = player.input.keyPresses.right();
 
         if (!back && !left && !forward && !right) {
             forward = true;
@@ -381,17 +381,17 @@ public abstract class AmethystShieldAbilityClientMixin {
             movement = movement.add(facing);
         }
         if (back && !forward) {
-            movement = movement.add(facing.negate());
+            movement = movement.add(facing.reverse());
         }
         if (left && !right) {
-            movement = movement.add(facing.rotateY((float) Math.toRadians(90)));
+            movement = movement.add(facing.yRot((float) Math.toRadians(90)));
         }
         if (right && !left) {
-            movement = movement.add(facing.rotateY((float) Math.toRadians(-90)));
+            movement = movement.add(facing.yRot((float) Math.toRadians(-90)));
         }
 
         // Normalize movement vector
-        if (movement.lengthSquared() > 0) {
+        if (movement.lengthSqr() > 0) {
             movement = movement.normalize();
         }
         return movement;
@@ -400,9 +400,9 @@ public abstract class AmethystShieldAbilityClientMixin {
     //chatGPTs code since IDK math like that
     @Unique
     private void flingPlayer(double speed) {
-        ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
-        float yaw = player.getYaw();
-        float pitch = player.getPitch();
+        LocalPlayer player = (LocalPlayer) (Object) this;
+        float yaw = player.getYRot();
+        float pitch = player.getXRot();
 
         // Convert yaw and pitch to radians
         double yawRadians = Math.toRadians(yaw);
@@ -414,8 +414,8 @@ public abstract class AmethystShieldAbilityClientMixin {
         double vz = Math.cos(yawRadians) * Math.cos(pitchRadians) * speed;
 
         // Apply velocity to the player
-        player.setVelocity(player.getVelocity().getX() + vx,
-                player.getVelocity().getY() + vy,
-                player.getVelocity().getZ() + vz);
+        player.setDeltaMovement(player.getDeltaMovement().x() + vx,
+                player.getDeltaMovement().y() + vy,
+                player.getDeltaMovement().z() + vz);
     }
 }

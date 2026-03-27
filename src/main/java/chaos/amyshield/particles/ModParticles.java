@@ -2,10 +2,10 @@ package chaos.amyshield.particles;
 
 import chaos.amyshield.AmethystShield;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.SimpleParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
 
 public class ModParticles {
     public static SimpleParticleType AMETHYST_CHARGE_PARTICLE = register(FabricParticleTypes.simple(true),
@@ -28,7 +28,7 @@ public class ModParticles {
             "amethyst_monocle_ping_south");
 
     private static SimpleParticleType register(SimpleParticleType particle, String name) {
-        return Registry.register(Registries.PARTICLE_TYPE, Identifier.of(AmethystShield.MOD_ID, name), particle);
+        return Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, name), particle);
     }
 
     public static void registerModParticles() {

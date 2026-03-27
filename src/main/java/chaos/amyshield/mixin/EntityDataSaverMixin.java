@@ -4,9 +4,9 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.util.IEntityDataSaver;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -23,17 +23,17 @@ public class EntityDataSaverMixin implements IEntityDataSaver {
         return this.persistentData;
     }
 
-    @WrapMethod(method = "writeCustomData")
-    protected void injectWriteMethod(WriteView writeView, Operation<Void> original) {
+    @WrapMethod(method = "addAdditionalSaveData")
+    protected void injectWriteMethod(ValueOutput writeView, Operation<Void> original) {
         if (this.persistentData != null) {
-            writeView.put(AmethystShield.MOD_ID, IEntityDataSaver.AMETHYST_SHIELD_DATA_CODEC, this.persistentData);
+            writeView.store(AmethystShield.MOD_ID, IEntityDataSaver.AMETHYST_SHIELD_DATA_CODEC, this.persistentData);
         }
 
         original.call(writeView);
     }
 
-    @WrapMethod(method = "readCustomData")
-    protected void injectReadMethod(ReadView readView, Operation<Void> original) {
+    @WrapMethod(method = "readAdditionalSaveData")
+    protected void injectReadMethod(ValueInput readView, Operation<Void> original) {
         this.persistentData = readView.read(AmethystShield.MOD_ID, IEntityDataSaver.AMETHYST_SHIELD_DATA_CODEC).orElse(new AmethystShieldData());
 
         original.call(readView);

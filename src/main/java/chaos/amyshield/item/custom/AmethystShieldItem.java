@@ -7,14 +7,14 @@ import chaos.amyshield.networking.playload.SyncSlashPayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.server.level.ServerPlayer;
 
 public class AmethystShieldItem extends ShieldItem {
 
-    public AmethystShieldItem(Item.Settings settings) {
+    public AmethystShieldItem(Item.Properties settings) {
         super(settings);
     }
 
@@ -40,7 +40,7 @@ public class AmethystShieldItem extends ShieldItem {
         ClientPlayNetworking.send(new SyncSlashPayload(isSlashing));
     }
 
-    public static float addCharge(PlayerEntity player, float amount) {
+    public static float addCharge(Player player, float amount) {
         if (amount > 0) {
 
             int level = ModEnchantments.getSensitivityEnchantmentLevel(player);
@@ -67,7 +67,7 @@ public class AmethystShieldItem extends ShieldItem {
         return player.amethyst_shield$getPersistentData().getCharge();
     }
 
-    public static void syncCharge(float charge, ServerPlayerEntity player) {
+    public static void syncCharge(float charge, ServerPlayer player) {
         ServerPlayNetworking.send(player, new SyncChargePayload(charge));
     }
 }

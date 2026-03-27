@@ -9,14 +9,14 @@ import chaos.amyshield.networking.playload.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public class ModPackets {
-    public static final Identifier SYNC_SLASHING_S2C = Identifier.of(AmethystShield.MOD_ID, "sync_slashing");
+    public static final Identifier SYNC_SLASHING_S2C = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "sync_slashing");
 
-    public static final Identifier AMETHYST_ABILITY_C2S = Identifier.of(AmethystShield.MOD_ID, "remove_charge");
-    public static final Identifier SYNC_CHARGE_S2C = Identifier.of(AmethystShield.MOD_ID, "sync_charge");
-    public static final Identifier IGNORE_FALL_DAMAGE_ABILITY_C2S = Identifier.of(AmethystShield.MOD_ID, "ignore_fall_damage");
+    public static final Identifier AMETHYST_ABILITY_C2S = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "remove_charge");
+    public static final Identifier SYNC_CHARGE_S2C = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "sync_charge");
+    public static final Identifier IGNORE_FALL_DAMAGE_ABILITY_C2S = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "ignore_fall_damage");
 
     public static void registerGlobalReceiversC2S() {
         PayloadTypeRegistry.playC2S().register(AmethystAbilityPayload.ID, AmethystAbilityPayload.CODEC);

@@ -1,8 +1,8 @@
 package chaos.amyshield.abilities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
 public interface AmethystShieldAbility {
     float getChargeCost();
@@ -14,7 +14,7 @@ public interface AmethystShieldAbility {
     boolean shouldPlaySound();
 
     default SoundEvent getSoundEvent() {
-        return SoundEvents.BLOCK_BELL_RESONATE;
+        return SoundEvents.BELL_RESONATE;
     }
 
     void onTrigger(ServerPlayNetworking.Context context);

@@ -5,38 +5,38 @@ import chaos.amyshield.item.ModItemsButItsOnlyTheMonocle;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 
 public class LootTableModifier {
     public static void init() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if (key.equals(LootTables.TRIAL_CHAMBERS_REWARD_CHEST)) {
-				LootPool.Builder pb = LootPool.builder()
-					.with(ItemEntry.builder(ModItems.OXIWINE_BOLT).weight(50))
-					.with(ItemEntry.builder(Items.AIR).weight(60));
-				tableBuilder.pool(pb);
+            if (key.equals(BuiltInLootTables.TRIAL_CHAMBERS_REWARD)) {
+				LootPool.Builder pb = LootPool.lootPool()
+					.add(LootItem.lootTableItem(ModItems.OXIWINE_BOLT).setWeight(50))
+					.add(LootItem.lootTableItem(Items.AIR).setWeight(60));
+				tableBuilder.withPool(pb);
             }
 
-            if (key.equals(LootTables.TRAIL_RUINS_RARE_ARCHAEOLOGY)) {
-				LootPool.Builder pb = LootPool.builder()
-					.with(ItemEntry.builder(ModItems.OXIWINE_BOLT).weight(10))
-                    .with(ItemEntry.builder(Items.AIR).weight(100));
-				tableBuilder.pool(pb);
+            if (key.equals(BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE)) {
+				LootPool.Builder pb = LootPool.lootPool()
+					.add(LootItem.lootTableItem(ModItems.OXIWINE_BOLT).setWeight(10))
+                    .add(LootItem.lootTableItem(Items.AIR).setWeight(100));
+				tableBuilder.withPool(pb);
 
-                LootPool.Builder pbf = LootPool.builder()
-                    .with(ItemEntry.builder(ModItemsButItsOnlyTheMonocle.AMETHYST_MONOCLE).weight(1))
-				.with(ItemEntry.builder(Items.AIR).weight(100));
-                tableBuilder.pool(pbf);
+                LootPool.Builder pbf = LootPool.lootPool()
+                    .add(LootItem.lootTableItem(ModItemsButItsOnlyTheMonocle.AMETHYST_MONOCLE).setWeight(1))
+				.add(LootItem.lootTableItem(Items.AIR).setWeight(100));
+                tableBuilder.withPool(pbf);
             }
 
-            if (key.equals(LootTables.ANCIENT_CITY_CHEST) && !FabricLoader.getInstance().isModLoaded("sculk-latch")) {
-                LootPool.Builder pb = LootPool.builder()
-                    .with(ItemEntry.builder(ModItemsButItsOnlyTheSculkLatch.SCULK_LATCH).weight(30))
-					.with(ItemEntry.builder(Items.AIR).weight(100));
-                tableBuilder.pool(pb);
+            if (key.equals(BuiltInLootTables.ANCIENT_CITY) && !FabricLoader.getInstance().isModLoaded("sculk-latch")) {
+                LootPool.Builder pb = LootPool.lootPool()
+                    .add(LootItem.lootTableItem(ModItemsButItsOnlyTheSculkLatch.SCULK_LATCH).setWeight(30))
+					.add(LootItem.lootTableItem(Items.AIR).setWeight(100));
+                tableBuilder.withPool(pb);
             }
 
             /*
