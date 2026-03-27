@@ -3,20 +3,20 @@ package chaos.amyshield.datagen;
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.tag.ModTags;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ModTagProvider {
-    public static class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
-        public ModItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public static class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
+        public ModItemTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
@@ -30,8 +30,8 @@ public class ModTagProvider {
         }
     }
 
-    public static class ModEntityProvider extends FabricTagProvider.EntityTypeTagProvider {
-        public ModEntityProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public static class ModEntityProvider extends FabricTagsProvider.EntityTypeTagsProvider {
+        public ModEntityProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
@@ -41,8 +41,8 @@ public class ModTagProvider {
         }
     }
 
-    public static class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-        public ModBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+    public static class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
+        public ModBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 

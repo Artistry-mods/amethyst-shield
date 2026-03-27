@@ -3,23 +3,23 @@ package chaos.amyshield.block.custom;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.blockEntities.ModBlockEntities;
 import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.ticks.TickPriority;
 
@@ -74,7 +74,7 @@ public class AmethystDispenserBlock extends DispenserBlock implements EntityBloc
             AmethystShield.LOGGER.warn("Ignoring dispensing attempt for Dispenser without matching block entity at {}", pos);
         } else {
             BlockSource blockPointer = new BlockSource(world, pos, state, dispenserBlockEntity);
-            int i = dispenserBlockEntity.getRandomSlot(world.random);
+            int i = dispenserBlockEntity.getRandomSlot(world.getRandom());
             if (i < 0) {
                 world.levelEvent(1001, pos, 0);
                 world.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(dispenserBlockEntity.getBlockState()));

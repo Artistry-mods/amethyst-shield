@@ -3,9 +3,9 @@ package chaos.amyshield.networking.C2Server;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.networking.playload.IgnoreFallDamagePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
@@ -22,8 +22,7 @@ public class IgnorFallDamagePacketC2S {
                             return;
                         }
                     }
-                    player.currentImpulseImpactPos = ignoreFallDamagePayload.till();
-                    player.setIgnoreFallDamageFromCurrentImpulse(true);
+                    player.setIgnoreFallDamageFromCurrentImpulse(true, ignoreFallDamagePayload.till());
                 }
             }
         });

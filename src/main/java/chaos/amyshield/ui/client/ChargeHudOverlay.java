@@ -4,25 +4,25 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.profiling.Profiler;
 
 public class ChargeHudOverlay implements HudElement {
     private static final Identifier CHARGE_UI_ATLAS = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "hud/amethyst_shield_ui");
 
     @Override
-    public void render(GuiGraphics drawContext, DeltaTracker tickCounter) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
-        if (client == null || client.options.hideGui) {
+        if (client.options.hideGui) {
             return;
         }
 
@@ -38,8 +38,8 @@ public class ChargeHudOverlay implements HudElement {
 
         Profiler.get().popPush("charge");
 
-        int width = drawContext.guiWidth();
-        int height = drawContext.guiHeight();
+        int width = graphics.guiWidth();
+        int height = graphics.guiHeight();
         int x = width / 2;
         int y = height;
 
@@ -58,7 +58,7 @@ public class ChargeHudOverlay implements HudElement {
             if (player.getAbilities().instabuild) yshift += 17;
         }
 
-        drawContext.blitSprite(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
                 81,
                 18,
                 1,
@@ -69,7 +69,7 @@ public class ChargeHudOverlay implements HudElement {
                 / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())),
                 3);
 
-        drawContext.blitSprite(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
                 81,
                 18,
                 0,
