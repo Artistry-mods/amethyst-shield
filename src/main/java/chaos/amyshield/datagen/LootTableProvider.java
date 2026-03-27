@@ -1,32 +1,31 @@
 package chaos.amyshield.datagen;
 
 import chaos.amyshield.block.ModBlocks;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.predicates.DataComponentPredicates;
+import net.minecraft.core.component.predicates.EnchantmentsPredicate;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.core.component.predicates.DataComponentPredicates;
-import net.minecraft.advancements.criterion.DataComponentMatchers;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.core.component.predicates.EnchantmentsPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.core.HolderLookup;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class LootTableProvider {
-    public static class Block extends FabricBlockLootTableProvider {
+    public static class Block extends FabricBlockLootSubProvider {
 
-        public Block(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+        public Block(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
             super(dataOutput, registryLookup);
         }
 

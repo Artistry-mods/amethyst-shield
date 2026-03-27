@@ -12,11 +12,11 @@ import chaos.amyshield.util.IMinecraftClientDatasaver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -266,8 +266,7 @@ public abstract class AmethystShieldAbilityClientMixin {
     @Unique
     private void ignoreAllFallDamageTill(LocalPlayer player, Vec3 player1) {
         player.fallDistance = 0;
-        player.currentImpulseImpactPos = player.position();
-        player.setIgnoreFallDamageFromCurrentImpulse(true);
+        player.setIgnoreFallDamageFromCurrentImpulse(true, player.position());
         ClientPlayNetworking.send(new IgnoreFallDamagePayload(player1));
     }
 

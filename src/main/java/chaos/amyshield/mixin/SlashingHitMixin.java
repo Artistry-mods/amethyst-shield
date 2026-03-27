@@ -6,12 +6,12 @@ import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
 import chaos.amyshield.util.IEntityDataSaver;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -69,7 +69,7 @@ public class SlashingHitMixin {
             List<Entity> entityList = new ArrayList<>(player.level().getEntities(player, player.getBoundingBox().inflate(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_RADIUS())));
             Objects.requireNonNull(player.level().getServer()).execute(() -> {
                 for (Entity entity : entityList) {
-                    if (entity instanceof LivingEntity && !((LivingEntity) entity).isDeadOrDying() && !entity.isRemoved() && !entity.getType().is(ModTags.SLASH_IMMUNE)) {
+                    if (entity instanceof LivingEntity && !((LivingEntity) entity).isDeadOrDying() && !entity.isRemoved() && !entity.is(ModTags.SLASH_IMMUNE)) {
                         /*
                         if (entity instanceof ServerPlayerEntity otherPlayer) {
                             if (otherPlayer != null && otherPlayer.isAlive() && !otherPlayer.isRemoved() && AmethystShieldItem.getSlashing(((IEntityDataSaver) otherPlayer))) {
