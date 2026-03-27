@@ -2,38 +2,38 @@ package chaos.amyshield.world;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.ModBlocks;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.structure.rule.RuleTest;
-import net.minecraft.structure.rule.TagMatchRuleTest;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureConfig;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 
 import java.util.List;
 
 public class ModConfiguredFeatures {
-    public static final RegistryKey<ConfiguredFeature<?, ?>> DIAMOND_DEPOSIT_KEY = registerKey("diamond_deposit");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> DIAMOND_DEPOSIT_KEY = registerKey("diamond_deposit");
 
-    public static void boostrap(Registerable<ConfiguredFeature<?, ?>> context) {
-        RuleTest deepslateReplacables = new TagMatchRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
+    public static void boostrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+        RuleTest deepslateReplacables = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
 
-        List<OreFeatureConfig.Target> overworldDiamondDeposit =
-                List.of(OreFeatureConfig.createTarget(deepslateReplacables, ModBlocks.DIAMOND_DEPOSIT.getDefaultState()));
+        List<OreConfiguration.TargetBlockState> overworldDiamondDeposit =
+                List.of(OreConfiguration.target(deepslateReplacables, ModBlocks.DIAMOND_DEPOSIT.defaultBlockState()));
 
-        register(context, DIAMOND_DEPOSIT_KEY, Feature.ORE, new OreFeatureConfig(overworldDiamondDeposit, 3));
+        register(context, DIAMOND_DEPOSIT_KEY, Feature.ORE, new OreConfiguration(overworldDiamondDeposit, 3));
     }
 
-    public static RegistryKey<ConfiguredFeature<?, ?>> registerKey(String name) {
-        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Identifier.of(AmethystShield.MOD_ID, name));
+    public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, name));
     }
 
-    private static <FC extends FeatureConfig, F extends Feature<FC>> void register(Registerable<ConfiguredFeature<?, ?>> context,
-                                                                                   RegistryKey<ConfiguredFeature<?, ?>> key, F feature, FC configuration) {
+    private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(BootstrapContext<ConfiguredFeature<?, ?>> context,
+                                                                                          ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC configuration) {
         context.register(key, new ConfiguredFeature<>(feature, configuration));
     }
 }

@@ -6,22 +6,22 @@ import chaos.amyshield.tag.ModTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ModTagProvider {
     public static class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
-        public ModItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public ModItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
         @Override
-        protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+        protected void addTags(HolderLookup.Provider wrapperLookup) {
             valueLookupBuilder(ModTags.AMETHYST_SHIELD_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD);
 
             valueLookupBuilder(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD);
@@ -31,24 +31,24 @@ public class ModTagProvider {
     }
 
     public static class ModEntityProvider extends FabricTagProvider.EntityTypeTagProvider {
-        public ModEntityProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public ModEntityProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
         @Override
-        protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+        protected void addTags(HolderLookup.Provider wrapperLookup) {
             valueLookupBuilder(ModTags.SLASH_IMMUNE).add(EntityType.HAPPY_GHAST);
         }
     }
 
     public static class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-        public ModBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public ModBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
         @Override
-        protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-            valueLookupBuilder(BlockTags.PICKAXE_MINEABLE)
+        protected void addTags(HolderLookup.Provider wrapperLookup) {
+            valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                     .add(ModBlocks.DIAMOND_DEPOSIT)
                     .add(ModBlocks.AMETHYST_DISPENSER);
 

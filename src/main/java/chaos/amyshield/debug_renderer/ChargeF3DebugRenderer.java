@@ -2,29 +2,29 @@ package chaos.amyshield.debug_renderer;
 
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.debug.DebugHudEntry;
-import net.minecraft.client.gui.hud.debug.DebugHudEntryCategory;
-import net.minecraft.client.gui.hud.debug.DebugHudLines;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.client.gui.components.debug.DebugEntryCategory;
+import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
-public class ChargeF3DebugRenderer implements DebugHudEntry {
+public class ChargeF3DebugRenderer implements DebugScreenEntry {
     @Override
-    public void render(DebugHudLines lines, @Nullable World world, @Nullable WorldChunk clientChunk, @Nullable WorldChunk chunk) {
-        lines.addLine(String.format(Locale.ROOT, "Amethyst shield charge %d%%", Math.round(AmethystShieldItem.getCharge((IEntityDataSaver) MinecraftClient.getInstance().player))));
+    public void display(DebugScreenDisplayer lines, @Nullable Level world, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+        lines.addLine(String.format(Locale.ROOT, "Amethyst shield charge %d%%", Math.round(AmethystShieldItem.getCharge((IEntityDataSaver) Minecraft.getInstance().player))));
     }
 
     @Override
-    public boolean canShow(boolean reducedDebugInfo) {
+    public boolean isAllowed(boolean reducedDebugInfo) {
         return true;
     }
 
     @Override
-    public DebugHudEntryCategory getCategory() {
-        return DebugHudEntry.super.getCategory();
+    public DebugEntryCategory category() {
+        return DebugScreenEntry.super.category();
     }
 }

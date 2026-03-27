@@ -2,21 +2,22 @@ package chaos.amyshield.mixin;
 
 import chaos.amyshield.block.ModBlocks;
 import chaos.amyshield.block.blockEntities.custom.AmethystDispenserBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.DispenserBlockEntity;
-import net.minecraft.client.sound.Sound;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.client.resources.sounds.Sound;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.redstone.Orientation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,19 +35,19 @@ public class AmethystDispenserConverterMixin extends Block {
     @Final
     public static EnumProperty<Direction> FACING;
 
-    public AmethystDispenserConverterMixin(Settings settings) {
+    public AmethystDispenserConverterMixin(Properties settings) {
         super(settings);
     }
 
-    @Inject(method = "neighborUpdate", at = @At(value = "HEAD"))
-    public void getStateForNeighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify, CallbackInfo ci) {
+    @Inject(method = "neighborChanged", at = @At(value = "HEAD"))
+    public void getStateForNeighborUpdate(BlockState state, Level world, BlockPos pos, Block sourceBlock, Orientation wireOrientation, boolean notify, CallbackInfo ci) {
         convertDispenserToAmethyst(state, world, pos, sourceBlock, wireOrientation, notify);
     }
 
     @Unique
-    private static void convertDispenserToAmethyst(BlockState state, World world, BlockPos pos, Block sourceBlock, WireOrientation wireOrientation, boolean notify) {
-        BlockPos sourcePos = pos.up();
-        if (world.getBlockState(sourcePos).getBlock() != Blocks.AMETHYST_CLUSTER || !world.getBlockState(sourcePos).get(FACING).equals(Direction.UP) || !pos.equals(sourcePos.down())) {
+    private static void convertDispenserToAmethyst(BlockState state, Level world, BlockPos pos, Block sourceBlock, Orientation wireOrientation, boolean notify) {
+        BlockPos sourcePos = pos.above();
+        if (world.getBlockState(sourcePos).getBlock() != Blocks.AMETHYST_CLUSTER || !world.getBlockState(sourcePos).getValue(FACING).equals(Direction.UP) || !pos.equals(sourcePos.below())) {
             return;
         }
 
@@ -56,20 +57,20 @@ public class AmethystDispenserConverterMixin extends Block {
         }
 
         Map<ItemStack, Integer> itemStackMap = new java.util.HashMap<>(Map.of());
-        for (int i = 0; i < ((DispenserBlockEntity) blockEntity).size(); i++) {
-            itemStackMap.put(((DispenserBlockEntity) blockEntity).getStack(i), i);
+        for (int i = 0; i < ((DispenserBlockEntity) blockEntity).getContainerSize(); i++) {
+            itemStackMap.put(((DispenserBlockEntity) blockEntity).getItem(i), i);
         }
 
-        ((DispenserBlockEntity) blockEntity).clear();
+        ((DispenserBlockEntity) blockEntity).clearContent();
         world.removeBlockEntity(pos);
-        world.setBlockState(pos, ModBlocks.AMETHYST_DISPENSER.getDefaultState().with(FACING, state.get(FACING)), 3);
+        world.setBlock(pos, ModBlocks.AMETHYST_DISPENSER.defaultBlockState().setValue(FACING, state.getValue(FACING)), 3);
         BlockEntity amethystblockEntity = world.getBlockEntity(pos);
         if (amethystblockEntity instanceof AmethystDispenserBlockEntity) {
-            amethystblockEntity.markDirty();
+            amethystblockEntity.setChanged();
         }
 
         if (amethystblockEntity instanceof AmethystDispenserBlockEntity) {
-            itemStackMap.forEach((stack, slot) -> ((AmethystDispenserBlockEntity) amethystblockEntity).setStack(slot, stack));
+            itemStackMap.forEach((stack, slot) -> ((AmethystDispenserBlockEntity) amethystblockEntity).setItem(slot, stack));
         }
     }
 }

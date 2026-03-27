@@ -10,23 +10,23 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.hud.debug.DebugHudEntries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public class AmethystShieldClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModPackets.registerGlobalReceiversS2C();
         ModEntityModels.registerModEntityModels();
-        HudElementRegistry.addFirst(Identifier.of(AmethystShield.MOD_ID, "charge_hud_overlay"), new ChargeHudOverlay());
+        HudElementRegistry.addFirst(Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "charge_hud_overlay"), new ChargeHudOverlay());
         ModClientParticles.registerModParticlesClient();
-        DebugHudEntries.register(Identifier.of(AmethystShield.MOD_ID, "charge"), new ChargeF3DebugRenderer());
+        DebugScreenEntries.register(Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "charge"), new ChargeF3DebugRenderer());
 
         ResourceLoader.registerBuiltinPack(
-            Identifier.of(AmethystShield.MOD_ID, "lower_amethyst_shield"),
+            Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "lower_amethyst_shield"),
             FabricLoader.getInstance().getModContainer(AmethystShield.MOD_ID).orElseThrow(),
-            Text.translatable("resourcePack.amyshield.name"),
+            Component.translatable("resourcePack.amyshield.name"),
             PackActivationType.NORMAL
         );
     }

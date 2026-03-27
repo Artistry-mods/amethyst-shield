@@ -3,15 +3,15 @@ package chaos.amyshield.mixin;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.component.type.BlocksAttacksComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,23 +19,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static chaos.amyshield.item.custom.AmethystShieldItem.syncCharge;
 
-@Mixin(BlocksAttacksComponent.class)
+@Mixin(BlocksAttacks.class)
 public class ShieldBrakeMixin {
 
-    @Inject(method = "onShieldHit", at = @At("HEAD"))
-    public void damageShield(World world, ItemStack stack, LivingEntity entity, Hand hand, float amount, CallbackInfo ci) {
-        if (entity instanceof PlayerEntity player) {
-            if (!(player.getActiveItem().getItem() instanceof ShieldItem)) {
+    @Inject(method = "hurtBlockingItem", at = @At("HEAD"))
+    public void damageShield(Level world, ItemStack stack, LivingEntity entity, InteractionHand hand, float amount, CallbackInfo ci) {
+        if (entity instanceof Player player) {
+            if (!(player.getUseItem().getItem() instanceof ShieldItem)) {
                 return;
             }
-            if (!player.getEntityWorld().isClient()) {
-                player.incrementStat(Stats.USED.getOrCreateStat(player.getActiveItem().getItem()));
+            if (!player.level().isClientSide()) {
+                player.awardStat(Stats.ITEM_USED.get(player.getUseItem().getItem()));
             }
 
-            if (player.getActiveItem().getItem() instanceof AmethystShieldItem) {
+            if (player.getUseItem().getItem() instanceof AmethystShieldItem) {
                 double addedCharge = amount * AmethystShield.CONFIG.amethystShieldNested.chargeNested.BLOCK_GAIN_MULTIPLIER();
                 AmethystShieldItem.addCharge((player), (float) addedCharge);
-                syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), (ServerPlayerEntity) player);
+                syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), (ServerPlayer) player);
             }
         }
 

@@ -4,32 +4,33 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class AmethystMonocleItem extends Item {
     private int activationTimer = 0;
 
-    public AmethystMonocleItem(Settings settings) {
+    public AmethystMonocleItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context) {
+    public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
         return false;
     }
 
@@ -52,7 +53,7 @@ public class AmethystMonocleItem extends Item {
      */
 
     @Override
-    public void inventoryTick(ItemStack stack, ServerWorld world, Entity entity, @Nullable EquipmentSlot slot) {
+    public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
         if (slot == EquipmentSlot.HEAD) {
             if (this.activationTimer >= 1) {
                 this.activationTimer--;
@@ -65,44 +66,44 @@ public class AmethystMonocleItem extends Item {
         super.inventoryTick(stack, world, entity, slot);
     }
 
-    private void onPing(World world, Entity entity) {
-        if (!(world instanceof ServerWorld serverWorld) || !(entity instanceof ServerPlayerEntity player)) {
+    private void onPing(Level world, Entity entity) {
+        if (!(world instanceof ServerLevel serverWorld) || !(entity instanceof ServerPlayer player)) {
             return;
         }
 
-        for (BlockPos blockPos : BlockPos.iterate(
-                entity.getBlockPos().add(AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE()),
-                entity.getBlockPos().add(-AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE())))
+        for (BlockPos blockPos : BlockPos.betweenClosed(
+                entity.blockPosition().offset(AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE()),
+                entity.blockPosition().offset(-AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE())))
         {
             BlockState state = world.getBlockState(blockPos);
 
-            if (!state.isIn(ModTags.SHINY_ORES)) {
+            if (!state.is(ModTags.SHINY_ORES)) {
                 continue;
             }
 
-            RaycastContext context = new RaycastContext(
-                    entity.getEntityPos().add(0, 1, 0),
-                    blockPos.toCenterPos(),
-                    RaycastContext.ShapeType.OUTLINE,
-                    RaycastContext.FluidHandling.NONE,
+            ClipContext context = new ClipContext(
+                    entity.position().add(0, 1, 0),
+                    blockPos.getCenter(),
+                    ClipContext.Block.OUTLINE,
+                    ClipContext.Fluid.NONE,
                     entity
             );
-            BlockHitResult result = world.raycast(context);
-            Vec3d particlePos = result.getBlockPos().toCenterPos().offset(result.getSide(), 0.51);
-            Direction facing = result.getSide();
+            BlockHitResult result = world.clip(context);
+            Vec3 particlePos = result.getBlockPos().getCenter().relative(result.getDirection(), 0.51);
+            Direction facing = result.getDirection();
 
             if (facing == Direction.WEST) {
-                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_WEST, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
+                serverWorld.sendParticles(player, ModParticles.AMETHYST_MONOCLE_PING_WEST, true, true, particlePos.x(),  particlePos.y(), particlePos.z(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.EAST) {
-                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_EAST, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
+                serverWorld.sendParticles(player, ModParticles.AMETHYST_MONOCLE_PING_EAST, true, true, particlePos.x(),  particlePos.y(), particlePos.z(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.NORTH) {
-                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_NORTH, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
+                serverWorld.sendParticles(player, ModParticles.AMETHYST_MONOCLE_PING_NORTH, true, true, particlePos.x(),  particlePos.y(), particlePos.z(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.SOUTH) {
-                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_SOUTH, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
+                serverWorld.sendParticles(player, ModParticles.AMETHYST_MONOCLE_PING_SOUTH, true, true, particlePos.x(),  particlePos.y(), particlePos.z(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.UP) {
-                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_UP, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
+                serverWorld.sendParticles(player, ModParticles.AMETHYST_MONOCLE_PING_UP, true, true, particlePos.x(),  particlePos.y(), particlePos.z(), 1, 0, 0, 0, 0);
             } else if (facing == Direction.DOWN) {
-                serverWorld.spawnParticles(player, ModParticles.AMETHYST_MONOCLE_PING_DOWN, true, true, particlePos.getX(),  particlePos.getY(), particlePos.getZ(), 1, 0, 0, 0, 0);
+                serverWorld.sendParticles(player, ModParticles.AMETHYST_MONOCLE_PING_DOWN, true, true, particlePos.x(),  particlePos.y(), particlePos.z(), 1, 0, 0, 0, 0);
             }
         }
     }

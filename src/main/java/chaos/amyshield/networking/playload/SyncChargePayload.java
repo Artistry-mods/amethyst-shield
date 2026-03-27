@@ -1,20 +1,20 @@
 package chaos.amyshield.networking.playload;
 
 import chaos.amyshield.networking.ModPackets;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record SyncChargePayload(Float chargeAmount) implements CustomPayload {
-    public static final CustomPayload.Id<SyncChargePayload> ID = new CustomPayload.Id<>(ModPackets.SYNC_CHARGE_S2C);
-    public static final PacketCodec<RegistryByteBuf, SyncChargePayload> CODEC =
-            PacketCodec.tuple(PacketCodecs.FLOAT,
+public record SyncChargePayload(Float chargeAmount) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<SyncChargePayload> ID = new CustomPacketPayload.Type<>(ModPackets.SYNC_CHARGE_S2C);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncChargePayload> CODEC =
+            StreamCodec.composite(ByteBufCodecs.FLOAT,
                     SyncChargePayload::chargeAmount,
                     SyncChargePayload::new);
 
     @Override
-    public CustomPayload.Id<? extends CustomPayload> getId() {
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }

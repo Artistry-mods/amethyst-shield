@@ -4,29 +4,29 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.custom.AmethystMonocleItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Rarity;
 
 public class ModItemsButItsOnlyTheMonocle {
-    public static final Item AMETHYST_MONOCLE = Items.register(keyOf("amethyst_monocle"),
+    public static final Item AMETHYST_MONOCLE = Items.registerItem(keyOf("amethyst_monocle"),
             AmethystMonocleItem::new,
-            new Item.Settings().maxCount(1).rarity(Rarity.RARE).equippableUnswappable(EquipmentSlot.HEAD));
+            new Item.Properties().stacksTo(1).rarity(Rarity.RARE).equippableUnswappable(EquipmentSlot.HEAD));
 
-    private static RegistryKey<Item> keyOf(String id) {
-		return RegistryKey.of(RegistryKeys.ITEM, Identifier.of(AmethystShield.MOD_ID, id));
+    private static ResourceKey<Item> keyOf(String id) {
+		return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, id));
 	}
 
     private static void addItemsToToolTabItemGroup(FabricItemGroupEntries entries) {
-        entries.add(AMETHYST_MONOCLE);
+        entries.accept(AMETHYST_MONOCLE);
     }
 
     public static void init() {
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(ModItemsButItsOnlyTheMonocle::addItemsToToolTabItemGroup);
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(ModItemsButItsOnlyTheMonocle::addItemsToToolTabItemGroup);
     }
 }

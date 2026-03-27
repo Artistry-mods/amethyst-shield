@@ -1,7 +1,7 @@
 package chaos.amyshield.abilities;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 
 public record HyperSlashAmethystShieldAbility() implements AmethystShieldAbility {
     @Override

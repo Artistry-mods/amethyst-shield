@@ -4,50 +4,50 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.ModItems;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.profiler.Profilers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.profiling.Profiler;
 
 public class ChargeHudOverlay implements HudElement {
-    private static final Identifier CHARGE_UI_ATLAS = Identifier.of(AmethystShield.MOD_ID, "hud/amethyst_shield_ui");
+    private static final Identifier CHARGE_UI_ATLAS = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "hud/amethyst_shield_ui");
 
     @Override
-    public void render(DrawContext drawContext, RenderTickCounter tickCounter) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null || client.options.hudHidden) {
+    public void render(GuiGraphics drawContext, DeltaTracker tickCounter) {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.options.hideGui) {
             return;
         }
 
         if (client.player == null ||client.player.isSpectator()) {
             return;
         }
-        ClientPlayerEntity player = client.player;
+        LocalPlayer player = client.player;
 
-        if (!player.getMainHandStack().getItem().equals(ModItems.AMETHYST_SHIELD) &&
-                !player.getOffHandStack().getItem().equals(ModItems.AMETHYST_SHIELD)) {
+        if (!player.getMainHandItem().getItem().equals(ModItems.AMETHYST_SHIELD) &&
+                !player.getOffhandItem().getItem().equals(ModItems.AMETHYST_SHIELD)) {
             return;
         }
 
-        Profilers.get().swap("charge");
+        Profiler.get().popPush("charge");
 
-        int width = drawContext.getScaledWindowWidth();
-        int height = drawContext.getScaledWindowHeight();
+        int width = drawContext.guiWidth();
+        int height = drawContext.guiHeight();
         int x = width / 2;
         int y = height;
 
         int yshift = 53 + AmethystShield.CONFIG.amethystShieldNested.CHARGE_BAR_OFFSET();
-        int maxAir = player.getMaxAir();
-        int playerAir = Math.min(player.getAir(), maxAir);
-        if (player.getAbilities().creativeMode) yshift -= 17;
-        if ((player.isSubmergedIn(FluidTags.WATER) || playerAir < maxAir) && !player.getAbilities().creativeMode) yshift += 10;
+        int maxAir = player.getMaxAirSupply();
+        int playerAir = Math.min(player.getAirSupply(), maxAir);
+        if (player.getAbilities().instabuild) yshift -= 17;
+        if ((player.isEyeInFluid(FluidTags.WATER) || playerAir < maxAir) && !player.getAbilities().instabuild) yshift += 10;
         LivingEntity livingEntity = this.getRiddenEntity();
 
         if (livingEntity != null) {
@@ -55,10 +55,10 @@ public class ChargeHudOverlay implements HudElement {
             if (i > 10) {
                 yshift += 10;
             }
-            if (player.getAbilities().creativeMode) yshift += 17;
+            if (player.getAbilities().instabuild) yshift += 17;
         }
 
-        drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
+        drawContext.blitSprite(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
                 81,
                 18,
                 1,
@@ -69,7 +69,7 @@ public class ChargeHudOverlay implements HudElement {
                 / AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE())),
                 3);
 
-        drawContext.drawGuiTexture(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
+        drawContext.blitSprite(RenderPipelines.GUI_TEXTURED, CHARGE_UI_ATLAS,
                 81,
                 18,
                 0,
@@ -80,11 +80,11 @@ public class ChargeHudOverlay implements HudElement {
                 13);
 
 
-        Profilers.get().pop();
+        Profiler.get().pop();
     }
 
     private LivingEntity getRiddenEntity() {
-        PlayerEntity playerEntity = this.getCameraPlayer();
+        Player playerEntity = this.getCameraPlayer();
         if (playerEntity == null) {
             return null;
         }
@@ -102,7 +102,7 @@ public class ChargeHudOverlay implements HudElement {
     }
 
     private int getHeartCount(LivingEntity entity) {
-        if (entity == null || !entity.isLiving()) {
+        if (entity == null || !entity.showVehicleHealth()) {
             return 0;
         }
 
@@ -114,10 +114,10 @@ public class ChargeHudOverlay implements HudElement {
         return i;
     }
 
-    private PlayerEntity getCameraPlayer() {
-        if (!(MinecraftClient.getInstance().getCameraEntity() instanceof PlayerEntity)) {
+    private Player getCameraPlayer() {
+        if (!(Minecraft.getInstance().getCameraEntity() instanceof Player)) {
             return null;
         }
-        return (PlayerEntity) MinecraftClient.getInstance().getCameraEntity();
+        return (Player) Minecraft.getInstance().getCameraEntity();
     }
 }
