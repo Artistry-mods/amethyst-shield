@@ -22,7 +22,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class LootTableProvider {
+public class ModLootTableProvider {
     public static class Block extends FabricBlockLootSubProvider {
 
         public Block(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {

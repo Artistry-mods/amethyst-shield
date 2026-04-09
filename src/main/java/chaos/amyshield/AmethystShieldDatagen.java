@@ -1,9 +1,6 @@
 package chaos.amyshield;
 
-import chaos.amyshield.datagen.DynamicRegistryProvider;
-import chaos.amyshield.datagen.LootTableProvider;
-import chaos.amyshield.datagen.ModEnchantmentTagModifier;
-import chaos.amyshield.datagen.ModTagProvider;
+import chaos.amyshield.datagen.*;
 import chaos.amyshield.enchantments.ModEnchantments;
 import chaos.amyshield.tag.ModTags;
 import chaos.amyshield.world.ModConfiguredFeatures;
@@ -24,7 +21,9 @@ public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
 
         pack.addProvider(ModEnchantmentTagModifier::new);
 
-        pack.addProvider(LootTableProvider.Block::new);
+        pack.addProvider(ModLootTableProvider.Block::new);
+
+        pack.addProvider(ModRecipeProvider::new);
 
         pack.addProvider(ModTagProvider.ModBlockTagProvider::new);
         pack.addProvider(ModTagProvider.ModItemTagProvider::new);
