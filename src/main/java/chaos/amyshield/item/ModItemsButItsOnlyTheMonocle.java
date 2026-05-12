@@ -10,10 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -37,7 +34,7 @@ public class ModItemsButItsOnlyTheMonocle {
     }
 
     private static void addItemsToToolTabItemGroup(FabricCreativeModeTabOutput entries) {
-        entries.accept(AMETHYST_MONOCLE);
+        entries.insertAfter(Items.SPYGLASS, AMETHYST_MONOCLE);
     }
 
     public static void init() {

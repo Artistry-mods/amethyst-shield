@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -21,10 +22,6 @@ public class ModItemsButItsOnlyTheSculkLatch {
             Item::new,
             new Item.Properties().stacksTo(16));
 
-    private static void addItemsToIngredientsTabItemGroup(FabricCreativeModeTabOutput entries) {
-        entries.accept(SCULK_LATCH);
-    }
-
     private static Item registerItem(final ResourceKey<@NotNull Item> key, final Function<Item.Properties, Item> itemFactory, final Item.Properties properties) {
         Item item = itemFactory.apply(properties.setId(key));
         if (item instanceof BlockItem blockItem) {
@@ -32,6 +29,10 @@ public class ModItemsButItsOnlyTheSculkLatch {
         }
 
         return Registry.register(BuiltInRegistries.ITEM, key, item);
+    }
+
+    private static void addItemsToIngredientsTabItemGroup(FabricCreativeModeTabOutput entries) {
+        entries.insertBefore(Items.ECHO_SHARD, SCULK_LATCH);
     }
 
     private static ResourceKey<@NotNull Item> keyOf(String id) {

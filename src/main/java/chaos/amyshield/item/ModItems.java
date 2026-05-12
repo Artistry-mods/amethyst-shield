@@ -15,10 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -78,7 +75,7 @@ public class ModItems {
     private static Item registerBlock(final Block block, final BiFunction<Block, Item.Properties, Item> itemFactory, final Item.Properties properties) {
         return registerItem(
                 blockIdToItemId(block.builtInRegistryHolder().key()),
-                p -> (Item)itemFactory.apply(block, p),
+                p -> itemFactory.apply(block, p),
                 properties.useBlockDescriptionPrefix().requiredFeatures(block.requiredFeatures())
         );
     }
@@ -101,11 +98,11 @@ public class ModItems {
 	}
 
     private static void addItemsToCombatTabItemGroup(FabricCreativeModeTabOutput entries) {
-        entries.accept(AMETHYST_SHIELD);
+        entries.insertAfter(Items.SHIELD, AMETHYST_SHIELD);
     }
 
     private static void addItemsToIngredientsTabItemGroup(FabricCreativeModeTabOutput entries) {
-        entries.accept(OXIWINE_BOLT);
+        entries.insertAfter(Items.HEAVY_CORE, OXIWINE_BOLT);
     }
 
     public static void registerModItems() {
