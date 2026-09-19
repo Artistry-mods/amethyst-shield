@@ -57,7 +57,7 @@ public class AmethystDispenserBlock extends DispenserBlock implements EntityBloc
 
         if (amethystDispenserBlockEntity.cooldown == 0 && state.getValue(TRIGGERED)) {
             super.tick(state, world, pos, random);
-            amethystDispenserBlockEntity.cooldown = AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_COOLDOWN();
+            amethystDispenserBlockEntity.cooldown = AmethystShield.AMETHYST_DISPENSER_COOLDOWN;
             world.scheduleTick(pos, state.getBlock(), 1, TickPriority.NORMAL);
         } else {
             amethystDispenserBlockEntity.cooldown = Math.max(0, amethystDispenserBlockEntity.cooldown - 1);

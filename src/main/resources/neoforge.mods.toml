@@ -1,0 +1,10 @@
+[properties]
+"launchpad:placeholder"=true
+
+# Replace with your actual mod id
+[[dependencies.amyshield]]
+modId="launchpad"
+type="required"
+versionRange="[0,)"
+ordering="NONE"
+side="BOTH"

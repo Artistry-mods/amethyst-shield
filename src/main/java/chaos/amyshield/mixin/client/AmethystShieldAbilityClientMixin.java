@@ -85,7 +85,7 @@ public abstract class AmethystShieldAbilityClientMixin {
                 !player.onClimbable() &&
                 !player.getAbilities().flying) {
 
-            if (canJump(player)) {
+            if (this.canJump(player)) {
                 //slashing code
                 if (this.canUseSparklingSlash()) {
                     this.onSparklingSlash();
@@ -101,11 +101,11 @@ public abstract class AmethystShieldAbilityClientMixin {
             }
         }
 
-        if (canHyperSlash()) {
+        if (this.canHyperSlash()) {
             this.onHyperSlash();
         }
 
-        if (lastSlashTimer < 40) {
+        if (this.lastSlashTimer < 40) {
             this.lastSlashTimer++;
         }
 
@@ -127,34 +127,34 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         this.lastSlashTimer = 40;
 
-        if (getMovementDirectionOfKeypresses(player) == Vec3.ZERO) {
-            onAbilityUse(PushAmethystShieldAbility.getId());
+        if (this.getMovementDirectionOfKeypresses(player) == Vec3.ZERO) {
+            this.onAbilityUse(PushAmethystShieldAbility.getId());
 
             player.setDeltaMovement(new Vec3(0, 0.3, 0));
         } else {
-            player.setDeltaMovement(getMovementDirectionOfKeypresses(player).add(0, 0.1, 0).normalize().scale(originalAmount * multiplier));
+            player.setDeltaMovement(this.getMovementDirectionOfKeypresses(player).add(0, 0.1, 0).normalize().scale(originalAmount * multiplier));
         }
 
-        ignoreAllFallDamageTill(player, player.position().subtract(0, 1000, 0));
+        this.ignoreAllFallDamageTill(player, player.position().subtract(0, 1000, 0));
 
         AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
         AmethystShieldItem.syncSlashing(true);
 
-        onAbilityUse(HyperSlashAmethystShieldAbility.getId());
+        this.onAbilityUse(HyperSlashAmethystShieldAbility.getId());
     }
 
     @Unique
     private boolean canHyperSlash() {
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        return player.onGround() && player.input.keyPresses.jump() && lastSlashTimer < AmethystShield.CONFIG.amethystShieldNested.slashNested.HYPER_SLASH_TICK_TIMING();
+        return player.onGround() && player.input.keyPresses.jump() && this.lastSlashTimer < AmethystShield.HYPER_SLASH_TICK_TIMING;
     }
 
     @Unique
     private boolean canDoubleJump() {
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        return canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_COST()) &&
+        return canUseAbility(player, AmethystShield.DOUBLE_JUMP_COST) &&
                 player.isBlocking() &&
                 player.input.keyPresses.jump();
     }
@@ -165,7 +165,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         return this.isDoubleJumpingTimer >= 1 &&
                ((IMinecraftClientDatasaver) Minecraft.getInstance()).amethyst_shield$getLastAttackTick() != 0 &&
-               canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_COST()) &&
+               canUseAbility(player, AmethystShield.SPARKLING_SLASH_COST) &&
                player.getMainHandItem().is(ItemTags.WEAPON_ENCHANTABLE);
     }
 
@@ -210,22 +210,22 @@ public abstract class AmethystShieldAbilityClientMixin {
         }
         //movement delta
         double movementDelta = new Vec2(((float) player.position().x()), ((float) player.position().z()))
-                .distanceToSqr(new Vec2(((float) lastPos.x()), ((float) lastPos.z()))) * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_MULTIPLIER();
+                .distanceToSqr(new Vec2(((float) this.lastPos.x()), ((float) this.lastPos.z()))) * AmethystShield.MOVEMENT_CHARGE_MULTIPLIER;
 
-        if (movementDelta > AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_MOVEMENT_DELTA()) {
+        if (movementDelta > AmethystShield.MIN_MOVEMENT_DELTA) {
             this.movementCharge += movementDelta;
         }
     }
 
     @Unique
     private void tickMovementTimer() {
-        if (this.movementChargeTimer >= 1 && this.movementCharge < AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE() / 4) {
+        if (this.movementChargeTimer >= 1 && this.movementCharge < AmethystShield.MAX_CHARGE / 4) {
             this.movementChargeTimer    --;
         } else {
             if (this.movementCharge > 0) {
                 this.onAbilityUse(ChargeGain.getId() + " " + this.movementCharge);
             }
-            this.movementChargeTimer = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MOVEMENT_CHARGE_TIMING();
+            this.movementChargeTimer = AmethystShield.MOVEMENT_CHARGE_TIMING;
             this.movementCharge = 0;
         }
     }
@@ -243,9 +243,9 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     public double getSparklingSlashMultiplier(Player player) {
-        double multiplier = AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_STRENGTH();
+        double multiplier = AmethystShield.SPARKLING_SLASH_STRENGTH;
 
-        return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SPARKLING_SLASH_MULTIPLIER());
+        return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.RELEASE_SPARKLING_SLASH_MULTIPLIER);
     }
 
     @Unique
@@ -254,11 +254,11 @@ public abstract class AmethystShieldAbilityClientMixin {
         AmethystShieldItem.setSlashing(((IEntityDataSaver) player), true);
         AmethystShieldItem.syncSlashing(true);
 
-        flingPlayer(getSparklingSlashMultiplier(player));
+        this.flingPlayer(this.getSparklingSlashMultiplier(player));
         this.isDoubleJumpingTimer = 0;
         this.lastSlashTimer = 0;
 
-        ignoreAllFallDamageTill(player, player.position().subtract(0, 1000, 0));
+        this.ignoreAllFallDamageTill(player, player.position().subtract(0, 1000, 0));
 
         this.onAbilityUse(SlashAmethystShieldAbility.getId());
     }
@@ -272,9 +272,9 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     public double getDoubleJumpMultiplier(Player player) {
-        double multiplier = AmethystShield.CONFIG.amethystShieldNested.doubleJumpNested.DOUBLE_JUMP_STRENGTH();
+        double multiplier = AmethystShield.DOUBLE_JUMP_STRENGTH;
 
-        return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_DOUBLE_JUMP_MULTIPLIER());
+        return multiplier + (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.RELEASE_DOUBLE_JUMP_MULTIPLIER);
     }
 
     @Unique
@@ -289,11 +289,12 @@ public abstract class AmethystShieldAbilityClientMixin {
             }
 
             player.jumpFromGround();
-            player.setDeltaMovement(player.getDeltaMovement().x(), getDoubleJumpMultiplier(player) , player.getDeltaMovement().z());
+            player.setDeltaMovement(player.getDeltaMovement().x(),
+                                    this.getDoubleJumpMultiplier(player) , player.getDeltaMovement().z());
 
-            this.isDoubleJumpingTimer = AmethystShield.CONFIG.amethystShieldNested.slashNested.SLASH_TIMING();
+            this.isDoubleJumpingTimer = AmethystShield.SLASH_TIMING;
 
-            ignoreAllFallDamageTill(player, player.position());
+            this.ignoreAllFallDamageTill(player, player.position());
 
             this.onAbilityUse(DoubleJumpAmethystShieldAbility.getId());
             return;
@@ -314,12 +315,12 @@ public abstract class AmethystShieldAbilityClientMixin {
 
         if (this.sneakTimer >= 1) {
             this.sneakTimer = 0;
-            if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST())) {
+            if (canUseAbility(player, AmethystShield.AMETHYST_PUSH_COST)) {
                 this.onAmethystBurst();
             }
             return;
         }
-        this.sneakTimer = AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_SNEAKING_TIMING();
+        this.sneakTimer = AmethystShield.AMETHYST_PUSH_SNEAKING_TIMING;
     }
 
     @Unique
@@ -327,12 +328,12 @@ public abstract class AmethystShieldAbilityClientMixin {
         LocalPlayer player = (LocalPlayer) (Object) this;
         if (this.blockTimer >= 1) {
             this.blockTimer = 0;
-            if (canUseAbility(player, AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_COST())) {
+            if (canUseAbility(player, AmethystShield.AMETHYST_SLIDE_COST)) {
                 this.onAmethystSlide();
             }
             return;
         }
-        this.blockTimer = AmethystShield.CONFIG.amethystShieldNested.slideNested.AMETHYST_SLIDE_TIMING();
+        this.blockTimer = AmethystShield.AMETHYST_SLIDE_TIMING;
     }
 
     @Unique
@@ -344,7 +345,7 @@ public abstract class AmethystShieldAbilityClientMixin {
 
     @Unique
     public double getSlideMultiplier(Player player) {
-        return ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER();
+        return ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.RELEASE_SLIDE_MULTIPLIER;
     }
 
     @Unique
@@ -353,8 +354,8 @@ public abstract class AmethystShieldAbilityClientMixin {
         // Get the player's current direction vector
 
         // Initialize movement vector
-        Vec3 movement = getMovementDirectionOfKeypresses(player);
-        movement = movement.scale(2 + getSlideMultiplier(player));
+        Vec3 movement = this.getMovementDirectionOfKeypresses(player);
+        movement = movement.scale(2 + this.getSlideMultiplier(player));
 
         // Apply velocity to the player
         player.getRootVehicle().setDeltaMovement(movement.x + player.getDeltaMovement().x, player.getDeltaMovement().y() * 0.5, movement.z + player.getDeltaMovement().z);

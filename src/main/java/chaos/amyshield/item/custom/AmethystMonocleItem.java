@@ -4,22 +4,21 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class AmethystMonocleItem extends Item {
@@ -59,7 +58,7 @@ public class AmethystMonocleItem extends Item {
                 this.activationTimer--;
             } else {
                 this.onPing(world, entity);
-                this.activationTimer = AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_TIMER();
+                this.activationTimer = AmethystShield.AMETHYST_MONOCLE_TIMER;
             }
         }
 
@@ -72,8 +71,8 @@ public class AmethystMonocleItem extends Item {
         }
 
         for (BlockPos blockPos : BlockPos.betweenClosed(
-                entity.blockPosition().offset(AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE()),
-                entity.blockPosition().offset(-AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE(), -AmethystShield.CONFIG.monocleNested.AMETHYST_MONOCLE_RANGE())))
+                entity.blockPosition().offset(AmethystShield.AMETHYST_MONOCLE_RANGE, AmethystShield.AMETHYST_MONOCLE_RANGE, AmethystShield.AMETHYST_MONOCLE_RANGE),
+                entity.blockPosition().offset(-AmethystShield.AMETHYST_MONOCLE_RANGE, -AmethystShield.AMETHYST_MONOCLE_RANGE, -AmethystShield.AMETHYST_MONOCLE_RANGE)))
         {
             BlockState state = world.getBlockState(blockPos);
 

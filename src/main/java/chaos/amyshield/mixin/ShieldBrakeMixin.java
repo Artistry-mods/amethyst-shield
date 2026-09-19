@@ -3,14 +3,14 @@ package chaos.amyshield.mixin;
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.custom.AmethystShieldItem;
 import chaos.amyshield.util.IEntityDataSaver;
-import net.minecraft.world.item.component.BlocksAttacks;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.BlocksAttacks;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,7 +33,7 @@ public class ShieldBrakeMixin {
             }
 
             if (player.getUseItem().getItem() instanceof AmethystShieldItem) {
-                double addedCharge = amount * AmethystShield.CONFIG.amethystShieldNested.chargeNested.BLOCK_GAIN_MULTIPLIER();
+                double addedCharge = amount * AmethystShield.BLOCK_GAIN_MULTIPLIER;
                 AmethystShieldItem.addCharge((player), (float) addedCharge);
                 syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), (ServerPlayer) player);
             }

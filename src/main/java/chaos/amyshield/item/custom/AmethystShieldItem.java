@@ -7,10 +7,10 @@ import chaos.amyshield.networking.playload.SyncSlashPayload;
 import chaos.amyshield.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ShieldItem;
-import net.minecraft.server.level.ServerPlayer;
 
 public class AmethystShieldItem extends ShieldItem {
 
@@ -20,8 +20,8 @@ public class AmethystShieldItem extends ShieldItem {
 
     public static float setCharge(IEntityDataSaver player, float amount) {
         IEntityDataSaver.AmethystShieldData nbt = player.amethyst_shield$getPersistentData();
-        if (amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
-            amount = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
+        if (amount >= AmethystShield.MAX_CHARGE) {
+            amount = AmethystShield.MAX_CHARGE;
         }
         nbt.setCharge(amount);
         return amount;
@@ -46,16 +46,16 @@ public class AmethystShieldItem extends ShieldItem {
             int level = ModEnchantments.getSensitivityEnchantmentLevel(player);
 
             if (level > 0) {
-                amount = amount * (level * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.CHARGE_GAIN_INCREASE_PER_LEVEL());
+                amount = amount * (level * AmethystShield.CHARGE_GAIN_INCREASE_PER_LEVEL);
             }
         }
 
         IEntityDataSaver.AmethystShieldData nbt = ((IEntityDataSaver) player).amethyst_shield$getPersistentData();
         float charge = nbt.getCharge();
-        if (charge + amount >= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE()) {
-            charge = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MAX_CHARGE();
-        } else if (charge + amount <= AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_CHARGE()) {
-            charge = AmethystShield.CONFIG.amethystShieldNested.chargeNested.MIN_CHARGE();
+        if (charge + amount >= AmethystShield.MAX_CHARGE) {
+            charge = AmethystShield.MAX_CHARGE;
+        } else if (charge + amount <= AmethystShield.MIN_CHARGE) {
+            charge = AmethystShield.MIN_CHARGE;
         } else {
             charge += amount;
         }

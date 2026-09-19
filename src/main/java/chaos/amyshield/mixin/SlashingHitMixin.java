@@ -66,7 +66,7 @@ public class SlashingHitMixin {
                 player.level().playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1f, 1);
             }
 
-            List<Entity> entityList = new ArrayList<>(player.level().getEntities(player, player.getBoundingBox().inflate(AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_RADIUS())));
+            List<Entity> entityList = new ArrayList<>(player.level().getEntities(player, player.getBoundingBox().inflate(AmethystShield.SPARKLING_SLASH_RADIUS)));
             Objects.requireNonNull(player.level().getServer()).execute(() -> {
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity && !((LivingEntity) entity).isDeadOrDying() && !entity.isRemoved() && !entity.is(ModTags.SLASH_IMMUNE)) {
@@ -83,7 +83,7 @@ public class SlashingHitMixin {
                         */
 
                         if (entity.hurtServer(player.level(), player.damageSources().indirectMagic(player, player), (float) getSlashMultiplier(player))) {
-                            AmethystShieldItem.addCharge((player), AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_CHARGE_RETURN());
+                            AmethystShieldItem.addCharge((player), AmethystShield.SPARKLING_SLASH_CHARGE_RETURN);
                             AmethystShieldItem.syncCharge(AmethystShieldItem.getCharge(((IEntityDataSaver) player)), player);
                         }
                     }
@@ -94,6 +94,6 @@ public class SlashingHitMixin {
 
     @Unique
     private static double getSlashMultiplier(Player player) {
-        return AmethystShield.CONFIG.amethystShieldNested.slashNested.SPARKLING_SLASH_DAMAGE() * (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_SLIDE_MULTIPLIER());
+        return AmethystShield.SPARKLING_SLASH_DAMAGE * (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.RELEASE_SLIDE_MULTIPLIER);
     }
 }

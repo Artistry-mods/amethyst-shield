@@ -4,22 +4,22 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.enchantments.ModEnchantments;
 import chaos.amyshield.item.ModItems;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 public record PushAmethystShieldAbility() implements AmethystShieldAbility {
     @Override
     public float getChargeCost() {
-        return AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_COST();
+        return AmethystShield.AMETHYST_PUSH_COST;
     }
 
     @Override
@@ -59,15 +59,15 @@ public record PushAmethystShieldAbility() implements AmethystShieldAbility {
                     context.player().level().sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, context.player().getBlockStateOn()), vec3d.x, vec3d.y, vec3d.z, i, 0.30000001192092896, 0.30000001192092896, 0.30000001192092896, 0.15000000596046448);
                     context.player().level().levelEvent(LevelEvent.PARTICLES_SMASH_ATTACK, context.player().getOnPos(), 750);
 
-                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_RADIUS(), context.player()));
-                    if (AmethystShield.CONFIG.amethystShieldNested.pushNested.KILL_ONLY_HOSTILE()) {
+                    List<Entity> entityList = new ArrayList<>(getEntitiesAroundPlayer(AmethystShield.AMETHYST_PUSH_RADIUS, context.player()));
+                    if (AmethystShield.KILL_ONLY_HOSTILE) {
                         entityList = entityList.stream().filter((entity) -> entity instanceof Enemy || entity instanceof Player).toList();
                     }
 
                     for (Entity entity : entityList) {
                         if (entity instanceof LivingEntity && !((LivingEntity) entity).isDeadOrDying() && !entity.isRemoved()) {
-                            pushEntityAwayFromPlayer(entity, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_X() * getBurstMultiplier(context.player()), context.player());
-                            entity.hurtServer(context.player().level(), context.player().damageSources().indirectMagic(context.player(), context.player()), (float) (AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_DAMAGE() * getBurstMultiplier(context.player())));
+                            pushEntityAwayFromPlayer(entity, AmethystShield.AMETHYST_PUSH_STRENGTH_X * getBurstMultiplier(context.player()), context.player());
+                            entity.hurtServer(context.player().level(), context.player().damageSources().indirectMagic(context.player(), context.player()), (float) (AmethystShield.AMETHYST_PUSH_DAMAGE * getBurstMultiplier(context.player())));
                         }
                     }
 
@@ -78,7 +78,7 @@ public record PushAmethystShieldAbility() implements AmethystShieldAbility {
     }
 
     public static double getBurstMultiplier(Player player) {
-        return (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.CONFIG.amethystShieldNested.enchantmentNested.RELEASE_PUSH_MULTIPLIER());
+        return (ModEnchantments.getReleaseEnchantmentLevel(player) * AmethystShield.RELEASE_PUSH_MULTIPLIER);
     }
 
     private static List<Entity> getEntitiesAroundPlayer(double radius, Player player) {
@@ -99,7 +99,7 @@ public record PushAmethystShieldAbility() implements AmethystShieldAbility {
 
         Vec2 velocity = normalizedDirection.scale((float) (speed + (player.distanceTo(entity) * 0.8)));
 
-        entity.push(new Vec3(velocity.x, AmethystShield.CONFIG.amethystShieldNested.pushNested.AMETHYST_PUSH_STRENGTH_Y() * getBurstMultiplier(player), velocity.y));
+        entity.push(new Vec3(velocity.x, AmethystShield.AMETHYST_PUSH_STRENGTH_Y * getBurstMultiplier(player), velocity.y));
     }
 
     public static String getId() {

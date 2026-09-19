@@ -32,7 +32,7 @@ public class ModItems {
             new Item.Properties()
                     .rarity(Rarity.EPIC)
                     .enchantable(10)
-                    .durability(AmethystShield.CONFIG.amethystShieldNested.AMETHYST_SHIELD_DURABILITY())
+                    .durability(AmethystShield.AMETHYST_SHIELD_DURABILITY)
                     .repairable(ItemTags.WOODEN_TOOL_MATERIALS)
                     .equippableUnswappable(EquipmentSlot.OFFHAND)
                     .delayedComponent(

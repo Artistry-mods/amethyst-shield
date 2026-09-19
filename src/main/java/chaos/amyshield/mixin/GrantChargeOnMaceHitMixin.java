@@ -2,8 +2,8 @@ package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.item.custom.AmethystShieldItem;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.MaceItem;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +16,7 @@ public class GrantChargeOnMaceHitMixin {
     @Inject(method = "getAttackDamageBonus", at = @At("RETURN"))
     public void onGetBonusAttackDamage(Entity target, float baseAttackDamage, DamageSource damageSource, CallbackInfoReturnable<Float> cir) {
         if (damageSource.getEntity() instanceof Player player) {
-            AmethystShieldItem.addCharge(player, cir.getReturnValue() * AmethystShield.CONFIG.amethystShieldNested.chargeNested.MACE_HIT_MULTIPLIER());
+            AmethystShieldItem.addCharge(player, cir.getReturnValue() * AmethystShield.MACE_HIT_MULTIPLIER);
         }
     }
 }

@@ -2,16 +2,15 @@ package chaos.amyshield.mixin;
 
 import chaos.amyshield.AmethystShield;
 import chaos.amyshield.block.custom.AmethystDispenserBlock;
-import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileItem;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.core.dispenser.BlockSource;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +30,7 @@ public class AmethystDispenserShootingMixin {
             ServerLevel serverWorld = pointer.level();
             Direction direction = pointer.state().getValue(DispenserBlock.FACING);
             Position position = this.dispenseConfig.positionFunction().getDispensePosition(pointer, direction);
-            Projectile.spawnProjectileUsingShoot(this.projectileItem.asProjectile(serverWorld, position, stack, direction), serverWorld, stack, direction.getStepX(), direction.getStepY(), direction.getStepZ(), this.dispenseConfig.power() * AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_STRENGTH(), this.dispenseConfig.uncertainty() * AmethystShield.CONFIG.dispenserNested.AMETHYST_DISPENSER_SPREAD());
+            Projectile.spawnProjectileUsingShoot(this.projectileItem.asProjectile(serverWorld, position, stack, direction), serverWorld, stack, direction.getStepX(), direction.getStepY(), direction.getStepZ(), this.dispenseConfig.power() * AmethystShield.AMETHYST_DISPENSER_STRENGTH, this.dispenseConfig.uncertainty() * AmethystShield.AMETHYST_DISPENSER_SPREAD);
             stack.shrink(1);
             cir.setReturnValue(stack);
         }
