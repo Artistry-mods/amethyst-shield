@@ -7,10 +7,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.EntityTypeIds;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -21,12 +22,12 @@ public class ModTagProvider {
         }
 
         @Override
-        protected void addTags(HolderLookup.Provider wrapperLookup) {
-            valueLookupBuilder(ModTags.AMETHYST_SHIELD_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD);
+        protected void addTags(HolderLookup.@NonNull Provider wrapperLookup) {
+            this.builder(ModTags.AMETHYST_SHIELD_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD_ID);
 
-            valueLookupBuilder(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD);
+            this.builder(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMETHYST_SHIELD_ID);
 
-            valueLookupBuilder(ConventionalItemTags.SHIELD_TOOLS).add(ModItems.AMETHYST_SHIELD);
+            this.builder(ConventionalItemTags.SHIELD_TOOLS).add(ModItems.AMETHYST_SHIELD_ID);
         }
     }
 
@@ -36,8 +37,8 @@ public class ModTagProvider {
         }
 
         @Override
-        protected void addTags(HolderLookup.Provider wrapperLookup) {
-            valueLookupBuilder(ModTags.SLASH_IMMUNE).add(EntityType.HAPPY_GHAST);
+        protected void addTags(HolderLookup.@NonNull Provider wrapperLookup) {
+            this.builder(ModTags.SLASH_IMMUNE).add(EntityTypeIds.HAPPY_GHAST);
         }
     }
 
@@ -47,30 +48,30 @@ public class ModTagProvider {
         }
 
         @Override
-        protected void addTags(HolderLookup.Provider wrapperLookup) {
-            valueLookupBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
-                    .add(ModBlocks.DIAMOND_DEPOSIT)
-                    .add(ModBlocks.AMETHYST_DISPENSER);
+        protected void addTags(HolderLookup.@NonNull Provider wrapperLookup) {
+            this.builder(BlockTags.MINEABLE_WITH_PICKAXE)
+                    .add(ModBlocks.DIAMOND_DEPOSIT_ID)
+                    .add(ModBlocks.AMETHYST_DISPENSER_ID);
 
-            valueLookupBuilder(ModTags.SHINY_ORES)
-                    .add(Blocks.DIAMOND_ORE)
-                    .add(Blocks.DEEPSLATE_DIAMOND_ORE)
+            this.builder(ModTags.SHINY_ORES)
+                    .add(BlockItemIds.DIAMOND_ORE)
+                    .add(BlockItemIds.DEEPSLATE_DIAMOND_ORE)
 
-                    .add(Blocks.EMERALD_ORE)
-                    .add(Blocks.DEEPSLATE_EMERALD_ORE)
+                    .add(BlockItemIds.EMERALD_ORE)
+                    .add(BlockItemIds.DEEPSLATE_EMERALD_ORE)
 
-                    .add(Blocks.GOLD_ORE)
-                    .add(Blocks.DEEPSLATE_GOLD_ORE)
+                    .add(BlockItemIds.GOLD_ORE)
+                    .add(BlockItemIds.DEEPSLATE_GOLD_ORE)
 
-                    .add(Blocks.IRON_ORE)
-                    .add(Blocks.DEEPSLATE_IRON_ORE)
+                    .add(BlockItemIds.IRON_ORE)
+                    .add(BlockItemIds.DEEPSLATE_IRON_ORE)
 
-                    .add(Blocks.NETHER_QUARTZ_ORE)
-                    .add(Blocks.GILDED_BLACKSTONE)
-                    .add(Blocks.ANCIENT_DEBRIS)
-                    .add(Blocks.NETHER_GOLD_ORE)
+                    .add(BlockItemIds.NETHER_QUARTZ_ORE)
+                    .add(BlockItemIds.GILDED_BLACKSTONE)
+                    .add(BlockItemIds.ANCIENT_DEBRIS)
+                    .add(BlockItemIds.NETHER_GOLD_ORE)
 
-                    .add(ModBlocks.DIAMOND_DEPOSIT);
+                    .add(ModBlocks.DIAMOND_DEPOSIT_ID);
 
         }
     }

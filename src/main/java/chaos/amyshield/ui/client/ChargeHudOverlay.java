@@ -15,14 +15,15 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.NonNull;
 
 public class ChargeHudOverlay implements HudElement {
     private static final Identifier CHARGE_UI_ATLAS = Identifier.fromNamespaceAndPath(AmethystShield.MOD_ID, "hud/amethyst_shield_ui");
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
-        if (client.options.hideGui) {
+        if (client.gui.hud.isHidden()) {
             return;
         }
 

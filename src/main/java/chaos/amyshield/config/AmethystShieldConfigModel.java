@@ -1,5 +1,6 @@
 package chaos.amyshield.config;
 
+/*
 import chaos.amyshield.AmethystShield;
 import io.wispforest.owo.config.annotation.*;
 
@@ -143,3 +144,4 @@ public class AmethystShieldConfigModel {
         public float AMETHYST_SLIDE_COST = -25f; //How much charge the amethyst slide costs
     }
 }
+*/

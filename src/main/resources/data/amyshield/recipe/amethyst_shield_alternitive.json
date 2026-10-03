@@ -6,7 +6,7 @@
     "a": "minecraft:amethyst_shard",
     "c": "minecraft:copper_ingot",
     "o": "amyshield:oxiwine_bolt",
-    "s": "sculk-latch:sculk_latch"
+    "s": "amyshield:sculk_latch"
   },
   "pattern": [
     "aaa",

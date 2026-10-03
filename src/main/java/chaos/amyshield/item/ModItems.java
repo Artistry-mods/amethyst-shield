@@ -26,18 +26,19 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class ModItems {
+    public static final ResourceKey<Item> AMETHYST_SHIELD_ID = keyOf("amethyst_shield");
     public static final Item AMETHYST_SHIELD = registerItem(
-			keyOf("amethyst_shield"),
+            AMETHYST_SHIELD_ID,
             AmethystShieldItem::new,
             new Item.Properties()
                     .rarity(Rarity.EPIC)
-                    .enchantable(10)
+                    .enchantable(15)
                     .durability(AmethystShield.CONFIG.amethystShieldNested.AMETHYST_SHIELD_DURABILITY())
                     .repairable(ItemTags.WOODEN_TOOL_MATERIALS)
                     .equippableUnswappable(EquipmentSlot.OFFHAND)
                     .delayedComponent(
                             DataComponents.BLOCKS_ATTACKS,
-                           context -> new BlocksAttacks(
+                            context -> new BlocksAttacks(
                                     0.25F,
                                     1.0F,
                                     List.of(
@@ -52,7 +53,7 @@ public class ModItems {
                                             1.0F,
                                             1.0F
                                     ),
-                                   Optional.of(context.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
+                                    Optional.of(context.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
                                     Optional.of(SoundEvents.SHIELD_BLOCK),
                                     Optional.of(SoundEvents.SHIELD_BREAK)
                             )
@@ -61,8 +62,9 @@ public class ModItems {
                             SoundEvents.SHIELD_BREAK)
     );
 
+    public static final ResourceKey<Item> OXIWINE_BOLT_ID = keyOf("oxiwine_bolt");
     public static final Item OXIWINE_BOLT = registerItem(
-			keyOf("oxiwine_bolt"),
+            OXIWINE_BOLT_ID,
 			Item::new,
             new Item.Properties());
 

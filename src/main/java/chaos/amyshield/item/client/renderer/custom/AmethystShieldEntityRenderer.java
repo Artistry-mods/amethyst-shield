@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
@@ -35,13 +36,13 @@ public class AmethystShieldEntityRenderer implements SpecialModelRenderer<DataCo
         poseStack.pushPose();
         poseStack.scale(1.0f, -1.0f, -1.0f);
 
-        submitNodeCollector.submitModelPart(this.modelShield.root(), poseStack, this.modelShield.renderType(AMETHYST_SHIELD_TEXTURE), lightCoords, overlayCoords, null, false, hasFoil, -1, null, outlineColor);
+        submitNodeCollector.submitModelPart(this.modelShield.root(), poseStack, this.modelShield.renderType(AMETHYST_SHIELD_TEXTURE), lightCoords, overlayCoords, null);
 
         poseStack.popPose();
     }
 
     @Override
-    public void getExtents(Consumer<Vector3fc> consumer) {
+    public void getExtents(@NonNull Consumer<Vector3fc> consumer) {
 
         PoseStack matrixStack = new PoseStack();
         this.modelShield.root().getExtentsForGui(matrixStack, consumer);

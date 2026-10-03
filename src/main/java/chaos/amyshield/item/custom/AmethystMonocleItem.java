@@ -4,23 +4,23 @@ import chaos.amyshield.AmethystShield;
 import chaos.amyshield.particles.ModParticles;
 import chaos.amyshield.tag.ModTags;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
-import net.minecraft.world.item.Item.Properties;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class AmethystMonocleItem extends Item {
     private int activationTimer = 0;
@@ -30,7 +30,7 @@ public class AmethystMonocleItem extends Item {
     }
 
     @Override
-    public boolean canBeEnchantedWith(ItemStack stack, Holder<Enchantment> enchantment, EnchantingContext context) {
+    public boolean canBeEnchantedWith(@NonNull ItemStack stack, @NonNull Holder<Enchantment> enchantment, @NonNull EnchantingContext context) {
         return false;
     }
 
@@ -53,7 +53,7 @@ public class AmethystMonocleItem extends Item {
      */
 
     @Override
-    public void inventoryTick(ItemStack stack, ServerLevel world, Entity entity, @Nullable EquipmentSlot slot) {
+    public void inventoryTick(@NonNull ItemStack stack, @NonNull ServerLevel world, @NonNull Entity entity, @Nullable EquipmentSlot slot) {
         if (slot == EquipmentSlot.HEAD) {
             if (this.activationTimer >= 1) {
                 this.activationTimer--;
@@ -83,13 +83,13 @@ public class AmethystMonocleItem extends Item {
 
             ClipContext context = new ClipContext(
                     entity.position().add(0, 1, 0),
-                    blockPos.getCenter(),
+                    new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5),
                     ClipContext.Block.OUTLINE,
                     ClipContext.Fluid.NONE,
                     entity
             );
             BlockHitResult result = world.clip(context);
-            Vec3 particlePos = result.getBlockPos().getCenter().relative(result.getDirection(), 0.51);
+            Vec3 particlePos = result.getLocation().relative(result.getDirection(), 0.51);
             Direction facing = result.getDirection();
 
             if (facing == Direction.WEST) {

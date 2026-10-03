@@ -3,14 +3,13 @@ package chaos.amyshield;
 import chaos.amyshield.datagen.*;
 import chaos.amyshield.enchantments.ModEnchantments;
 import chaos.amyshield.tag.ModTags;
-import chaos.amyshield.world.ModConfiguredFeatures;
-import chaos.amyshield.world.ModPlacedFeatures;
+import chaos.amyshield.world.ModOreFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
     @Override
@@ -32,8 +31,8 @@ public class AmethystShieldDatagen implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
-        registryBuilder.add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::boostrap);
-        registryBuilder.add(Registries.PLACED_FEATURE, ModPlacedFeatures::boostrap);
+        registryBuilder.add(Registries.FEATURE, ModOreFeatures::bootstrapFeature);
+        registryBuilder.add(Registries.PLACED_FEATURE, ModOreFeatures::bootstrapPlacedFeature);
 
         registryBuilder.add(Registries.ENCHANTMENT, (context) -> {
 

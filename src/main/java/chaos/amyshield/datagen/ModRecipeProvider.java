@@ -4,11 +4,14 @@ import chaos.amyshield.item.ModItems;
 import chaos.amyshield.item.ModItemsButItsOnlyTheSculkLatch;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -19,11 +22,15 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    protected @NonNull RecipeProvider createRecipeProvider(HolderLookup.@NonNull Provider registryLookup, @NonNull RecipeOutput exporter) {
-        return new RecipeProvider(registryLookup, exporter) {
+    protected @NonNull RecipeProvider createRecipeProvider(
+        HolderLookup.@NonNull Provider registries,
+        @NonNull BootstrapContext<Recipe<?>> recipes,
+        @NonNull BootstrapContext<Advancement> advancements
+    ) {
+        return new VanillaRecipeProvider(recipes, advancements) {
             @Override
             public void buildRecipes() {
-                shaped(RecipeCategory.COMBAT, ModItems.AMETHYST_SHIELD)
+                this.shaped(RecipeCategory.COMBAT, ModItems.AMETHYST_SHIELD)
                         .define('s', Items.SHIELD)
                         .define('c', Items.COPPER_INGOT)
                         .define('a', Items.AMETHYST_SHARD)
@@ -33,8 +40,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .pattern("oso")
                         .pattern("clc")
                         .showNotification(true)
-                        .unlockedBy("has_item", has(Items.SHIELD))
-                        .save(output);
+                        .unlockedBy("has_item", this.has(Items.SHIELD))
+                        .save(this.output);
             }
         };
     }

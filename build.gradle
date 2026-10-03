@@ -41,7 +41,9 @@ loom {
 }
 
 fabricApi {
-	configureDataGeneration()
+	configureDataGeneration() {
+		client = true
+	}
 }
 
 dependencies {
@@ -49,9 +51,9 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	annotationProcessor implementation("io.wispforest:owo-lib:${project.owo_version}")
-	include "io.wispforest:owo-sentinel:${project.owo_version}"
-	//modCompileOnly "net.fabricmc:fabric-loom:${project.loom_version}"
+	// annotationProcessor implementation("io.wispforest:owo-lib:${project.owo_version}")
+	// include "io.wispforest:owo-sentinel:${project.owo_version}"
+
 	// Fabric API. This is technically optional, but you probably want it anyway.
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
